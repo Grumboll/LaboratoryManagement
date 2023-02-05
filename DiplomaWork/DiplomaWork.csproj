@@ -5,11 +5,24 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>resources\images\LaboratoryIcon.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Images\CloseIcon.png" />
+    <None Remove="Resources\Images\LaboratoryLogo.png" />
+    <None Remove="Resources\Images\MaximizeIcon.png" />
+    <None Remove="Resources\Images\MinimizeIcon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\Images\LaboratoryIcon.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <Folder Include="DB\" />
     <Folder Include="Models\" />
+    <Folder Include="Resources\Views\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,6 +33,17 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="App.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Images\CloseIcon.png" />
+    <Resource Include="Resources\Images\LaboratoryLogo.png" />
+    <Resource Include="Resources\Images\MaximizeIcon.png" />
+    <Resource Include="Resources\Images\MinimizeIcon.png" />
   </ItemGroup>
 
 </Project>
