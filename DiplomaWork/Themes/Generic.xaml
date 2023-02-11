@@ -49,10 +49,10 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                                <Image Margin="5 0 0 0" Width="20" Height="20" Source="/Resources/Images/LaboratoryLogo.png"/>
+                                <Image Margin="10 0 0 0" Width="20" Height="20" Source="/Resources/Images/LaboratoryLogo.png"/>
                                 <TextBlock TextAlignment="Left"
-                                   Margin="5 5 5 5"
-                                   FontSize="18"
+                                   Margin="10 5 5 5"
+                                   FontSize="14"
                                    FontWeight="DemiBold"
                                    Foreground="RoyalBlue"
                                    Text="{TemplateBinding Title}"/>
