@@ -21,6 +21,7 @@ namespace DiplomaWork.Models
         public uint Id { get; set; }
         public string Username { get; set; } = null!;
         public string Password { get; set; } = null!;
+        public string PasswordSalt { get; set; } = null!;
         public string FirstName { get; set; } = null!;
         public string? MiddleName { get; set; }
         public string LastName { get; set; } = null!;
