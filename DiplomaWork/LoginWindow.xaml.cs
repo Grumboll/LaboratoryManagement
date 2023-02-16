@@ -1,4 +1,5 @@
 ﻿using DiplomaWork.Models;
+using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -34,22 +35,48 @@ namespace DiplomaWork
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             string username = UserNameTextBox.Text;
-            string password = PasswordBox.Password;
 
             // Check if the user exists
-            var user = _dbContext.Users.FirstOrDefault(u => u.Username == username && u.Password == password);
+            var user = _dbContext.Users.FirstOrDefault(u => u.Username == username);
 
             if (user != null)
             {
-                // Open another window
-                MainWindow otherWindow = new MainWindow();
-                otherWindow.Show();
+                ErrorLabel.Visibility = Visibility.Hidden;
 
-                // Close the current window
-                this.Close();
+                string saltString = user.PasswordSalt;
+                string hashString = user.Password;
+
+                // Convert salt and hash from Base64 strings to byte arrays
+                byte[] salt = Convert.FromBase64String(saltString);
+                byte[] hash = Convert.FromBase64String(hashString);
+
+                byte[] passwordBytes = Encoding.UTF8.GetBytes(hash + Convert.ToBase64String(salt));
+                byte[] hashedPassword;
+                using (var sha256 = SHA256.Create())
+                {
+                    hashedPassword = sha256.ComputeHash(passwordBytes);
+                }
+
+                // Compare the resulting hash with the hash stored in the database
+                if (hashedPassword.SequenceEqual(hash))
+                {
+                    // Authentication successful, open Main Window
+                    MainWindow mainWindow = new MainWindow();
+                    mainWindow.Show();
+
+                    // Close the current window
+                    this.Close();
+                }
+                else
+                {
+                    ErrorLabel.Content = "Грешни потребителски данни!";
+                    ErrorLabel.Visibility = Visibility.Visible;
+                }
+                
             }
             else
             {
+                ErrorLabel.Content = "Потребителското име не беше открито!";
                 ErrorLabel.Visibility= Visibility.Visible;
             }
         }

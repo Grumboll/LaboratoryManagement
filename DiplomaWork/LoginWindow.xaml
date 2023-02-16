@@ -61,7 +61,7 @@
                 <CheckBox VerticalAlignment="Center" Margin="3 0 0 0"/>
             </StackPanel>
             <Button Name="LoginButton" Content="Влизане" Margin="5" Click="LoginButton_Click"/>
-            <Label Name="ErrorLabel" Content="Грешни потребителски данни!" Foreground="Red" Visibility="Hidden" Margin="5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+            <Label Name="ErrorLabel" Foreground="Red" Visibility="Hidden" Margin="5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
         </StackPanel>
     </Grid>
 </control:CustomWindow>
