@@ -60,7 +60,8 @@
                 <Label Content="Запомни ме:" Margin="5" Foreground="#c8ccc9"/>
                 <CheckBox VerticalAlignment="Center" Margin="3 0 0 0"/>
             </StackPanel>
-            <Button Content="Влизане" Margin="5"/>
+            <Button Name="LoginButton" Content="Влизане" Margin="5" Click="LoginButton_Click"/>
+            <Label Name="ErrorLabel" Content="Грешни потребителски данни!" Foreground="Red" Visibility="Hidden" Margin="5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
         </StackPanel>
     </Grid>
 </control:CustomWindow>
