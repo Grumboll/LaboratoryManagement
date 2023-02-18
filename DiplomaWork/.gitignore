@@ -1,0 +1,76 @@
+﻿# Visual Studio / .NET Core
+*.obj
+*.pdb
+*.user
+*.vs/
+*.vscode/
+*.suo
+*.cache
+*.dll
+*.exe
+*.bin/
+*.log
+*.tlog/
+*.stf/
+*.coverage
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+bld/
+[Bb]in/
+[Oo]bj/
+
+# NuGet Packages
+*.nupkg
+packages/
+
+# MSTest Test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# Build Results of an ATL Project
+[Dd]ebugPS/
+[Rr]eleasePS/
+dlldata.c
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# StyleCop
+StyleCopReport.xml
+
+# Resharper files
+_ReSharper*/
+*.ReSharper*
+*.DotSettings.user
+
+# Test files
+*.testsettings
+test-*.xml
+
+# Ignore unneeded user files
+*.bak
+*.cache
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio 2015
+.vs/config/applicationhost.config
+
+# End of Visual Studio / .NET Core section
+
+
+# Ignore build output folders
+bin/
+obj/
+
+# Ignore application specific files
+App.config
+Web.config

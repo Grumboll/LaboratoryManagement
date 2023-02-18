@@ -58,7 +58,7 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Width="auto">
                 <Label Content="Запомни ме:" Margin="5" Foreground="#c8ccc9"/>
-                <CheckBox VerticalAlignment="Center" Margin="3 0 0 0"/>
+                <CheckBox Name="RememberMeCheckBox"  VerticalAlignment="Center" Margin="3 0 0 0"/>
             </StackPanel>
             <Button Name="LoginButton" Content="Влизане" Margin="5" Click="LoginButton_Click"/>
             <Label Name="ErrorLabel" Foreground="Red" Visibility="Hidden" Margin="5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
