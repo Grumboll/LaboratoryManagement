@@ -9,7 +9,7 @@ namespace DiplomaWork.Helpers
 {
     public static class LoginCredentialsHelper
     {
-        private static readonly byte[] entropy = Encoding.Unicode.GetBytes("your entropy string here");
+        private static readonly byte[] entropy = Encoding.Unicode.GetBytes(ConfigurationHelper.getEntropyKey());
 
         public static void SaveLoginCredentials(string username, string password)
         {
@@ -25,7 +25,7 @@ namespace DiplomaWork.Helpers
             }
         }
 
-        public static (string Username, string Password) TryLoadLoginCredentials()
+        public static (string username, string password) TryLoadLoginCredentials()
         {
             try
             {
