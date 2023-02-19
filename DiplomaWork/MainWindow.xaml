@@ -54,7 +54,7 @@
             <Button Grid.Column="1">Текущ месец</Button>
             <Button Grid.Column="2">Справки</Button>
             <Button Grid.Column="3">Настройки</Button>
-            <Button Grid.Column="4" HorizontalAlignment="Right">Изход</Button>
+            <Button Grid.Column="4" HorizontalAlignment="Right" Name="LogOutButton" Click="LogOutButton_Click">Изход</Button>
         </Grid>
 
         <Grid Grid.Row="1">
