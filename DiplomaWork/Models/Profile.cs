@@ -20,7 +20,7 @@ namespace DiplomaWork.Models
 
         public virtual User CreatedByNavigation { get; set; } = null!;
         public virtual User UpdatedByNavigation { get; set; } = null!;
-        public virtual LaboratoryDayHasProfile LaboratoryDayHasProfile { get; set; } = null!;
+        public virtual LaboratoryDay LaboratoryDay { get; set; } = null!;
         public virtual ICollection<ProfileHasLengthsPerimeter> ProfileHasLengthsPerimeters { get; set; }
     }
 }

@@ -9,10 +9,10 @@ namespace DiplomaWork.Models
         {
             InverseCreatedByNavigation = new HashSet<User>();
             InverseUpdatedByNavigation = new HashSet<User>();
-            LaboratoryDayHasProfileCreatedByNavigations = new HashSet<LaboratoryDayHasProfile>();
-            LaboratoryDayHasProfileUpdatedByNavigations = new HashSet<LaboratoryDayHasProfile>();
-            LaboratoryMonthHasDayHasChemicalCreatedByNavigations = new HashSet<LaboratoryMonthHasDayHasChemical>();
-            LaboratoryMonthHasDayHasChemicalUpdatedByNavigations = new HashSet<LaboratoryMonthHasDayHasChemical>();
+            LaboratoryDayCreatedByNavigations = new HashSet<LaboratoryDay>();
+            LaboratoryDayUpdatedByNavigations = new HashSet<LaboratoryDay>();
+            LaboratoryMonthHasChemicalCreatedByNavigations = new HashSet<LaboratoryMonthHasChemical>();
+            LaboratoryMonthHasChemicalUpdatedByNavigations = new HashSet<LaboratoryMonthHasChemical>();
             ProfileCreatedByNavigations = new HashSet<Profile>();
             ProfileUpdatedByNavigations = new HashSet<Profile>();
             UserHasRoles = new HashSet<UserHasRole>();
@@ -36,10 +36,10 @@ namespace DiplomaWork.Models
         public virtual User UpdatedByNavigation { get; set; } = null!;
         public virtual ICollection<User> InverseCreatedByNavigation { get; set; }
         public virtual ICollection<User> InverseUpdatedByNavigation { get; set; }
-        public virtual ICollection<LaboratoryDayHasProfile> LaboratoryDayHasProfileCreatedByNavigations { get; set; }
-        public virtual ICollection<LaboratoryDayHasProfile> LaboratoryDayHasProfileUpdatedByNavigations { get; set; }
-        public virtual ICollection<LaboratoryMonthHasDayHasChemical> LaboratoryMonthHasDayHasChemicalCreatedByNavigations { get; set; }
-        public virtual ICollection<LaboratoryMonthHasDayHasChemical> LaboratoryMonthHasDayHasChemicalUpdatedByNavigations { get; set; }
+        public virtual ICollection<LaboratoryDay> LaboratoryDayCreatedByNavigations { get; set; }
+        public virtual ICollection<LaboratoryDay> LaboratoryDayUpdatedByNavigations { get; set; }
+        public virtual ICollection<LaboratoryMonthHasChemical> LaboratoryMonthHasChemicalCreatedByNavigations { get; set; }
+        public virtual ICollection<LaboratoryMonthHasChemical> LaboratoryMonthHasChemicalUpdatedByNavigations { get; set; }
         public virtual ICollection<Profile> ProfileCreatedByNavigations { get; set; }
         public virtual ICollection<Profile> ProfileUpdatedByNavigations { get; set; }
         public virtual ICollection<UserHasRole> UserHasRoles { get; set; }

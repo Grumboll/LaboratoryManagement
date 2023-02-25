@@ -29,6 +29,21 @@ INSERT INTO permissions(id, name, slug) VALUES
 (17, 'Изтрива потребители', 'permissions.delete_users'),
 (18, 'Заключва потребители', 'permissions.lock_users');
 
+INSERT INTO months(id, name, slug) VALUES
+('1', 'Януари', 'months.january'),
+('2', 'Февруари', 'months.february'),
+('3', 'Март', 'months.march'),
+('4', 'Април', 'months.april'),
+('5', 'Май', 'months.may'),
+('6', 'Юни', 'months.june'),
+('7', 'Юли', 'months.july'),
+('8', 'Август', 'months.august'),
+('9', 'Септември', 'months.september'),
+('10', 'Октомври', 'months.october'),
+('11', 'Ноември', 'months.november'),
+('12', 'Декември', 'months.december');
+
+
 INSERT INTO role_has_permissions(id, role_id, permission_id) VALUES 
 (1, 1, 1),
 (2, 2, 2),

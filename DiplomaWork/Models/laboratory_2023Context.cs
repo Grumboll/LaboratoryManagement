@@ -17,10 +17,9 @@ namespace DiplomaWork.Models
         }
 
         public virtual DbSet<LaboratoryDay> LaboratoryDays { get; set; } = null!;
-        public virtual DbSet<LaboratoryDayHasProfile> LaboratoryDayHasProfiles { get; set; } = null!;
         public virtual DbSet<LaboratoryMonth> LaboratoryMonths { get; set; } = null!;
-        public virtual DbSet<LaboratoryMonthHasDay> LaboratoryMonthHasDays { get; set; } = null!;
-        public virtual DbSet<LaboratoryMonthHasDayHasChemical> LaboratoryMonthHasDayHasChemicals { get; set; } = null!;
+        public virtual DbSet<LaboratoryMonthHasChemical> LaboratoryMonthHasChemicals { get; set; } = null!;
+        public virtual DbSet<Month> Months { get; set; } = null!;
         public virtual DbSet<Permission> Permissions { get; set; } = null!;
         public virtual DbSet<Profile> Profiles { get; set; } = null!;
         public virtual DbSet<ProfileHasLengthsPerimeter> ProfileHasLengthsPerimeters { get; set; } = null!;
@@ -47,30 +46,11 @@ namespace DiplomaWork.Models
             {
                 entity.ToTable("laboratory_day");
 
-                entity.HasIndex(e => e.Id, "id_UNIQUE")
-                    .IsUnique();
-
-                entity.Property(e => e.Id)
-                    .HasColumnType("int(10) unsigned")
-                    .HasColumnName("id");
-
-                entity.Property(e => e.Day)
-                    .HasColumnType("datetime")
-                    .HasColumnName("day");
-            });
-
-            modelBuilder.Entity<LaboratoryDayHasProfile>(entity =>
-            {
-                entity.ToTable("laboratory_day_has_profile");
-
                 entity.HasIndex(e => e.CreatedBy, "fk_users_laboratory_day_profile1_idx");
 
                 entity.HasIndex(e => e.UpdatedBy, "fk_users_laboratory_day_profile2_idx");
 
                 entity.HasIndex(e => e.Id, "id_UNIQUE")
-                    .IsUnique();
-
-                entity.HasIndex(e => e.LaboratoryDayId, "laboratory_day_id_UNIQUE")
                     .IsUnique();
 
                 entity.HasIndex(e => e.ProfileId, "profile_id_UNIQUE")
@@ -89,24 +69,24 @@ namespace DiplomaWork.Models
                     .HasColumnType("int(10) unsigned")
                     .HasColumnName("created_by");
 
+                entity.Property(e => e.Day)
+                    .HasColumnType("datetime")
+                    .HasColumnName("day");
+
                 entity.Property(e => e.DeletedAt)
                     .HasColumnType("timestamp")
                     .HasColumnName("deleted_at");
 
                 entity.Property(e => e.KilogramsPerMeter)
-                    .HasColumnType("float unsigned")
+                    .HasColumnType("decimal(7,3) unsigned")
                     .HasColumnName("kilograms_per_meter");
 
-                entity.Property(e => e.LaboratoryDayId)
-                    .HasColumnType("int(10) unsigned")
-                    .HasColumnName("laboratory_day_id");
-
                 entity.Property(e => e.MetersSquaredPerSample)
-                    .HasColumnType("float unsigned")
+                    .HasColumnType("decimal(7,3) unsigned")
                     .HasColumnName("meters_squared_per_sample");
 
                 entity.Property(e => e.PaintedMetersSquared)
-                    .HasColumnType("float unsigned")
+                    .HasColumnType("decimal(7,3) unsigned")
                     .HasColumnName("painted_meters_squared");
 
                 entity.Property(e => e.PaintedSamplesCount)
@@ -127,47 +107,27 @@ namespace DiplomaWork.Models
                     .HasColumnName("updated_by");
 
                 entity.HasOne(d => d.CreatedByNavigation)
-                    .WithMany(p => p.LaboratoryDayHasProfileCreatedByNavigations)
+                    .WithMany(p => p.LaboratoryDayCreatedByNavigations)
                     .HasForeignKey(d => d.CreatedBy)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_users_laboratory_day_profile1");
+                    .HasConstraintName("fk_users_laboratory_day1");
 
                 entity.HasOne(d => d.Profile)
-                    .WithOne(p => p.LaboratoryDayHasProfile)
-                    .HasForeignKey<LaboratoryDayHasProfile>(d => d.ProfileId)
+                    .WithOne(p => p.LaboratoryDay)
+                    .HasForeignKey<LaboratoryDay>(d => d.ProfileId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_profile_laboratory_day_has_profile");
+                    .HasConstraintName("fk_profile_laboratory_day");
 
                 entity.HasOne(d => d.UpdatedByNavigation)
-                    .WithMany(p => p.LaboratoryDayHasProfileUpdatedByNavigations)
+                    .WithMany(p => p.LaboratoryDayUpdatedByNavigations)
                     .HasForeignKey(d => d.UpdatedBy)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_users_laboratory_day_profile2");
+                    .HasConstraintName("fk_users_laboratory_day2");
             });
 
             modelBuilder.Entity<LaboratoryMonth>(entity =>
             {
-                entity.ToTable("laboratory_month");
-
-                entity.HasIndex(e => e.Id, "id_UNIQUE")
-                    .IsUnique();
-
-                entity.Property(e => e.Id)
-                    .HasColumnType("int(10) unsigned")
-                    .HasColumnName("id");
-
-                entity.Property(e => e.Month)
-                    .HasColumnType("int(5) unsigned")
-                    .HasColumnName("month");
-
-                entity.Property(e => e.Year)
-                    .HasColumnType("int(5) unsigned")
-                    .HasColumnName("year");
-            });
-
-            modelBuilder.Entity<LaboratoryMonthHasDay>(entity =>
-            {
-                entity.ToTable("laboratory_month_has_day");
+                entity.ToTable("laboratory_months");
 
                 entity.HasIndex(e => e.Id, "id_UNIQUE")
                     .IsUnique();
@@ -175,7 +135,7 @@ namespace DiplomaWork.Models
                 entity.HasIndex(e => e.LaboratoryDayId, "laboratory_day_id_UNIQUE")
                     .IsUnique();
 
-                entity.HasIndex(e => e.LaboratoryMonthId, "laboratory_month_id_UNIQUE")
+                entity.HasIndex(e => e.MonthId, "laboratory_month_id_UNIQUE")
                     .IsUnique();
 
                 entity.Property(e => e.Id)
@@ -183,37 +143,41 @@ namespace DiplomaWork.Models
                     .HasColumnName("id");
 
                 entity.Property(e => e.Kilograms)
-                    .HasColumnType("float unsigned")
+                    .HasColumnType("decimal(7,3) unsigned")
                     .HasColumnName("kilograms");
 
                 entity.Property(e => e.LaboratoryDayId)
                     .HasColumnType("int(10) unsigned")
                     .HasColumnName("laboratory_day_id");
 
-                entity.Property(e => e.LaboratoryMonthId)
-                    .HasColumnType("int(10) unsigned")
-                    .HasColumnName("laboratory_month_id");
-
                 entity.Property(e => e.MetersSquared)
-                    .HasColumnType("float unsigned")
+                    .HasColumnType("decimal(7,3) unsigned")
                     .HasColumnName("meters_squared");
 
-                entity.HasOne(d => d.LaboratoryDay)
-                    .WithOne(p => p.LaboratoryMonthHasDay)
-                    .HasForeignKey<LaboratoryMonthHasDay>(d => d.LaboratoryDayId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_laboratory_day_laboratory_month_has_day");
+                entity.Property(e => e.MonthId)
+                    .HasColumnType("int(10) unsigned")
+                    .HasColumnName("month_id");
 
-                entity.HasOne(d => d.LaboratoryMonth)
-                    .WithOne(p => p.LaboratoryMonthHasDay)
-                    .HasForeignKey<LaboratoryMonthHasDay>(d => d.LaboratoryMonthId)
+                entity.Property(e => e.Year)
+                    .HasColumnType("smallint(5)")
+                    .HasColumnName("year");
+
+                entity.HasOne(d => d.LaboratoryDay)
+                    .WithOne(p => p.LaboratoryMonth)
+                    .HasForeignKey<LaboratoryMonth>(d => d.LaboratoryDayId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_laboratory_month_laboratory_month_has_day");
+                    .HasConstraintName("fk_laboratory_day_laboratory_months");
+
+                entity.HasOne(d => d.Month)
+                    .WithOne(p => p.LaboratoryMonth)
+                    .HasForeignKey<LaboratoryMonth>(d => d.MonthId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_months_laboratory_months");
             });
 
-            modelBuilder.Entity<LaboratoryMonthHasDayHasChemical>(entity =>
+            modelBuilder.Entity<LaboratoryMonthHasChemical>(entity =>
             {
-                entity.ToTable("laboratory_month_has_day_has_chemicals");
+                entity.ToTable("laboratory_month_has_chemicals");
 
                 entity.HasIndex(e => e.CreatedBy, "fk_users_laboratory_month_chemicals1_idx");
 
@@ -222,7 +186,7 @@ namespace DiplomaWork.Models
                 entity.HasIndex(e => e.Id, "id_UNIQUE")
                     .IsUnique();
 
-                entity.HasIndex(e => e.LaboratoryMonthHasDayId, "laboratory_month_has_day_id_UNIQUE")
+                entity.HasIndex(e => e.LaboratoryMonthId, "laboratory_month_has_day_id_UNIQUE")
                     .IsUnique();
 
                 entity.Property(e => e.Id)
@@ -243,12 +207,12 @@ namespace DiplomaWork.Models
                     .HasColumnName("deleted_at");
 
                 entity.Property(e => e.ExpensePerMeterSquared)
-                    .HasColumnType("float unsigned")
+                    .HasColumnType("decimal(7,3) unsigned")
                     .HasColumnName("expense_per_meter_squared");
 
-                entity.Property(e => e.LaboratoryMonthHasDayId)
+                entity.Property(e => e.LaboratoryMonthId)
                     .HasColumnType("int(10) unsigned")
-                    .HasColumnName("laboratory_month_has_day_id");
+                    .HasColumnName("laboratory_month_id");
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(64)
@@ -264,22 +228,45 @@ namespace DiplomaWork.Models
                     .HasColumnName("updated_by");
 
                 entity.HasOne(d => d.CreatedByNavigation)
-                    .WithMany(p => p.LaboratoryMonthHasDayHasChemicalCreatedByNavigations)
+                    .WithMany(p => p.LaboratoryMonthHasChemicalCreatedByNavigations)
                     .HasForeignKey(d => d.CreatedBy)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_users_laboratory_month_chemicals1");
+                    .HasConstraintName("fk_users_laboratory_month_has_chemicals1");
 
-                entity.HasOne(d => d.LaboratoryMonthHasDay)
-                    .WithOne(p => p.LaboratoryMonthHasDayHasChemical)
-                    .HasForeignKey<LaboratoryMonthHasDayHasChemical>(d => d.LaboratoryMonthHasDayId)
+                entity.HasOne(d => d.LaboratoryMonth)
+                    .WithOne(p => p.LaboratoryMonthHasChemical)
+                    .HasForeignKey<LaboratoryMonthHasChemical>(d => d.LaboratoryMonthId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_laboratory_month_has_day_laboratory_month_chemicals");
+                    .HasConstraintName("fk_laboratory_month_has_chemicals_laboratory_months");
 
                 entity.HasOne(d => d.UpdatedByNavigation)
-                    .WithMany(p => p.LaboratoryMonthHasDayHasChemicalUpdatedByNavigations)
+                    .WithMany(p => p.LaboratoryMonthHasChemicalUpdatedByNavigations)
                     .HasForeignKey(d => d.UpdatedBy)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_users_laboratory_month_chemicals2");
+                    .HasConstraintName("fk_users_laboratory_month_has_chemicals2");
+            });
+
+            modelBuilder.Entity<Month>(entity =>
+            {
+                entity.ToTable("months");
+
+                entity.HasIndex(e => e.Id, "id_UNIQUE")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.Slug, "slug_UNIQUE")
+                    .IsUnique();
+
+                entity.Property(e => e.Id)
+                    .HasColumnType("int(10) unsigned")
+                    .HasColumnName("id");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(50)
+                    .HasColumnName("name");
+
+                entity.Property(e => e.Slug)
+                    .HasMaxLength(50)
+                    .HasColumnName("slug");
             });
 
             modelBuilder.Entity<Permission>(entity =>
@@ -373,11 +360,11 @@ namespace DiplomaWork.Models
                     .HasColumnName("id");
 
                 entity.Property(e => e.Length)
-                    .HasColumnType("float unsigned")
+                    .HasColumnType("decimal(7,3) unsigned")
                     .HasColumnName("length");
 
                 entity.Property(e => e.Perimeter)
-                    .HasColumnType("float unsigned")
+                    .HasColumnType("decimal(7,3) unsigned")
                     .HasColumnName("perimeter");
 
                 entity.Property(e => e.ProfileId)
