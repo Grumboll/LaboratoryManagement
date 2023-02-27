@@ -13,36 +13,6 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Background="#F8F3D3">
-            <Grid.Resources>
-                <Style TargetType="{x:Type Button}">
-                    <Setter Property="Background" Value="#F3EC99"/>
-                    <Setter Property="BorderBrush" Value="Transparent"/>
-                    <Setter Property="MaxWidth" Value="120"/>
-                    <Setter Property="Width" Value="90"/>
-                    <Setter Property="Margin" Value="5"/>
-                    <Setter Property="HorizontalAlignment" Value="Left"/>
-                    <Setter Property="FontFamily" Value="Aharoni"/>
-                    <Setter Property="FontWeight" Value="DemiBold"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="Button">
-                                <Border Background="{TemplateBinding Background}"
-                                    CornerRadius="3"
-                                    BorderThickness="1"
-                                    Padding="5">
-                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="#67A9DB"/>
-                            <Setter Property="Foreground" Value="Black"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </Grid.Resources>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -50,17 +20,15 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="6*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0">Текущ ден</Button>
-            <Button Grid.Column="1">Текущ месец</Button>
-            <Button Grid.Column="2">Справки</Button>
-            <Button Grid.Column="3">Настройки</Button>
-            <Button Grid.Column="4" HorizontalAlignment="Right" Name="LogOutButton" Click="LogOutButton_Click">Изход</Button>
+            <Button Grid.Column="0" Style="{StaticResource AppButtonStyle}" Click="LaboratoryDay_Click">Текущ ден</Button>
+            <Button Grid.Column="1" Style="{StaticResource AppButtonStyle}">Текущ месец</Button>
+            <Button Grid.Column="2" Style="{StaticResource AppButtonStyle}">Справки</Button>
+            <Button Grid.Column="3" Style="{StaticResource AppButtonStyle}">Настройки</Button>
+            <Button Grid.Column="4" HorizontalAlignment="Right" Name="LogOutButton" Click="LogOutButton_Click" Style="{StaticResource AppButtonStyle}">Изход</Button>
         </Grid>
 
         <Grid Grid.Row="1">
-            <ContentControl>
-
-            </ContentControl>
+            <ContentControl x:Name="ContentControl" />
         </Grid>
     </Grid>
 </control:CustomWindow>

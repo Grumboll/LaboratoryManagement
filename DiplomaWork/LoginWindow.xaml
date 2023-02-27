@@ -15,35 +15,6 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Grid.Resources>
-            <Style TargetType="{x:Type Button}">
-                <Setter Property="Background" Value="#F3EC99"/>
-                <Setter Property="BorderBrush" Value="Transparent"/>
-                <Setter Property="Width" Value="236"/>
-                <Setter Property="Margin" Value="5"/>
-                <Setter Property="HorizontalAlignment" Value="Center"/>
-                <Setter Property="FontFamily" Value="Aharoni"/>
-                <Setter Property="FontWeight" Value="DemiBold"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="Button">
-                            <Border Background="{TemplateBinding Background}"
-                                    CornerRadius="3"
-                                    BorderThickness="1"
-                                    Padding="5">
-                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-                <Style.Triggers>
-                    <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="Background" Value="#67A9DB"/>
-                        <Setter Property="Foreground" Value="Black"/>
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-        </Grid.Resources>
         <StackPanel Grid.Row="0" Orientation="Horizontal" Width="auto" HorizontalAlignment="Center">
             <TextBlock Margin="0 -30 0 0" Text="Влизане в системата" VerticalAlignment="Center" FontSize="23" FontWeight="DemiBold" Foreground="#c8ccc9"/>
         </StackPanel>
@@ -60,7 +31,7 @@
                 <Label Content="Запомни ме:" Margin="5" Foreground="#c8ccc9"/>
                 <CheckBox Name="RememberMeCheckBox"  VerticalAlignment="Center" Margin="3 0 0 0"/>
             </StackPanel>
-            <Button Name="LoginButton" Content="Влизане" Margin="5" Click="LoginButton_Click"/>
+            <Button Name="LoginButton" Content="Влизане" Width="236" MaxWidth="236" Click="LoginButton_Click" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource AppButtonStyle}"/>
             <Label Name="ErrorLabel" Foreground="Red" Visibility="Hidden" Margin="5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
         </StackPanel>
     </Grid>
