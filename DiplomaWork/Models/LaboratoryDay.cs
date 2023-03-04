@@ -6,7 +6,7 @@ namespace DiplomaWork.Models
     public partial class LaboratoryDay
     {
         public uint Id { get; set; }
-        public DateTime Day { get; set; }
+        public DateOnly Day { get; set; }
         public uint ProfileId { get; set; }
         public decimal MetersSquaredPerSample { get; set; }
         public uint PaintedSamplesCount { get; set; }

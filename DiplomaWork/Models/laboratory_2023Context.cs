@@ -69,9 +69,7 @@ namespace DiplomaWork.Models
                     .HasColumnType("int(10) unsigned")
                     .HasColumnName("created_by");
 
-                entity.Property(e => e.Day)
-                    .HasColumnType("datetime")
-                    .HasColumnName("day");
+                entity.Property(e => e.Day).HasColumnName("day");
 
                 entity.Property(e => e.DeletedAt)
                     .HasColumnType("timestamp")
