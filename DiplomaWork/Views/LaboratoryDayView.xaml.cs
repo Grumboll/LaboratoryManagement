@@ -15,6 +15,7 @@ namespace DiplomaWork.Views
     public partial class LaboratoryDayView : UserControl
     {
         public ObservableCollection<LaboratoryDayItem> DataItems { get; set; } = new ObservableCollection<LaboratoryDayItem>();
+        public List<uint> LaboratoryDayIds { get; set; } = new List<uint> {};
 
         public LaboratoryDayView()
         {
@@ -32,20 +33,8 @@ namespace DiplomaWork.Views
                 DataGridComboBox.DisplayMemberPath = "Name";
                 DataGridComboBox.SelectedValuePath = "Id";
 
-                laboratoryDayItems = context.LaboratoryDays
-                    .Where(ld => ld.Day == DateOnly.FromDateTime(now))
-                    .Include(x => x.Profile)
-                    .ThenInclude(x => x.ProfileHasLengthsPerimeters)
-                    .Select(ld => new LaboratoryDayItem
-                    {
-                        Profile = ld.Profile.Id.ToString(),
-                        ProfileLength = ld.Profile.ProfileHasLengthsPerimeters.FirstOrDefault().Length.ToString(),
-                        ProfilePerimeter = ld.Profile.ProfileHasLengthsPerimeters.FirstOrDefault().Perimeter.ToString(),
-                        MetersSquaredPerSample = ld.MetersSquaredPerSample.ToString(),
-                        PaintedSamplesCount = ld.PaintedSamplesCount.ToString(),
-                        PaintedMetersSquared = ld.PaintedMetersSquared.ToString(),
-                        KilogramsPerMeter = ld.KilogramsPerMeter.ToString()
-                    }).ToList();
+                laboratoryDayItems = getLaboratoryDayItemsList(context, now);
+                context.Dispose();
              }
 
             LaboratoryDayDatePicker.SelectedDate = now;
@@ -105,6 +94,75 @@ namespace DiplomaWork.Views
         private void DataGrid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             LaboratoryDayScrollViewer.ScrollToVerticalOffset(LaboratoryDayScrollViewer.VerticalOffset - e.Delta / 3);
+        }
+
+        private List<LaboratoryDayItem> getLaboratoryDayItemsList(laboratory_2023Context context, DateTime now)
+        {
+            List<LaboratoryDayItem> items = context.LaboratoryDays
+                    .Where(ld => ld.Day == DateOnly.FromDateTime(now))
+                    .Where(ld => ld.DeletedAt == null)
+                    .Include(x => x.Profile)
+                    .ThenInclude(x => x.ProfileHasLengthsPerimeters)
+                    .Select(ld => new LaboratoryDayItem
+                    {
+                        Id = ld.Id,
+                        Profile = ld.Profile.Id.ToString(),
+                        ProfileLength = ld.Profile.ProfileHasLengthsPerimeters.FirstOrDefault().Length.ToString(),
+                        ProfilePerimeter = ld.Profile.ProfileHasLengthsPerimeters.FirstOrDefault().Perimeter.ToString(),
+                        MetersSquaredPerSample = ld.MetersSquaredPerSample.ToString(),
+                        PaintedSamplesCount = ld.PaintedSamplesCount.ToString(),
+                        PaintedMetersSquared = ld.PaintedMetersSquared.ToString(),
+                        KilogramsPerMeter = ld.KilogramsPerMeter.ToString()
+                    }).ToList();
+
+            //Get ids so we can track which items where deleted during save operation
+            LaboratoryDayIds = items.Select(x => x.Id).ToList();
+
+            return items;
+        }
+
+        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DateTime selectedDate = (DateTime) LaboratoryDayDatePicker.SelectedDate;
+
+            if (selectedDate != null)
+            {
+                var context = new laboratory_2023Context();
+                DataItems = new ObservableCollection<LaboratoryDayItem>(getLaboratoryDayItemsList(context, selectedDate));
+                LaboratoryDayDataGrid.ItemsSource = DataItems;
+            }
+        }
+        
+        private void LaboratoryDaySave_Click(object sender, RoutedEventArgs e)
+        {
+            var context = new laboratory_2023Context();
+
+            foreach (LaboratoryDayItem item in DataItems)
+            {
+                //DataItems contains everything from the database with their Ids, If there is a LaboratoryDayItem with no Id, create a new row in the database for it
+                if (item.Id == 0)
+                {
+                    LaboratoryDay newLaboratoryDay = new LaboratoryDay
+                    {
+                        Day = DateOnly.FromDateTime((DateTime)LaboratoryDayDatePicker.SelectedDate),
+                        ProfileId = uint.Parse(item.Profile),
+                        MetersSquaredPerSample = decimal.Parse(item.MetersSquaredPerSample),
+                        PaintedSamplesCount = uint.Parse(item.PaintedSamplesCount),
+                        PaintedMetersSquared = decimal.Parse(item.PaintedMetersSquared),
+                        KilogramsPerMeter = decimal.Parse(item.KilogramsPerMeter),
+                        CreatedAt = DateTime.Now,
+                        UpdatedAt = DateTime.Now,
+                        DeletedAt = null,
+                        CreatedBy = App.CurrentUser.Id,
+                        UpdatedBy = App.CurrentUser.Id,
+                    };
+
+                    context.LaboratoryDays.Add(newLaboratoryDay);
+                    continue;
+                }
+            }
+
+            context.SaveChanges();
         }
     }
 }
