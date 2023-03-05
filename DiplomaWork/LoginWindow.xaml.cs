@@ -69,6 +69,8 @@ namespace DiplomaWork
                         LoginCredentialsHelper.SaveLoginCredentials(username, password);
                     }
 
+                    App.CurrentUser = user;
+
                     // Close the current window
                     this.Close();
                 }
@@ -101,6 +103,8 @@ namespace DiplomaWork
                     // Authentication successful, open Main Window
                     MainWindow mainWindow = new MainWindow();
                     mainWindow.Show();
+
+                    App.CurrentUser = user;
 
                     this.Close();
                 }
@@ -144,6 +148,7 @@ namespace DiplomaWork
                     hashedPassword = sha256.ComputeHash(passwordBytes);
                     hashedInputPassword = sha256.ComputeHash(inputPasswordBytes);
                 }
+
 
                 return (hashedPassword, hashedInputPassword);
             }

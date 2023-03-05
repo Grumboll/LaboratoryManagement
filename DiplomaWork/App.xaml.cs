@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DiplomaWork.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -12,6 +14,8 @@ namespace DiplomaWork
     public partial class App : Application
     {
         WindowState WindowState;
+
+        public static User CurrentUser { get; set; }
 
         private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -42,9 +46,6 @@ namespace DiplomaWork
             this.WindowState = WindowState.Minimized;
         }
 
-        /// <summary>
-        /// Adjusts the WindowSize to correct parameters when Maximize button is clicked
-        /// </summary>
         private void AdjustWindowSize()
         {
             if (this.WindowState == WindowState.Maximized)
