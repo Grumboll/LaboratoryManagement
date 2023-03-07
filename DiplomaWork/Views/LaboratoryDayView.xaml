@@ -33,22 +33,19 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <DataGrid Grid.Row="0" x:Name="LaboratoryDayDataGrid" AutoGenerateColumns="False" SelectionMode="Single" SelectionUnit="Cell"
-                              Margin="5" HorizontalScrollBarVisibility="Hidden" PreviewMouseWheel="DataGrid_PreviewMouseWheel"
-                              ItemsSource="{Binding data:LaboratoryDayItem}" CanUserAddRows="False">
+                              Margin="5" HorizontalScrollBarVisibility="Hidden" PreviewMouseWheel="DataGrid_PreviewMouseWheel" CanUserAddRows="False" >
                         <DataGrid.Columns>
-                            <DataGridComboBoxColumn Width="1.1*" Header="Вид Профил" SelectedValueBinding="{Binding Profile}" 
-                                                    x:Name="DataGridComboBox" HeaderStyle="{StaticResource DataGridColumnHeader}">
-                                <DataGridComboBoxColumn.EditingElementStyle>
-                                    <Style TargetType="{x:Type ComboBox}">
-                                        <Setter Property="IsEditable" Value="True"/>
-                                        <Setter Property="Text" Value="Изберете"/>
-                                        <Setter Property="ItemsSource" Value="{Binding Profiles}"/>
-                                        <Setter Property="Foreground" Value="Black"/>
-                                    </Style>
-                                </DataGridComboBoxColumn.EditingElementStyle>
-                            </DataGridComboBoxColumn>
-                            <DataGridTextColumn Width="1.1*" Header="Дължина, mm" Binding="{Binding ProfileLength}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
-                            <DataGridTextColumn Width="1.2*" Header="Периметър, mm" Binding="{Binding ProfilePerimeter}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
+                            <DataGridTemplateColumn Width="1.1*" Header="Вид Профил" HeaderStyle="{StaticResource DataGridColumnHeader}">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox x:Name="DataGridComboBox" DropDownClosed="DataGridComboBox_DropDownClosed" SelectedItem="{Binding Path=ProfileName}"
+                                                  ItemsSource="{Binding DataContext.Items, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                  DisplayMemberPath="ProfileName" SelectedValuePath="Id" SelectedValue="{Binding ProfileId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Width="1.1*" Header="Дължина, mm" Binding="{Binding ProfileLength}" HeaderStyle="{StaticResource DataGridColumnHeader}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="1.2*" Header="Периметър, mm" Binding="{Binding ProfilePerimeter}" HeaderStyle="{StaticResource DataGridColumnHeader}" IsReadOnly="True"/>
                             <DataGridTextColumn Width="*" Header="м2 за брой" Binding="{Binding MetersSquaredPerSample}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
                             <DataGridTextColumn Width="1.9*" Header="Брой боядисани профили" Binding="{Binding PaintedSamplesCount}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
                             <DataGridTextColumn Width="1.2*" Header="Боядисани м2" Binding="{Binding PaintedMetersSquared}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>

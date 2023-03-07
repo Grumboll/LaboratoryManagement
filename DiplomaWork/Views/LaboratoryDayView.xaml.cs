@@ -12,6 +12,9 @@ using System.Collections.Generic;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using Serilog;
+using System.Reflection;
+using System.Xml.Linq;
+using System.Windows.Markup;
 
 namespace DiplomaWork.Views
 {
@@ -30,11 +33,7 @@ namespace DiplomaWork.Views
 
             using (var context = new laboratory_2023Context())
             {
-                var profiles = context.Profiles.Select(p => new { p.Id, p.Name }).ToList();
-
-                DataGridComboBox.ItemsSource = profiles;
-                DataGridComboBox.DisplayMemberPath = "Name";
-                DataGridComboBox.SelectedValuePath = "Id";
+                DataContext = new ViewModel();
 
                 laboratoryDayItems = getLaboratoryDayItemsList(context, now);
                 context.Dispose();
@@ -72,7 +71,7 @@ namespace DiplomaWork.Views
             {
                 if (source.Count == 1)
                 {
-                    item.Profile = null;
+                    item.ProfileId = null;
                     item.ProfilePerimeter = "";
                     item.ProfileLength = "";
                     item.KilogramsPerMeter = "";
@@ -109,7 +108,8 @@ namespace DiplomaWork.Views
                     .Select(ld => new LaboratoryDayItem
                     {
                         Id = ld.Id,
-                        Profile = ld.Profile.Id.ToString(),
+                        ProfileId = ld.Profile.Id,
+                        ProfileName = ld.Profile.Name,
                         ProfileLength = ld.Profile.ProfileHasLengthsPerimeters.FirstOrDefault().Length.ToString(),
                         ProfilePerimeter = ld.Profile.ProfileHasLengthsPerimeters.FirstOrDefault().Perimeter.ToString(),
                         MetersSquaredPerSample = ld.MetersSquaredPerSample.ToString(),
@@ -150,7 +150,7 @@ namespace DiplomaWork.Views
                         LaboratoryDay newLaboratoryDay = new LaboratoryDay
                         {
                             Day = DateOnly.FromDateTime((DateTime)LaboratoryDayDatePicker.SelectedDate),
-                            ProfileId = uint.Parse(item.Profile),
+                            ProfileId = (uint) item.ProfileId,
                             MetersSquaredPerSample = decimal.Parse(item.MetersSquaredPerSample),
                             PaintedSamplesCount = uint.Parse(item.PaintedSamplesCount),
                             PaintedMetersSquared = decimal.Parse(item.PaintedMetersSquared),
@@ -169,7 +169,7 @@ namespace DiplomaWork.Views
                     //In DataItems if a row has been deleted it won't get needlessly updated since it won't be present in the ObservableCollection
                     var rowToUpdate = context.LaboratoryDays.FirstOrDefault(row => row.Id == item.Id);
 
-                    rowToUpdate.ProfileId = uint.Parse(item.Profile);
+                    rowToUpdate.ProfileId = (uint) item.ProfileId;
                     rowToUpdate.MetersSquaredPerSample = decimal.Parse(item.MetersSquaredPerSample);
                     rowToUpdate.PaintedSamplesCount = uint.Parse(item.PaintedSamplesCount);
                     rowToUpdate.PaintedMetersSquared = decimal.Parse(item.PaintedMetersSquared);
@@ -188,7 +188,7 @@ namespace DiplomaWork.Views
                         rowToDelete.DeletedAt = DateTime.Now;
                     }
                 }
-                //270 error Грешка при запазване на промените!
+
                 context.SaveChanges();
                 SaveLabel.Content = "Успешно запазени промени!";
                 SaveLabel.Foreground = new SolidColorBrush(Colors.Green);
@@ -208,8 +208,42 @@ namespace DiplomaWork.Views
                 storyboard.Stop();
                 storyboard.Begin(SaveLabel);
             }
-            
+
+            context.Dispose();
         }
 
+        private void DataGridComboBox_DropDownClosed(object sender, EventArgs e)
+        {
+            var comboBox = sender as ComboBox;
+            var selectedItem = comboBox.SelectedItem as ProfileItem;
+            var item = comboBox.DataContext as LaboratoryDayItem;
+
+            if (selectedItem == null)
+            {
+                return;
+            }
+
+            // Get the data source of the DataGrid
+            var source = LaboratoryDayDataGrid.ItemsSource as ObservableCollection<LaboratoryDayItem>;
+            var context = new laboratory_2023Context();
+
+
+            if (source.Contains(item))
+            {
+                var profileId = selectedItem.Id;
+                var profileHasLengthsPerimeter = context.ProfileHasLengthsPerimeters.FirstOrDefault(p => p.ProfileId == profileId);
+
+                if (profileHasLengthsPerimeter != null)
+                {
+                    item.ProfileLength = profileHasLengthsPerimeter.Length.ToString();
+                    item.ProfilePerimeter = profileHasLengthsPerimeter.Perimeter.ToString();
+
+                    LaboratoryDayDataGrid.ItemsSource = null;
+                    LaboratoryDayDataGrid.ItemsSource = DataItems;
+                }
+            }
+
+            context.Dispose();
+        }
     }
 }

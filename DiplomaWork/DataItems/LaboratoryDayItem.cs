@@ -9,7 +9,8 @@ namespace DiplomaWork.DataItems
     public class LaboratoryDayItem
     {
         public uint Id { get; set; }
-        public string Profile { get; set; }
+        public uint? ProfileId { get; set; }
+        public string ProfileName { get; set; }
         public string ProfileLength { get; set; }
         public string ProfilePerimeter { get; set; }
         public string MetersSquaredPerSample { get; set; }
