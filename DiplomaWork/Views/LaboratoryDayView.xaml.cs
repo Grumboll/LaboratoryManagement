@@ -154,7 +154,7 @@ namespace DiplomaWork.Views
                             MetersSquaredPerSample = decimal.Parse(item.MetersSquaredPerSample),
                             PaintedSamplesCount = uint.Parse(item.PaintedSamplesCount),
                             PaintedMetersSquared = decimal.Parse(item.PaintedMetersSquared),
-                            KilogramsPerMeter = decimal.Parse(item.KilogramsPerMeter),
+                            KilogramsPerMeter = item.KilogramsPerMeter != null ? decimal.Parse(item.KilogramsPerMeter) : null,
                             CreatedAt = DateTime.Now,
                             UpdatedAt = DateTime.Now,
                             DeletedAt = null,
