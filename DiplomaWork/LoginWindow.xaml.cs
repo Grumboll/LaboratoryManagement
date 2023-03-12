@@ -125,6 +125,7 @@ namespace DiplomaWork
         private (byte[] hashedPassword, byte[] HashedInputPassword) getHashedPasswordTuple(string username, string password)
         {
             // Check if the user exists
+            // TODO: Throw exception when user not found
             user = _dbContext.Users.FirstOrDefault(u => u.Username == username);
 
             if (user != null)

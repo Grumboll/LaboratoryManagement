@@ -235,8 +235,11 @@ namespace DiplomaWork.Views
 
                 if (profileHasLengthsPerimeter != null)
                 {
-                    item.ProfileLength = profileHasLengthsPerimeter.Length.ToString();
-                    item.ProfilePerimeter = profileHasLengthsPerimeter.Perimeter.ToString();
+                    var profileLength = profileHasLengthsPerimeter.Length;
+                    var profilePerimeter = profileHasLengthsPerimeter.Perimeter;
+                    item.ProfileLength = profileLength.ToString();
+                    item.ProfilePerimeter = profilePerimeter.ToString();
+                    item.MetersSquaredPerSample = ((profileLength * profilePerimeter) / 1000000).ToString();
 
                     LaboratoryDayDataGrid.ItemsSource = null;
                     LaboratoryDayDataGrid.ItemsSource = DataItems;
