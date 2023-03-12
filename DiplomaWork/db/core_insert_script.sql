@@ -1,7 +1,7 @@
 -- CORE INSERT SCRIPT LABORATORY
 
 INSERT INTO users(id, username, password, first_name, last_name, created_by, updated_by) VALUES 
-(1, 'admin', 'admin', 'Admin_first_name', 'Admin_last_name', 1, 1);
+(1, 'admin', '1f32b9c9932c02227819a4151feed43e8d6b42d74f1be2b1eabbf7850b60cda', 'Admin_first_name', 'Admin_last_name', 1, 1);
 
 INSERT INTO roles(id, name, slug) VALUES 
 (1, 'Админ', 'roles.admin'),

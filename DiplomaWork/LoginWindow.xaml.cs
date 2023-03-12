@@ -135,7 +135,7 @@ namespace DiplomaWork
 
                 // Convert salt and hash from Base64 strings to byte arrays
                 byte[] salt = Convert.FromBase64String(saltString);
-                byte[] hash = Convert.FromBase64String(hashString);
+                byte[] hash = Encoding.UTF8.GetBytes(hashString);
                 byte[] inputHash = Encoding.UTF8.GetBytes(password);
 
                 byte[] passwordBytes = Encoding.UTF8.GetBytes(hash + Convert.ToBase64String(salt));

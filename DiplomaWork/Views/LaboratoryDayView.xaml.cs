@@ -118,6 +118,15 @@ namespace DiplomaWork.Views
                         KilogramsPerMeter = ld.KilogramsPerMeter.ToString()
                     }).ToList();
 
+            foreach (LaboratoryDayItem item in items)
+            {
+                item.ProfileLength = item.ProfileLength.TrimEnd('0').TrimEnd('.');
+                item.ProfilePerimeter = item.ProfilePerimeter.TrimEnd('0').TrimEnd('.');
+                item.MetersSquaredPerSample = item.MetersSquaredPerSample.TrimEnd('0').TrimEnd('.');
+                item.PaintedMetersSquared = item.PaintedMetersSquared.TrimEnd('0').TrimEnd('.');
+                item.KilogramsPerMeter = item.KilogramsPerMeter.TrimEnd('0').TrimEnd('.');
+            }
+
             //Get ids so we can track which items where deleted during save operation
             LaboratoryDayIds = items.Select(x => x.Id).ToList();
 
@@ -237,9 +246,9 @@ namespace DiplomaWork.Views
                 {
                     var profileLength = profileHasLengthsPerimeter.Length;
                     var profilePerimeter = profileHasLengthsPerimeter.Perimeter;
-                    item.ProfileLength = profileLength.ToString();
-                    item.ProfilePerimeter = profilePerimeter.ToString();
-                    item.MetersSquaredPerSample = ((profileLength * profilePerimeter) / 1000000).ToString();
+                    item.ProfileLength = profileLength.ToString().TrimEnd('0').TrimEnd('.');
+                    item.ProfilePerimeter = profilePerimeter.ToString().TrimEnd('0').TrimEnd('.');
+                    item.MetersSquaredPerSample = ((profileLength * profilePerimeter) / 1000000).ToString().TrimEnd('0').TrimEnd('.');
 
                     LaboratoryDayDataGrid.ItemsSource = null;
                     LaboratoryDayDataGrid.ItemsSource = DataItems;
