@@ -35,7 +35,7 @@
                     <DataGrid Grid.Row="0" x:Name="LaboratoryDayDataGrid" AutoGenerateColumns="False" SelectionMode="Single" SelectionUnit="Cell"
                               Margin="5" HorizontalScrollBarVisibility="Hidden" PreviewMouseWheel="DataGrid_PreviewMouseWheel" CanUserAddRows="False" >
                         <DataGrid.Columns>
-                            <DataGridTemplateColumn Width="1.3*" Header="Вид Профил" HeaderStyle="{StaticResource DataGridColumnHeader}">
+                            <DataGridTemplateColumn Width="1.3*" Header="Вид Профил*" HeaderStyle="{StaticResource DataGridColumnHeader}">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <ComboBox x:Name="DataGridComboBox" DropDownClosed="DataGridComboBox_DropDownClosed" SelectedItem="{Binding Path=ProfileName}"
@@ -44,11 +44,11 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTextColumn Width="1.4*" Header="Дължина, mm" Binding="{Binding ProfileLength}" HeaderStyle="{StaticResource DataGridColumnHeader}" IsReadOnly="True"/>
-                            <DataGridTextColumn Width="1.6*" Header="Периметър, mm" Binding="{Binding ProfilePerimeter}" HeaderStyle="{StaticResource DataGridColumnHeader}" IsReadOnly="True"/>
-                            <DataGridTextColumn Width="1.2*" Header="м2 за брой" Binding="{Binding MetersSquaredPerSample}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
-                            <DataGridTextColumn Width="2.5*" Header="Брой боядисани профили" Binding="{Binding PaintedSamplesCount}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
-                            <DataGridTextColumn Width="1.6*" Header="Боядисани м2" Binding="{Binding PaintedMetersSquared}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
+                            <DataGridTextColumn Width="1.4*" Header="Дължина, mm*" Binding="{Binding ProfileLength}" HeaderStyle="{StaticResource DataGridColumnHeader}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="1.6*" Header="Периметър, mm*" Binding="{Binding ProfilePerimeter}" HeaderStyle="{StaticResource DataGridColumnHeader}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="1.2*" Header="м2 за брой*" Binding="{Binding MetersSquaredPerSample}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
+                            <DataGridTextColumn Width="2.5*" Header="Брой боядисани профили*" Binding="{Binding PaintedSamplesCount}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
+                            <DataGridTextColumn Width="1.6*" Header="Боядисани м2*" Binding="{Binding PaintedMetersSquared}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
                             <DataGridTextColumn Width="*" Header="КГ/М" Binding="{Binding KilogramsPerMeter}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
                             <DataGridTemplateColumn Header="Операции" HeaderStyle="{StaticResource DataGridColumnHeader}">
                                 <DataGridTemplateColumn.CellTemplate>

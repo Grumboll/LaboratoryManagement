@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:DiplomaWork"
         xmlns:control="clr-namespace:DiplomaWork.Controllers"
         mc:Ignorable="d"
-        Title="Login" Height="320" Width="430" MinHeight="320" MinWidth="430" MaxHeight="320" MaxWidth="430">
+        Title="Login" Height="320" Width="430" MinHeight="320" MinWidth="430" MaxHeight="320" MaxWidth="430" PreviewKeyDown="Window_PreviewKeyDown">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>

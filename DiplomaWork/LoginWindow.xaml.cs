@@ -7,6 +7,8 @@ using System.Windows;
 using System.Windows.Controls;
 using DiplomaWork.Helpers;
 using System.Data.SqlTypes;
+using System.Windows.Input;
+using System.Collections;
 
 namespace DiplomaWork
 {
@@ -51,34 +53,82 @@ namespace DiplomaWork
 
         private void loginUserThroughForm(string username, string password)
         {
-            (byte[] hashedPassword, byte[] hashedInputPassword) = getHashedPasswordTuple(username, password);
+            (string hashedPassword, string hashedInputPassword) = getHashedPasswordTuple(username, password);
 
             if (user != null)
             {
                 ErrorLabel.Visibility = Visibility.Hidden;
 
-                // Compare the resulting hash with the hash stored in the database
-                if (hashedPassword.SequenceEqual(hashedInputPassword))
+                if (hashedPassword == null || hashedInputPassword == null)
                 {
-                    // Authentication successful, open Main Window
-                    MainWindow mainWindow = new MainWindow();
-                    mainWindow.Show();
-
-                    if (RememberMeCheckBox.IsChecked ?? false)
-                    {
-                        LoginCredentialsHelper.SaveLoginCredentials(username, password);
-                    }
-
-                    App.CurrentUser = user;
-
-                    // Close the current window
-                    this.Close();
+                    ErrorLabel.Content = "Грешни потребителски данни!";
+                    ErrorLabel.Visibility = Visibility.Visible;
                 }
                 else
+                {
+                    // Compare the resulting hash with the hash stored in the database
+                    if (hashedPassword == hashedInputPassword)
+                    {
+                        // Authentication successful, open Main Window
+                        MainWindow mainWindow = new MainWindow();
+                        mainWindow.Show();
+
+                        if (RememberMeCheckBox.IsChecked ?? false)
+                        {
+                            LoginCredentialsHelper.SaveLoginCredentials(username, password);
+                        }
+
+                        App.CurrentUser = user;
+
+                        // Close the current window
+                        this.Close();
+                    }
+                    else
+                    {
+                        ErrorLabel.Content = "Грешни потребителски данни!";
+                        ErrorLabel.Visibility = Visibility.Visible;
+                    }
+                }
+                                
+            }
+            else
+            {
+                ErrorLabel.Content = "Потребителското име не беше открито!";
+                ErrorLabel.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void preLoginUser(string username, string password)
+        {
+            (string hashedPassword, string hashedInputPassword) = getHashedPasswordTuple(username, password);
+
+            if (user != null)
+            {
+                if (hashedPassword == null || hashedInputPassword == null)
                 {
                     InitializeComponent();
                     ErrorLabel.Content = "Грешни потребителски данни!";
                     ErrorLabel.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    // Compare the resulting hash with the hash stored in the database
+                    if (hashedPassword == hashedInputPassword)
+                    {
+                        // Authentication successful, open Main Window
+                        MainWindow mainWindow = new MainWindow();
+                        mainWindow.Show();
+
+                        App.CurrentUser = user;
+
+                        this.Close();
+                    }
+                    else
+                    {
+                        InitializeComponent();
+                        ErrorLabel.Content = "Грешни потребителски данни!";
+                        ErrorLabel.Visibility = Visibility.Visible;
+                    }
                 }
 
             }
@@ -90,74 +140,53 @@ namespace DiplomaWork
             }
         }
 
-        private void preLoginUser(string username, string password)
+        private (string hashedPassword, string HashedInputPassword) getHashedPasswordTuple(string username, string password)
         {
-            (byte[] hashedPassword, byte[] hashedInputPassword) = getHashedPasswordTuple(username, password);
-
-            if (user != null)
+            // Check if the user exists
+            try
             {
+                user = _dbContext.Users.FirstOrDefault(u => u.Username == username);
 
-                // Compare the resulting hash with the hash stored in the database
-                if (hashedPassword.SequenceEqual(hashedInputPassword))
+                if (user != null)
                 {
-                    // Authentication successful, open Main Window
-                    MainWindow mainWindow = new MainWindow();
-                    mainWindow.Show();
+                    string dbSaltString = user.PasswordSalt;
+                    string dbHashString = user.Password;
 
-                    App.CurrentUser = user;
+                    byte[] inputHash;
+                    using (var sha256 = SHA256.Create())
+                    {
+                        // Concatenate the salt with the user inputted password and hash the resulting string
+                        inputHash = sha256.ComputeHash(Encoding.UTF8.GetBytes(password + dbSaltString));
+                    }
 
-                    this.Close();
+                    // Convert the hash to a Base64-encoded string
+                    string inputHashString = Convert.ToBase64String(inputHash);
+                    dbHashString = Convert.ToBase64String(Convert.FromBase64String(dbHashString));
+
+                    return (dbHashString, inputHashString);
                 }
                 else
                 {
-                    ErrorLabel.Content = "Грешни потребителски данни!";
-                    ErrorLabel.Visibility = Visibility.Visible;
+                    return (null, null);
                 }
-
-            }
-            else
-            {
-                ErrorLabel.Content = "Потребителското име не беше открито!";
-                ErrorLabel.Visibility = Visibility.Visible;
-            }
-        }
-
-        private (byte[] hashedPassword, byte[] HashedInputPassword) getHashedPasswordTuple(string username, string password)
-        {
-            // Check if the user exists
-            // TODO: Throw exception when user not found
-            user = _dbContext.Users.FirstOrDefault(u => u.Username == username);
-
-            if (user != null)
-            {
-                string saltString = user.PasswordSalt;
-                string hashString = user.Password;
-
-                // Convert salt and hash from Base64 strings to byte arrays
-                byte[] salt = Convert.FromBase64String(saltString);
-                byte[] hash = Encoding.UTF8.GetBytes(hashString);
-                byte[] inputHash = Encoding.UTF8.GetBytes(password);
-
-                byte[] passwordBytes = Encoding.UTF8.GetBytes(hash + Convert.ToBase64String(salt));
-                byte[] inputPasswordBytes = Encoding.UTF8.GetBytes(inputHash + Convert.ToBase64String(salt));
-
-                byte[] hashedPassword;
-                byte[] hashedInputPassword;
-
-                using (var sha256 = SHA256.Create())
-                {
-                    hashedPassword = sha256.ComputeHash(passwordBytes);
-                    hashedInputPassword = sha256.ComputeHash(inputPasswordBytes);
-                }
-
-
-                return (hashedPassword, hashedInputPassword);
-            }
-            else
+            } catch(Exception e)
             {
                 return (null, null);
             }
             
+            
+            
+        }
+
+        private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                string username = UserNameTextBox.Text;
+                string password = PasswordBox.Password;
+
+                loginUserThroughForm(username, password);
+            }
         }
 
     }
