@@ -124,7 +124,7 @@ namespace DiplomaWork.Views
                 item.ProfilePerimeter = item.ProfilePerimeter.TrimEnd('0').TrimEnd('.');
                 item.MetersSquaredPerSample = item.MetersSquaredPerSample.TrimEnd('0').TrimEnd('.');
                 item.PaintedMetersSquared = item.PaintedMetersSquared.TrimEnd('0').TrimEnd('.');
-                item.KilogramsPerMeter = item.KilogramsPerMeter.TrimEnd('0').TrimEnd('.');
+                item.KilogramsPerMeter = item.KilogramsPerMeter != null ? item.KilogramsPerMeter.TrimEnd('0').TrimEnd('.') : null;
             }
 
             //Get ids so we can track which items where deleted during save operation
