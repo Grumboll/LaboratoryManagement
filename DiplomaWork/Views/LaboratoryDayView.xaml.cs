@@ -257,5 +257,25 @@ namespace DiplomaWork.Views
 
             context.Dispose();
         }
+
+        private void DataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            DataGridColumn editedColumn = e.Column;
+            int editedColumnIndex = editedColumn.DisplayIndex;
+
+            if (editedColumnIndex == 4)
+            {
+                LaboratoryDayItem editedRow = (LaboratoryDayItem) e.Row.Item;
+
+                if (editedRow.MetersSquaredPerSample != null && editedRow.PaintedSamplesCount != null)
+                {
+                    editedRow.PaintedMetersSquared = (decimal.Parse(editedRow.MetersSquaredPerSample) * decimal.Parse(editedRow.PaintedSamplesCount)).ToString();
+
+                    LaboratoryDayDataGrid.ItemsSource = null;
+                    LaboratoryDayDataGrid.ItemsSource = DataItems;
+                }
+
+            }
+        }
     }
 }

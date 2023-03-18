@@ -54,5 +54,22 @@ namespace DiplomaWork
                 ContentControl.Content = view;
             }
         }
+        
+        private void LaboratoryMonth_Click(object sender, RoutedEventArgs e)
+        {
+            string viewName = "LaboratoryMonthView";
+            object view;
+
+            if (loadedViews.TryGetValue(viewName, out view))
+            {
+                ContentControl.Content = view;
+            }
+            else
+            {
+                view = new LaboratoryMonthView();
+                loadedViews.Add(viewName, view);
+                ContentControl.Content = view;
+            }
+        }
     }
 }
