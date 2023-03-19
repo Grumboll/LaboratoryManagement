@@ -263,7 +263,7 @@ namespace DiplomaWork.Views
             DataGridColumn editedColumn = e.Column;
             int editedColumnIndex = editedColumn.DisplayIndex;
 
-            if (editedColumnIndex == 4)
+            if (editedColumnIndex == 3 || editedColumnIndex == 4)
             {
                 LaboratoryDayItem editedRow = (LaboratoryDayItem) e.Row.Item;
 
