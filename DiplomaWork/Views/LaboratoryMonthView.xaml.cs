@@ -15,9 +15,6 @@ using System.Windows.Shapes;
 
 namespace DiplomaWork.Views
 {
-    /// <summary>
-    /// Interaction logic for LaboratoryMonthView.xaml
-    /// </summary>
     public partial class LaboratoryMonthView : UserControl
     {
         public LaboratoryMonthView()
