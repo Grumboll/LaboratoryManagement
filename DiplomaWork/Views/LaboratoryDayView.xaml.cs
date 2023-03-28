@@ -159,6 +159,7 @@ namespace DiplomaWork.Views
                         LaboratoryDay newLaboratoryDay = new LaboratoryDay
                         {
                             Day = DateOnly.FromDateTime((DateTime)LaboratoryDayDatePicker.SelectedDate),
+                            MonthId = (uint) LaboratoryDayDatePicker.SelectedDate.Value.Month,
                             ProfileId = (uint) item.ProfileId,
                             MetersSquaredPerSample = decimal.Parse(item.MetersSquaredPerSample),
                             PaintedSamplesCount = uint.Parse(item.PaintedSamplesCount),

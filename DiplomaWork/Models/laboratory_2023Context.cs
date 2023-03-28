@@ -46,14 +46,15 @@ namespace DiplomaWork.Models
             {
                 entity.ToTable("laboratory_day");
 
+                entity.HasIndex(e => e.MonthId, "fk_months_laboratory_day_idx");
+
+                entity.HasIndex(e => e.ProfileId, "fk_profile_laboratory_day");
+
                 entity.HasIndex(e => e.CreatedBy, "fk_users_laboratory_day_profile1_idx");
 
                 entity.HasIndex(e => e.UpdatedBy, "fk_users_laboratory_day_profile2_idx");
 
                 entity.HasIndex(e => e.Id, "id_UNIQUE")
-                    .IsUnique();
-
-                entity.HasIndex(e => e.ProfileId, "profile_id_UNIQUE")
                     .IsUnique();
 
                 entity.Property(e => e.Id)
@@ -83,6 +84,10 @@ namespace DiplomaWork.Models
                     .HasColumnType("decimal(7,3) unsigned")
                     .HasColumnName("meters_squared_per_sample");
 
+                entity.Property(e => e.MonthId)
+                    .HasColumnType("int(10) unsigned")
+                    .HasColumnName("month_id");
+
                 entity.Property(e => e.PaintedMetersSquared)
                     .HasColumnType("decimal(7,3) unsigned")
                     .HasColumnName("painted_meters_squared");
@@ -110,9 +115,15 @@ namespace DiplomaWork.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_users_laboratory_day1");
 
+                entity.HasOne(d => d.Month)
+                    .WithMany(p => p.LaboratoryDays)
+                    .HasForeignKey(d => d.MonthId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_months_laboratory_day");
+
                 entity.HasOne(d => d.Profile)
-                    .WithOne(p => p.LaboratoryDay)
-                    .HasForeignKey<LaboratoryDay>(d => d.ProfileId)
+                    .WithMany(p => p.LaboratoryDays)
+                    .HasForeignKey(d => d.ProfileId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_profile_laboratory_day");
 
@@ -358,11 +369,11 @@ namespace DiplomaWork.Models
                     .HasColumnName("id");
 
                 entity.Property(e => e.Length)
-                    .HasColumnType("decimal(7,3) unsigned")
+                    .HasColumnType("decimal(21,13) unsigned")
                     .HasColumnName("length");
 
                 entity.Property(e => e.Perimeter)
-                    .HasColumnType("decimal(7,3) unsigned")
+                    .HasColumnType("decimal(21,13) unsigned")
                     .HasColumnName("perimeter");
 
                 entity.Property(e => e.ProfileId)
