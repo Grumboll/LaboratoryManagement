@@ -112,9 +112,9 @@ namespace DiplomaWork.Views
             if (messageBoxResult == MessageBoxResult.Yes)
             {
                 var context = new laboratory_2023Context();
-                DateTime now = DateTime.Now.Date;
+                DateTime selectedDate = (DateTime)LaboratoryMonthPicker.SelectedDate;
 
-                DataItems = new ObservableCollection<LaboratoryMonthItem>(generateLaboratoryMonthItems(context, now));
+                DataItems = new ObservableCollection<LaboratoryMonthItem>(generateLaboratoryMonthItems(context, selectedDate));
                 LaboratoryMonthDataGrid.ItemsSource = DataItems;
 
                 context.Dispose();
@@ -128,9 +128,24 @@ namespace DiplomaWork.Views
             if (messageBoxResult == MessageBoxResult.Yes)
             {
                 var context = new laboratory_2023Context();
-                DateTime now = DateTime.Now.Date;
+                DateTime selectedDate = (DateTime)LaboratoryMonthPicker.SelectedDate;
 
-                DataItems = new ObservableCollection<LaboratoryMonthItem>(getLaboratoryMonthItemsList(context, now));
+                DataItems = new ObservableCollection<LaboratoryMonthItem>(getLaboratoryMonthItemsList(context, selectedDate));
+                LaboratoryMonthDataGrid.ItemsSource = DataItems;
+
+                context.Dispose();
+            }
+        }
+
+        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DateTime selectedDate = (DateTime)LaboratoryMonthPicker.SelectedDate;
+
+            if (selectedDate != null)
+            {
+                var context = new laboratory_2023Context();
+
+                DataItems = new ObservableCollection<LaboratoryMonthItem>(getLaboratoryMonthItemsList(context, selectedDate));
                 LaboratoryMonthDataGrid.ItemsSource = DataItems;
 
                 context.Dispose();
