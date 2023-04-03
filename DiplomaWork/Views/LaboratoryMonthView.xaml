@@ -23,11 +23,15 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
             <Label FontWeight="DemiBold" x:Name="SaveLabel" Margin="2 5 2 2" Grid.Column="0" HorizontalAlignment="Left" Visibility="Collapsed"></Label>
-            <DatePicker Grid.Column="2" my:DatePickerCalendar.IsMonthYear="True" Language="bg-BG" Width="200" MaxWidth="200" Margin="2 7 2 2"
+            <DatePicker Name="LaboratoryMonthPicker" Grid.Column="2" my:DatePickerCalendar.IsMonthYear="True" Language="bg-BG" Width="200" MaxWidth="200" Margin="2 7 2 2"
                 my:DatePickerDateFormat.DateFormat="MM/yyyy"/>
-            <Button Grid.Column="3" Style="{StaticResource AppButtonStyle}">Запази</Button>
+            <Button Grid.Column="3" Style="{StaticResource AppButtonStyle}" Click="Generate_Click">Генерирай</Button>
+            <Button Grid.Column="4" Style="{StaticResource AppButtonStyle}" Click="ReloadFromDb_Click">Презареди</Button>
+            <Button Grid.Column="5" Style="{StaticResource AppButtonStyle}">Запази</Button>
         </Grid>
         <ScrollViewer Grid.Row="1" x:Name="LaboratoryMonthScrollViewer" Width="auto">
             <Grid>
@@ -41,11 +45,17 @@
                 <DataGrid Grid.Column="0" Grid.Row="0" x:Name="LaboratoryMonthDataGrid" AutoGenerateColumns="False" SelectionMode="Single" SelectionUnit="Cell"
                             Margin="5" VerticalScrollBarVisibility="Hidden" CanUserAddRows="False" >
                     <DataGrid.Columns>
-                        <DataGridTextColumn Width="0.7*" Header="Дата *" Binding="{Binding PaintedMetersSquared}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
-                        <DataGridTextColumn Width="0.5*" Header="КГ" Binding="{Binding KilogramsPerMeter}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
-                        <DataGridTextColumn Width="0.5*" Header="м2 *" Binding="{Binding KilogramsPerMeter}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
-                        <DataGridTextColumn Width="0.6*" Header="" Binding="{Binding KilogramsPerMeter}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
-                        <DataGridTextColumn Width="0.4*" Header="Разход на м2" Binding="{Binding KilogramsPerMeter}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
+                        <DataGridTemplateColumn Width="0.7*" Header="Дата *" HeaderStyle="{StaticResource DataGridColumnHeader}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <DatePicker SelectedDate="{Binding LaboratoryDayDate}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Width="0.5*" Header="КГ" Binding="{Binding Kilograms}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
+                        <DataGridTextColumn Width="0.5*" Header="м2 *" Binding="{Binding MetersSquared}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
+                        <DataGridTextColumn Width="0.6*" Header="" Binding="{Binding LaboratoryMonthChemical}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
+                        <DataGridTextColumn Width="0.4*" Header="Разход на м2" Binding="{Binding ExpensePerMonthMetersSquared}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
                     </DataGrid.Columns>
                 </DataGrid>
                 <StackPanel Grid.Column="1" VerticalAlignment="Center">

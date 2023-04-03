@@ -10,6 +10,7 @@ namespace DiplomaWork.DataItems
     {
         public uint Id { get; set; }
         public uint? ProfileId { get; set; }
+        public string? Day { get; set; }
         public string ProfileName { get; set; }
         public string ProfileLength { get; set; }
         public string ProfilePerimeter { get; set; }

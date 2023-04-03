@@ -7,14 +7,11 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using Serilog;
-using System.Reflection;
-using System.Xml.Linq;
-using System.Windows.Markup;
+using DiplomaWork.Services;
 
 namespace DiplomaWork.Views
 {
@@ -37,7 +34,7 @@ namespace DiplomaWork.Views
 
                 laboratoryDayItems = getLaboratoryDayItemsList(context, now);
                 context.Dispose();
-             }
+            }
 
             LaboratoryDayDatePicker.SelectedDate = now;
 
@@ -100,32 +97,7 @@ namespace DiplomaWork.Views
 
         private List<LaboratoryDayItem> getLaboratoryDayItemsList(laboratory_2023Context context, DateTime now)
         {
-            List<LaboratoryDayItem> items = context.LaboratoryDays
-                    .Where(ld => ld.Day == DateOnly.FromDateTime(now))
-                    .Where(ld => ld.DeletedAt == null)
-                    .Include(x => x.Profile)
-                    .ThenInclude(x => x.ProfileHasLengthsPerimeters)
-                    .Select(ld => new LaboratoryDayItem
-                    {
-                        Id = ld.Id,
-                        ProfileId = ld.Profile.Id,
-                        ProfileName = ld.Profile.Name,
-                        ProfileLength = ld.Profile.ProfileHasLengthsPerimeters.FirstOrDefault().Length.ToString(),
-                        ProfilePerimeter = ld.Profile.ProfileHasLengthsPerimeters.FirstOrDefault().Perimeter.ToString(),
-                        MetersSquaredPerSample = ld.MetersSquaredPerSample.ToString(),
-                        PaintedSamplesCount = ld.PaintedSamplesCount.ToString(),
-                        PaintedMetersSquared = ld.PaintedMetersSquared.ToString(),
-                        KilogramsPerMeter = ld.KilogramsPerMeter.ToString()
-                    }).ToList();
-
-            foreach (LaboratoryDayItem item in items)
-            {
-                item.ProfileLength = item.ProfileLength.TrimEnd('0').TrimEnd('.');
-                item.ProfilePerimeter = item.ProfilePerimeter.TrimEnd('0').TrimEnd('.');
-                item.MetersSquaredPerSample = item.MetersSquaredPerSample.TrimEnd('0').TrimEnd('.');
-                item.PaintedMetersSquared = item.PaintedMetersSquared.TrimEnd('0').TrimEnd('.');
-                item.KilogramsPerMeter = item.KilogramsPerMeter != null ? item.KilogramsPerMeter.TrimEnd('0').TrimEnd('.') : null;
-            }
+            List<LaboratoryDayItem> items = LaboratoryDayService.getLaboratoryDayItems(context, now);
 
             //Get ids so we can track which items where deleted during save operation
             LaboratoryDayIds = items.Select(x => x.Id).ToList();
@@ -142,6 +114,7 @@ namespace DiplomaWork.Views
                 var context = new laboratory_2023Context();
                 DataItems = new ObservableCollection<LaboratoryDayItem>(getLaboratoryDayItemsList(context, selectedDate));
                 LaboratoryDayDataGrid.ItemsSource = DataItems;
+                context.Dispose();
             }
         }
 
@@ -160,6 +133,7 @@ namespace DiplomaWork.Views
                         {
                             Day = DateOnly.FromDateTime((DateTime)LaboratoryDayDatePicker.SelectedDate),
                             MonthId = (uint) LaboratoryDayDatePicker.SelectedDate.Value.Month,
+                            Year = (ushort) LaboratoryDayDatePicker.SelectedDate.Value.Year,
                             ProfileId = (uint) item.ProfileId,
                             MetersSquaredPerSample = decimal.Parse(item.MetersSquaredPerSample),
                             PaintedSamplesCount = uint.Parse(item.PaintedSamplesCount),

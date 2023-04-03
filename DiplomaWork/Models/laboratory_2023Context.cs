@@ -109,6 +109,10 @@ namespace DiplomaWork.Models
                     .HasColumnType("int(10) unsigned")
                     .HasColumnName("updated_by");
 
+                entity.Property(e => e.Year)
+                    .HasColumnType("smallint(5) unsigned")
+                    .HasColumnName("year");
+
                 entity.HasOne(d => d.CreatedByNavigation)
                     .WithMany(p => p.LaboratoryDayCreatedByNavigations)
                     .HasForeignKey(d => d.CreatedBy)
@@ -141,9 +145,6 @@ namespace DiplomaWork.Models
                 entity.HasIndex(e => e.Id, "id_UNIQUE")
                     .IsUnique();
 
-                entity.HasIndex(e => e.LaboratoryDayId, "laboratory_day_id_UNIQUE")
-                    .IsUnique();
-
                 entity.HasIndex(e => e.MonthId, "laboratory_month_id_UNIQUE")
                     .IsUnique();
 
@@ -151,13 +152,11 @@ namespace DiplomaWork.Models
                     .HasColumnType("int(10) unsigned")
                     .HasColumnName("id");
 
+                entity.Property(e => e.Date).HasColumnName("date");
+
                 entity.Property(e => e.Kilograms)
                     .HasColumnType("decimal(7,3) unsigned")
                     .HasColumnName("kilograms");
-
-                entity.Property(e => e.LaboratoryDayId)
-                    .HasColumnType("int(10) unsigned")
-                    .HasColumnName("laboratory_day_id");
 
                 entity.Property(e => e.MetersSquared)
                     .HasColumnType("decimal(7,3) unsigned")
@@ -170,12 +169,6 @@ namespace DiplomaWork.Models
                 entity.Property(e => e.Year)
                     .HasColumnType("smallint(5)")
                     .HasColumnName("year");
-
-                entity.HasOne(d => d.LaboratoryDay)
-                    .WithOne(p => p.LaboratoryMonth)
-                    .HasForeignKey<LaboratoryMonth>(d => d.LaboratoryDayId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_laboratory_day_laboratory_months");
 
                 entity.HasOne(d => d.Month)
                     .WithOne(p => p.LaboratoryMonth)

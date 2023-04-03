@@ -6,16 +6,14 @@ using System.Threading.Tasks;
 
 namespace DiplomaWork.DataItems
 {
-    class LaboratoryMonthItem
+    public class LaboratoryMonthItem
     {
-        public uint Id { get; set; }
-        public uint? ProfileId { get; set; }
-        public string ProfileName { get; set; }
-        public string ProfileLength { get; set; }
-        public string ProfilePerimeter { get; set; }
-        public string MetersSquaredPerSample { get; set; }
-        public string PaintedSamplesCount { get; set; }
-        public string PaintedMetersSquared { get; set; }
-        public string KilogramsPerMeter { get; set; }
+        public uint? Id { get; set; }
+        public DateTime? LaboratoryDayDate { get; set; }
+        public string Kilograms { get; set; }
+        public string MetersSquared { get; set; }
+        public uint? LaboratoryMonthChemicalId { get; set; }
+        public string? LaboratoryMonthChemical { get; set; }
+        public string? ExpensePerMonthMetersSquared { get; set; }
     }
 }
