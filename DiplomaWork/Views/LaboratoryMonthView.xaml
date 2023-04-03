@@ -54,7 +54,7 @@
                         </DataGridTemplateColumn>
                         <DataGridTextColumn Width="0.5*" Header="КГ" Binding="{Binding Kilograms}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
                         <DataGridTextColumn Width="0.5*" Header="м2 *" Binding="{Binding MetersSquared}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
-                        <DataGridTextColumn Width="0.6*" Header="" Binding="{Binding LaboratoryMonthChemical}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
+                        <DataGridTextColumn Width="0.6*" Header="" Binding="{Binding LaboratoryMonthChemical}" HeaderStyle="{StaticResource DataGridColumnHeader}" CanUserSort="False"/>
                         <DataGridTextColumn Width="0.4*" Header="Разход на м2" Binding="{Binding ExpensePerMonthMetersSquared}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
                     </DataGrid.Columns>
                 </DataGrid>
