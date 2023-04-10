@@ -59,6 +59,7 @@ namespace DiplomaWork.Views
                     .Select(ld => new LaboratoryMonthItem
                     {
                         Id = ld.Id,
+                        LaboratoryDayDate = new DateTime(ld.Date.Year, ld.Date.Month, ld.Date.Day),
                         Kilograms = ld.Kilograms.ToString(),
                         MetersSquared = ld.MetersSquared.ToString(),
                         LaboratoryMonthChemicalId = ld.LaboratoryMonthHasChemical.Id,
