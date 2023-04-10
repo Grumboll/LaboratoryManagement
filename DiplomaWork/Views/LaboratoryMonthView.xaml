@@ -45,17 +45,28 @@
                 <DataGrid Grid.Column="0" Grid.Row="0" x:Name="LaboratoryMonthDataGrid" AutoGenerateColumns="False" SelectionMode="Single" SelectionUnit="Cell"
                             Margin="5" VerticalScrollBarVisibility="Hidden" CanUserAddRows="False" >
                     <DataGrid.Columns>
-                        <DataGridTemplateColumn Width="0.7*" Header="Дата *" HeaderStyle="{StaticResource DataGridColumnHeader}">
+                        <DataGridTemplateColumn Width="0.7*" Header="Дата *" HeaderStyle="{StaticResource DataGridColumnHeader}" CanUserReorder="False">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <DatePicker SelectedDate="{Binding LaboratoryDayDate}"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn Width="0.5*" Header="КГ" Binding="{Binding Kilograms}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
-                        <DataGridTextColumn Width="0.5*" Header="м2 *" Binding="{Binding MetersSquared}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
-                        <DataGridTextColumn Width="0.6*" Header="" Binding="{Binding LaboratoryMonthChemical}" HeaderStyle="{StaticResource DataGridColumnHeader}" CanUserSort="False"/>
-                        <DataGridTextColumn Width="0.4*" Header="Разход на м2" Binding="{Binding ExpensePerMonthMetersSquared}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
+                        <DataGridTextColumn Width="0.5*" Header="КГ" Binding="{Binding Kilograms}" HeaderStyle="{StaticResource DataGridColumnHeader}" CanUserReorder="False"/>
+                        <DataGridTextColumn Width="0.5*" Header="м2 *" Binding="{Binding MetersSquared}" HeaderStyle="{StaticResource DataGridColumnHeader}" CanUserReorder="False"/>
+                        <DataGridTemplateColumn Width="0.6*" Header="" HeaderStyle="{StaticResource DataGridColumnHeader}" CanUserSort="False" CanUserReorder="False">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Width="50" Text="{Binding LaboratoryMonthChemical}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding LaboratoryMonthChemical, UpdateSourceTrigger=LostFocus}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Width="0.4*" Header="Разход на м2" Binding="{Binding ExpensePerMonthMetersSquared}" HeaderStyle="{StaticResource DataGridColumnHeader}" CanUserReorder="False"/>
                     </DataGrid.Columns>
                 </DataGrid>
                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
