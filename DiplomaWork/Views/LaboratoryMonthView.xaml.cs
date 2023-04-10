@@ -54,6 +54,8 @@ namespace DiplomaWork.Views
                     .Where(ld => ld.MonthId == time.Month)
                     .Where(ld => ld.Year == time.Year)
                     .Include(x => x.LaboratoryMonthHasChemical)
+                    .Where(x => x.MonthId == time.Month)
+                    .Where(x => x.Year == time.Year)
                     .Select(ld => new LaboratoryMonthItem
                     {
                         Id = ld.Id,
