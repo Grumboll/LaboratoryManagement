@@ -33,7 +33,7 @@ namespace DiplomaWork.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseMySql("server=localhost;database=laboratory_2023;user=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.4.22-mariadb"));
+                optionsBuilder.UseMySql("server=localhost;port=3306;database=laboratory_2023;user=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.4.24-mariadb"));
             }
         }
 
@@ -181,71 +181,41 @@ namespace DiplomaWork.Models
             {
                 entity.ToTable("laboratory_month_has_chemicals");
 
-                entity.HasIndex(e => e.CreatedBy, "fk_users_laboratory_month_chemicals1_idx");
-
-                entity.HasIndex(e => e.UpdatedBy, "fk_users_laboratory_month_chemicals2_idx");
-
                 entity.HasIndex(e => e.Id, "id_UNIQUE")
                     .IsUnique();
 
-                entity.HasIndex(e => e.LaboratoryMonthId, "laboratory_month_has_day_id_UNIQUE")
+                entity.HasIndex(e => e.MonthId, "laboratory_month_has_day_id_UNIQUE")
                     .IsUnique();
 
                 entity.Property(e => e.Id)
                     .HasColumnType("int(10) unsigned")
                     .HasColumnName("id");
 
-                entity.Property(e => e.CreatedAt)
-                    .HasColumnType("timestamp")
-                    .HasColumnName("created_at")
-                    .HasDefaultValueSql("current_timestamp()");
-
-                entity.Property(e => e.CreatedBy)
-                    .HasColumnType("int(10) unsigned")
-                    .HasColumnName("created_by");
-
-                entity.Property(e => e.DeletedAt)
-                    .HasColumnType("timestamp")
-                    .HasColumnName("deleted_at");
+                entity.Property(e => e.ChemicalExpenditure)
+                    .HasColumnType("decimal(7,3) unsigned")
+                    .HasColumnName("chemical_expenditure");
 
                 entity.Property(e => e.ExpensePerMeterSquared)
                     .HasColumnType("decimal(7,3) unsigned")
                     .HasColumnName("expense_per_meter_squared");
 
-                entity.Property(e => e.LaboratoryMonthId)
+                entity.Property(e => e.MonthId)
                     .HasColumnType("int(10) unsigned")
-                    .HasColumnName("laboratory_month_id");
+                    .HasColumnName("month_id");
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(64)
                     .HasColumnName("name");
 
-                entity.Property(e => e.UpdatedAt)
-                    .HasColumnType("timestamp")
-                    .HasColumnName("updated_at")
-                    .HasDefaultValueSql("current_timestamp()");
+                entity.Property(e => e.Year)
+                    .HasColumnType("smallint(5) unsigned")
+                    .HasColumnName("year");
 
-                entity.Property(e => e.UpdatedBy)
-                    .HasColumnType("int(10) unsigned")
-                    .HasColumnName("updated_by");
-
-                entity.HasOne(d => d.CreatedByNavigation)
-                    .WithMany(p => p.LaboratoryMonthHasChemicalCreatedByNavigations)
-                    .HasForeignKey(d => d.CreatedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_users_laboratory_month_has_chemicals1");
-
-                entity.HasOne(d => d.LaboratoryMonth)
+                entity.HasOne(d => d.Month)
                     .WithOne(p => p.LaboratoryMonthHasChemical)
-                    .HasForeignKey<LaboratoryMonthHasChemical>(d => d.LaboratoryMonthId)
+                    .HasForeignKey<LaboratoryMonthHasChemical>(d => d.MonthId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_laboratory_month_has_chemicals_laboratory_months");
-
-                entity.HasOne(d => d.UpdatedByNavigation)
-                    .WithMany(p => p.LaboratoryMonthHasChemicalUpdatedByNavigations)
-                    .HasForeignKey(d => d.UpdatedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_users_laboratory_month_has_chemicals2");
             });
 
             modelBuilder.Entity<Month>(entity =>

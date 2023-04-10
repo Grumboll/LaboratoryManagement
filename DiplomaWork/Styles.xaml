@@ -59,4 +59,17 @@
         </ObjectAnimationUsingKeyFrames>
     </Storyboard>
 
+    <Style TargetType="DataGridColumnHeader" x:Key="EditableDataGridColumnHeader">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="DataGridColumnHeader">
+                    <TextBox 
+                        Background="#007ACC" Foreground="White" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"
+                        Text="{Binding LaboratoryMonthChemical, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                             />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

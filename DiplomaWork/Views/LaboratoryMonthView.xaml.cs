@@ -16,7 +16,6 @@ namespace DiplomaWork.Views
         public ObservableCollection<LaboratoryMonthItem> DataItems { get; set; } = new ObservableCollection<LaboratoryMonthItem>();
         public List<uint?> LaboratoryMonthHasChemicalIds { get; set; } = new List<uint?> { };
 
-        //TODO: FIRST CHECK IF THERE ARE ENTRIES FOR THIS MONTH AND YEAR, IF NOT GENERATE IT
         public LaboratoryMonthView()
         {
             InitializeComponent();
@@ -61,6 +60,7 @@ namespace DiplomaWork.Views
                         Kilograms = ld.Kilograms.ToString(),
                         MetersSquared = ld.MetersSquared.ToString(),
                         LaboratoryMonthChemicalId = ld.LaboratoryMonthHasChemical.Id,
+                        ChemicalExpenditure = ld.LaboratoryMonthHasChemical.ChemicalExpenditure.ToString(),
                         LaboratoryMonthChemical = ld.LaboratoryMonthHasChemical.Name,
                         ExpensePerMonthMetersSquared = ld.LaboratoryMonthHasChemical.ExpensePerMeterSquared.ToString(),
                     }).ToList();
@@ -96,6 +96,7 @@ namespace DiplomaWork.Views
                     Kilograms = kgSum.ToString(),
                     MetersSquared = m2Sum.ToString(),
                     LaboratoryMonthChemicalId = null,
+                    ChemicalExpenditure = null,
                     LaboratoryMonthChemical = null,
                     ExpensePerMonthMetersSquared = null,
                 });

@@ -14,6 +14,7 @@ namespace DiplomaWork.DataItems
         public string MetersSquared { get; set; }
         public uint? LaboratoryMonthChemicalId { get; set; }
         public string? LaboratoryMonthChemical { get; set; }
+        public string? ChemicalExpenditure { get; set; }
         public string? ExpensePerMonthMetersSquared { get; set; }
     }
 }
