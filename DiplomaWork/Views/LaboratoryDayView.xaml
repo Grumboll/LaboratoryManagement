@@ -44,13 +44,13 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTextColumn Width="1.4*" Header="Дължина, mm*" Binding="{Binding ProfileLength}" HeaderStyle="{StaticResource DataGridColumnHeader}" IsReadOnly="True"/>
-                            <DataGridTextColumn Width="1.6*" Header="Периметър, mm*" Binding="{Binding ProfilePerimeter}" HeaderStyle="{StaticResource DataGridColumnHeader}" IsReadOnly="True"/>
-                            <DataGridTextColumn Width="1.2*" Header="м2 за брой*" Binding="{Binding MetersSquaredPerSample, UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
-                            <DataGridTextColumn Width="2.5*" Header="Брой боядисани профили*" Binding="{Binding PaintedSamplesCount, UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
-                            <DataGridTextColumn Width="1.6*" Header="Боядисани м2*" Binding="{Binding PaintedMetersSquared}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
-                            <DataGridTextColumn Width="*" Header="КГ/М" Binding="{Binding KilogramsPerMeter}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
-                            <DataGridTemplateColumn Header="Операции" HeaderStyle="{StaticResource DataGridColumnHeader}">
+                            <DataGridTextColumn Width="1.4*" Header="Дължина, mm*" Binding="{Binding ProfileLength}" HeaderStyle="{StaticResource DataGridColumnHeader}" IsReadOnly="True" CanUserReorder="False"/>
+                            <DataGridTextColumn Width="1.6*" Header="Периметър, mm*" Binding="{Binding ProfilePerimeter}" HeaderStyle="{StaticResource DataGridColumnHeader}" IsReadOnly="True" CanUserReorder="False"/>
+                            <DataGridTextColumn Width="1.2*" Header="м2 за брой*" Binding="{Binding MetersSquaredPerSample, UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource DataGridColumnHeader}" CanUserReorder="False"/>
+                            <DataGridTextColumn Width="2.5*" Header="Брой боядисани профили*" Binding="{Binding PaintedSamplesCount, UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource DataGridColumnHeader}" CanUserReorder="False"/>
+                            <DataGridTextColumn Width="1.6*" Header="Боядисани м2*" Binding="{Binding PaintedMetersSquared}" HeaderStyle="{StaticResource DataGridColumnHeader}" CanUserReorder="False"/>
+                            <DataGridTextColumn Width="*" Header="КГ/М" Binding="{Binding KilogramsPerMeter}" HeaderStyle="{StaticResource DataGridColumnHeader}" CanUserReorder="False"/>
+                            <DataGridTemplateColumn Header="Операции" HeaderStyle="{StaticResource DataGridColumnHeader}" CanUserReorder="False">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Button Content="X" Margin="15 2 15 2" Background="#F61E2C" FontSize="15" FontWeight="DemiBold" Click="DeleteButton_Click"/>

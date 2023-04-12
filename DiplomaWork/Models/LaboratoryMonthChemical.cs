@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 namespace DiplomaWork.Models
 {
-    public partial class LaboratoryMonth
+    public partial class LaboratoryMonthChemical
     {
         public uint Id { get; set; }
-        public DateOnly Date { get; set; }
         public uint MonthId { get; set; }
-        public short Year { get; set; }
-        public decimal? Kilograms { get; set; }
-        public decimal MetersSquared { get; set; }
+        public ushort Year { get; set; }
+        public string Name { get; set; } = null!;
+        public decimal ChemicalExpenditure { get; set; }
+        public decimal ExpensePerMeterSquared { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
@@ -18,8 +18,7 @@ namespace DiplomaWork.Models
         public uint UpdatedBy { get; set; }
 
         public virtual User CreatedByNavigation { get; set; } = null!;
-        public virtual Month Month { get; set; } = null!;
+        public virtual LaboratoryMonth Month { get; set; } = null!;
         public virtual User UpdatedByNavigation { get; set; } = null!;
-        public virtual LaboratoryMonthChemical LaboratoryMonthChemical { get; set; } = null!;
     }
 }

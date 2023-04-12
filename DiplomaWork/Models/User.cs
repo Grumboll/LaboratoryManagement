@@ -11,6 +11,10 @@ namespace DiplomaWork.Models
             InverseUpdatedByNavigation = new HashSet<User>();
             LaboratoryDayCreatedByNavigations = new HashSet<LaboratoryDay>();
             LaboratoryDayUpdatedByNavigations = new HashSet<LaboratoryDay>();
+            LaboratoryMonthChemicalCreatedByNavigations = new HashSet<LaboratoryMonthChemical>();
+            LaboratoryMonthChemicalUpdatedByNavigations = new HashSet<LaboratoryMonthChemical>();
+            LaboratoryMonthCreatedByNavigations = new HashSet<LaboratoryMonth>();
+            LaboratoryMonthUpdatedByNavigations = new HashSet<LaboratoryMonth>();
             ProfileCreatedByNavigations = new HashSet<Profile>();
             ProfileUpdatedByNavigations = new HashSet<Profile>();
             UserHasRoles = new HashSet<UserHasRole>();
@@ -36,6 +40,10 @@ namespace DiplomaWork.Models
         public virtual ICollection<User> InverseUpdatedByNavigation { get; set; }
         public virtual ICollection<LaboratoryDay> LaboratoryDayCreatedByNavigations { get; set; }
         public virtual ICollection<LaboratoryDay> LaboratoryDayUpdatedByNavigations { get; set; }
+        public virtual ICollection<LaboratoryMonthChemical> LaboratoryMonthChemicalCreatedByNavigations { get; set; }
+        public virtual ICollection<LaboratoryMonthChemical> LaboratoryMonthChemicalUpdatedByNavigations { get; set; }
+        public virtual ICollection<LaboratoryMonth> LaboratoryMonthCreatedByNavigations { get; set; }
+        public virtual ICollection<LaboratoryMonth> LaboratoryMonthUpdatedByNavigations { get; set; }
         public virtual ICollection<Profile> ProfileCreatedByNavigations { get; set; }
         public virtual ICollection<Profile> ProfileUpdatedByNavigations { get; set; }
         public virtual ICollection<UserHasRole> UserHasRoles { get; set; }

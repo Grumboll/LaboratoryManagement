@@ -31,18 +31,26 @@
                 my:DatePickerDateFormat.DateFormat="MM/yyyy" SelectedDateChanged="DatePicker_SelectedDateChanged"/>
             <Button Grid.Column="3" Style="{StaticResource AppButtonStyle}" Click="Generate_Click">Генерирай</Button>
             <Button Grid.Column="4" Style="{StaticResource AppButtonStyle}" Click="ReloadFromDb_Click">Презареди</Button>
-            <Button Grid.Column="5" Style="{StaticResource AppButtonStyle}">Запази</Button>
+            <Button Grid.Column="5" Style="{StaticResource AppButtonStyle}" Click="Save_Click">Запази</Button>
         </Grid>
         <ScrollViewer Grid.Row="1" x:Name="LaboratoryMonthScrollViewer" Width="auto">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="3*"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <DataGrid Grid.Column="0" Grid.Row="0" x:Name="LaboratoryMonthDataGrid" AutoGenerateColumns="False" SelectionMode="Single" SelectionUnit="Cell"
+                <DataGrid Grid.Column="0" Grid.Row="0" x:Name="LaboratoryMonthChemicalDataGrid" AutoGenerateColumns="False" SelectionMode="Single" SelectionUnit="Cell"
+                            Margin="5" VerticalScrollBarVisibility="Hidden" CanUserAddRows="False" >
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="0.5*" Header="Химикал (име)" Binding="{Binding ChemicalName}" HeaderStyle="{StaticResource DataGridColumnHeader}" CanUserReorder="False"/>
+                        <DataGridTextColumn Width="0.5*" Header="Разход" Binding="{Binding ChemicalExpenditure}" HeaderStyle="{StaticResource DataGridColumnHeader}" CanUserReorder="False"/>
+                        <DataGridTextColumn Width="0.5*" Header="Разход на м2" Binding="{Binding ExpensePerMeterSquared}" HeaderStyle="{StaticResource DataGridColumnHeader}" CanUserReorder="False"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <DataGrid Grid.Column="0" Grid.Row="1" x:Name="LaboratoryMonthDataGrid" AutoGenerateColumns="False" SelectionMode="Single" SelectionUnit="Cell"
                             Margin="5" VerticalScrollBarVisibility="Hidden" CanUserAddRows="False" >
                     <DataGrid.Columns>
                         <DataGridTemplateColumn Width="0.7*" Header="Дата *" HeaderStyle="{StaticResource DataGridColumnHeader}" CanUserReorder="False">
@@ -54,14 +62,8 @@
                         </DataGridTemplateColumn>
                         <DataGridTextColumn Width="0.5*" Header="КГ" Binding="{Binding Kilograms}" HeaderStyle="{StaticResource DataGridColumnHeader}" CanUserReorder="False"/>
                         <DataGridTextColumn Width="0.5*" Header="м2 *" Binding="{Binding MetersSquared}" HeaderStyle="{StaticResource DataGridColumnHeader}" CanUserReorder="False"/>
-                        <DataGridTextColumn Width="0.6*" Header="" Binding="{Binding ChemicalExpenditure}" HeaderStyle="{StaticResource EditableDataGridColumnHeader}" CanUserSort="False" CanUserReorder="False"/>
-                        <DataGridTextColumn Width="0.4*" Header="Разход на м2" Binding="{Binding ExpensePerMonthMetersSquared}" HeaderStyle="{StaticResource DataGridColumnHeader}" CanUserReorder="False"/>
                     </DataGrid.Columns>
                 </DataGrid>
-                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                    <Button Style="{StaticResource AppButtonStyle}" HorizontalAlignment="Center" Content="-" MaxWidth="75" Width="35" Height="35" Margin="2 10 7 2" />
-                    <Button Style="{StaticResource AppButtonStyle}" HorizontalAlignment="Center" Content="+" MaxWidth="75" Width="35" Height="35" Margin="2 10 7 2" />
-                </StackPanel>
             </Grid>
         </ScrollViewer>
     </Grid>

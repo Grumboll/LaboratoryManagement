@@ -12,9 +12,5 @@ namespace DiplomaWork.DataItems
         public DateTime? LaboratoryDayDate { get; set; }
         public string Kilograms { get; set; }
         public string MetersSquared { get; set; }
-        public uint? LaboratoryMonthChemicalId { get; set; }
-        public string? LaboratoryMonthChemical { get; set; }
-        public string? ChemicalExpenditure { get; set; }
-        public string? ExpensePerMonthMetersSquared { get; set; }
     }
 }
