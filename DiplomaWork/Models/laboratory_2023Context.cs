@@ -149,9 +149,6 @@ namespace DiplomaWork.Models
                 entity.HasIndex(e => e.Id, "id_UNIQUE")
                     .IsUnique();
 
-                entity.HasIndex(e => e.MonthId, "laboratory_month_id_UNIQUE")
-                    .IsUnique();
-
                 entity.Property(e => e.Id)
                     .HasColumnType("int(10) unsigned")
                     .HasColumnName("id");
@@ -203,8 +200,8 @@ namespace DiplomaWork.Models
                     .HasConstraintName("fk_users_laboratory_months");
 
                 entity.HasOne(d => d.Month)
-                    .WithOne(p => p.LaboratoryMonth)
-                    .HasForeignKey<LaboratoryMonth>(d => d.MonthId)
+                    .WithMany(p => p.LaboratoryMonths)
+                    .HasForeignKey(d => d.MonthId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_months_laboratory_months");
 
@@ -219,14 +216,13 @@ namespace DiplomaWork.Models
             {
                 entity.ToTable("laboratory_month_chemicals");
 
+                entity.HasIndex(e => e.MonthId, "fk_laboratory_month_chemicals_laboratory_months_idx");
+
                 entity.HasIndex(e => e.UpdatedBy, "fk_users2_laboratory_month_chemicals_idx");
 
                 entity.HasIndex(e => e.CreatedBy, "fk_users_laboratory_month_chemicals_idx");
 
                 entity.HasIndex(e => e.Id, "id_UNIQUE")
-                    .IsUnique();
-
-                entity.HasIndex(e => e.MonthId, "laboratory_month_has_day_id_UNIQUE")
                     .IsUnique();
 
                 entity.Property(e => e.Id)
@@ -282,10 +278,10 @@ namespace DiplomaWork.Models
                     .HasConstraintName("fk_users_laboratory_month_chemicals");
 
                 entity.HasOne(d => d.Month)
-                    .WithOne(p => p.LaboratoryMonthChemical)
-                    .HasForeignKey<LaboratoryMonthChemical>(d => d.MonthId)
+                    .WithMany(p => p.LaboratoryMonthChemicals)
+                    .HasForeignKey(d => d.MonthId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_laboratory_month_chemicals_laboratory_months");
+                    .HasConstraintName("fk_laboratory_month_chemicals_months");
 
                 entity.HasOne(d => d.UpdatedByNavigation)
                     .WithMany(p => p.LaboratoryMonthChemicalUpdatedByNavigations)

@@ -12,13 +12,14 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using Serilog;
 using DiplomaWork.Services;
+using System.Xml.Linq;
 
 namespace DiplomaWork.Views
 {
     public partial class LaboratoryDayView : UserControl
     {
         public ObservableCollection<LaboratoryDayItem> DataItems { get; set; } = new ObservableCollection<LaboratoryDayItem>();
-        public List<uint> LaboratoryDayIds { get; set; } = new List<uint> {};
+        public List<uint?> LaboratoryDayIds { get; set; } = new List<uint?> {};
 
         public LaboratoryDayView()
         {
@@ -68,6 +69,7 @@ namespace DiplomaWork.Views
             {
                 if (source.Count == 1)
                 {
+                    item.Id = null;
                     item.ProfileId = null;
                     item.ProfilePerimeter = "";
                     item.ProfileLength = "";
@@ -113,6 +115,12 @@ namespace DiplomaWork.Views
             {
                 var context = new laboratory_2023Context();
                 DataItems = new ObservableCollection<LaboratoryDayItem>(getLaboratoryDayItemsList(context, selectedDate));
+
+                if (DataItems.Count == 0)
+                {
+                    DataItems.Add(new LaboratoryDayItem());
+                }
+
                 LaboratoryDayDataGrid.ItemsSource = DataItems;
                 context.Dispose();
             }
@@ -121,6 +129,7 @@ namespace DiplomaWork.Views
         private void LaboratoryDaySave_Click(object sender, RoutedEventArgs e)
         {
             var context = new laboratory_2023Context();
+            List <LaboratoryDay> newlyCreatedDayItems = new List<LaboratoryDay>();
 
             try
             {
@@ -147,30 +156,42 @@ namespace DiplomaWork.Views
                         };
 
                         context.LaboratoryDays.Add(newLaboratoryDay);
+
+                        //Needed so we can later update LaboratoryDayIds, this makes it possible  to delete an item that was just created
+                        newlyCreatedDayItems.Add(newLaboratoryDay);
+
                         continue;
                     }
 
                     //In DataItems if a row has been deleted it won't get needlessly updated since it won't be present in the ObservableCollection
                     var rowToUpdate = context.LaboratoryDays.FirstOrDefault(row => row.Id == item.Id);
 
-                    rowToUpdate.ProfileId = (uint) item.ProfileId;
-                    rowToUpdate.MetersSquaredPerSample = decimal.Parse(item.MetersSquaredPerSample);
-                    rowToUpdate.PaintedSamplesCount = uint.Parse(item.PaintedSamplesCount);
-                    rowToUpdate.PaintedMetersSquared = decimal.Parse(item.PaintedMetersSquared);
-                    rowToUpdate.KilogramsPerMeter = decimal.Parse(item.KilogramsPerMeter);
-                    rowToUpdate.UpdatedAt = DateTime.Now;
-                    rowToUpdate.UpdatedBy = App.CurrentUser.Id;
-
-                    //Get the difference between LaboratoryDayIds, which is set when loading DataItems, and DataItems that has only ids to be updated
-                    List<uint> idsToDelete = LaboratoryDayIds.Except(DataItems.Select(x => x.Id)).ToList();
-
-                    foreach (uint id in idsToDelete)
+                    if (item.Id == null && DataItems.Count == 1)
                     {
-                        var rowToDelete = context.LaboratoryDays.FirstOrDefault(x => x.Id == id);
-
-                        //Soft Delete the item from the database
-                        rowToDelete.DeletedAt = DateTime.Now;
+                        rowToUpdate = context.LaboratoryDays.FirstOrDefault(row => row.Id == LaboratoryDayIds[0]);
+                        rowToUpdate.DeletedAt = DateTime.Now;
                     }
+                    else
+                    {
+                        rowToUpdate.ProfileId = (uint)item.ProfileId;
+                        rowToUpdate.MetersSquaredPerSample = decimal.Parse(item.MetersSquaredPerSample);
+                        rowToUpdate.PaintedSamplesCount = uint.Parse(item.PaintedSamplesCount);
+                        rowToUpdate.PaintedMetersSquared = decimal.Parse(item.PaintedMetersSquared);
+                        rowToUpdate.KilogramsPerMeter = item.KilogramsPerMeter != null ? decimal.Parse(item.KilogramsPerMeter) : null;
+                        rowToUpdate.UpdatedAt = DateTime.Now;
+                        rowToUpdate.UpdatedBy = App.CurrentUser.Id;
+                    }
+                }
+
+                //Get the difference between LaboratoryDayIds, which is set when loading DataItems, and DataItems that has only ids to be updated
+                List<uint?> idsToDelete = LaboratoryDayIds.Except(DataItems.Select(x => x.Id)).ToList();
+
+                foreach (uint id in idsToDelete)
+                {
+                    var rowToDelete = context.LaboratoryDays.FirstOrDefault(x => x.Id == id);
+
+                    //Soft Delete the item from the database
+                    rowToDelete.DeletedAt = DateTime.Now;
                 }
 
                 context.SaveChanges();
@@ -179,6 +200,12 @@ namespace DiplomaWork.Views
                 var storyboard = (Storyboard)FindResource("FadeInOut");
                 storyboard.Stop();
                 storyboard.Begin(SaveLabel);
+
+                LaboratoryDayIds.AddRange(newlyCreatedDayItems.Select(o => (uint?) o.Id));
+
+                DataItems = new ObservableCollection<LaboratoryDayItem>(getLaboratoryDayItemsList(context, DateTime.Now.Date));
+                LaboratoryDayDataGrid.ItemsSource = null;
+                LaboratoryDayDataGrid.ItemsSource = DataItems;
             }
             catch(Exception ex)
             {

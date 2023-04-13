@@ -20,6 +20,5 @@ namespace DiplomaWork.Models
         public virtual User CreatedByNavigation { get; set; } = null!;
         public virtual Month Month { get; set; } = null!;
         public virtual User UpdatedByNavigation { get; set; } = null!;
-        public virtual LaboratoryMonthChemical LaboratoryMonthChemical { get; set; } = null!;
     }
 }

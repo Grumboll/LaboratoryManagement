@@ -18,7 +18,7 @@ namespace DiplomaWork.Models
         public uint UpdatedBy { get; set; }
 
         public virtual User CreatedByNavigation { get; set; } = null!;
-        public virtual LaboratoryMonth Month { get; set; } = null!;
+        public virtual Month Month { get; set; } = null!;
         public virtual User UpdatedByNavigation { get; set; } = null!;
     }
 }

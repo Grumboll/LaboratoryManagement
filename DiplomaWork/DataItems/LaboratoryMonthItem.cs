@@ -8,7 +8,7 @@ namespace DiplomaWork.DataItems
 {
     public class LaboratoryMonthItem
     {
-        public uint? Id { get; set; }
+        public uint? Id { get; set; } = 0;
         public DateTime? LaboratoryDayDate { get; set; }
         public string Kilograms { get; set; }
         public string MetersSquared { get; set; }
