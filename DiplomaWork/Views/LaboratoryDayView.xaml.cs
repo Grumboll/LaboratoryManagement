@@ -43,10 +43,6 @@ namespace DiplomaWork.Views
             {
                 DataItems = new ObservableCollection<LaboratoryDayItem>(laboratoryDayItems);
             }
-            else
-            {
-                DataItems.Add(new LaboratoryDayItem());
-            }
 
             LaboratoryDayDataGrid.ItemsSource = DataItems;
         }
@@ -269,12 +265,20 @@ namespace DiplomaWork.Views
             {
                 LaboratoryDayItem editedRow = (LaboratoryDayItem) e.Row.Item;
 
+                var metersSquaredPerSample = editedRow.MetersSquaredPerSample;
+                decimal metersSquaredPerSampleDecimal;
+                decimal paintedSamplesCountDecimal;
+                var paintedSamplesCount = editedRow.PaintedSamplesCount;
+
                 if (editedRow.MetersSquaredPerSample != null && editedRow.PaintedSamplesCount != null)
                 {
-                    editedRow.PaintedMetersSquared = (decimal.Parse(editedRow.MetersSquaredPerSample) * decimal.Parse(editedRow.PaintedSamplesCount)).ToString();
-
-                    LaboratoryDayDataGrid.ItemsSource = null;
-                    LaboratoryDayDataGrid.ItemsSource = DataItems;
+                    if (decimal.TryParse(editedRow.MetersSquaredPerSample, out metersSquaredPerSampleDecimal) && decimal.TryParse(editedRow.PaintedSamplesCount, out paintedSamplesCountDecimal))
+                    {
+                        editedRow.PaintedMetersSquared = (metersSquaredPerSampleDecimal * paintedSamplesCountDecimal).ToString();
+                        
+                        LaboratoryDayDataGrid.ItemsSource = null;
+                        LaboratoryDayDataGrid.ItemsSource = DataItems;
+                    }
                 }
 
             }
