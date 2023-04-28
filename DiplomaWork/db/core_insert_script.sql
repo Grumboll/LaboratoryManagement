@@ -3,6 +3,9 @@
 INSERT INTO users(id, username, password, password_salt, first_name, last_name, created_by, updated_by) VALUES 
 (1, 'admin', 'yNcf58gzTp62MaOa23THAOOj50VXmR6i8oDt/Nff4d0=', '19cLL8FFIdfomX/FW8ZSFw==', 'Admin_first_name', 'Admin_last_name', 1, 1);
 
+INSERT INTO user_has_roles(id, user_id, role_id) VALUES 
+(1, 1, 1);
+
 INSERT INTO roles(id, name, slug) VALUES 
 (1, 'Админ', 'roles.admin'),
 (2, 'Лаборант', 'roles.laboratory_assistant'),

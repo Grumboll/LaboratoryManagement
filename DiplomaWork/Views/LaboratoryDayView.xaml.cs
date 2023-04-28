@@ -13,6 +13,10 @@ using System.Windows.Media.Animation;
 using Serilog;
 using DiplomaWork.Services;
 using System.Xml.Linq;
+using ToastNotifications;
+using ToastNotifications.Lifetime;
+using ToastNotifications.Position;
+using ToastNotifications.Messages;
 
 namespace DiplomaWork.Views
 {
@@ -47,6 +51,21 @@ namespace DiplomaWork.Views
             LaboratoryDayDataGrid.ItemsSource = DataItems;
         }
 
+        Notifier notifier = new Notifier(cfg =>
+        {
+            cfg.PositionProvider = new WindowPositionProvider(
+                parentWindow: Application.Current.MainWindow,
+                corner: Corner.TopRight,
+                offsetX: 10,
+                offsetY: 10);
+
+            cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
+                notificationLifetime: TimeSpan.FromSeconds(3),
+                maximumNotificationCount: MaximumNotificationCount.FromCount(5));
+
+            cfg.Dispatcher = Application.Current.Dispatcher;
+        });
+
         private void AddRow_Click(object sender, RoutedEventArgs e)
         {
             DataItems.Add(new LaboratoryDayItem());
@@ -59,7 +78,6 @@ namespace DiplomaWork.Views
 
             // Get the data source of the DataGrid
             var source = LaboratoryDayDataGrid.ItemsSource as ObservableCollection<LaboratoryDayItem>;
-            
 
             if (source.Contains(item))
             {
@@ -80,7 +98,7 @@ namespace DiplomaWork.Views
                         LaboratoryDayDataGrid.ItemsSource = null;
                         LaboratoryDayDataGrid.ItemsSource = source;
                     }));
-                } 
+                }
                 else
                 {
                     source.Remove((LaboratoryDayItem)item);
@@ -126,94 +144,95 @@ namespace DiplomaWork.Views
         {
             var context = new laboratory_2023Context();
             List <LaboratoryDay> newlyCreatedDayItems = new List<LaboratoryDay>();
-
-            try
+            if (App.UserPermissions.Contains("permissions.all") || App.UserPermissions.Contains("permissions.create_days") || 
+                App.UserPermissions.Contains("permissions.edit_days") || App.UserPermissions.Contains("permissions.delete_days"))
             {
-                foreach (LaboratoryDayItem item in DataItems)
+                try
                 {
-                    //DataItems contains everything from the database with their Ids, If there is a LaboratoryDayItem with no Id, create a new row in the database for it
-                    if (item.Id == 0)
+                    foreach (LaboratoryDayItem item in DataItems)
                     {
-                        LaboratoryDay newLaboratoryDay = new LaboratoryDay
+                        //DataItems contains everything from the database with their Ids, If there is a LaboratoryDayItem with no Id, create a new row in the database for it
+                        if (item.Id == 0)
                         {
-                            Day = DateOnly.FromDateTime((DateTime)LaboratoryDayDatePicker.SelectedDate),
-                            MonthId = (uint) LaboratoryDayDatePicker.SelectedDate.Value.Month,
-                            Year = (ushort) LaboratoryDayDatePicker.SelectedDate.Value.Year,
-                            ProfileId = (uint) item.ProfileId,
-                            MetersSquaredPerSample = decimal.Parse(item.MetersSquaredPerSample),
-                            PaintedSamplesCount = uint.Parse(item.PaintedSamplesCount),
-                            PaintedMetersSquared = decimal.Parse(item.PaintedMetersSquared),
-                            KilogramsPerMeter = item.KilogramsPerMeter != null ? decimal.Parse(item.KilogramsPerMeter) : null,
-                            CreatedAt = DateTime.Now,
-                            UpdatedAt = DateTime.Now,
-                            DeletedAt = null,
-                            CreatedBy = App.CurrentUser.Id,
-                            UpdatedBy = App.CurrentUser.Id,
-                        };
+                            LaboratoryDay newLaboratoryDay = new LaboratoryDay
+                            {
+                                Day = DateOnly.FromDateTime((DateTime)LaboratoryDayDatePicker.SelectedDate),
+                                MonthId = (uint)LaboratoryDayDatePicker.SelectedDate.Value.Month,
+                                Year = (ushort)LaboratoryDayDatePicker.SelectedDate.Value.Year,
+                                ProfileId = (uint)item.ProfileId,
+                                MetersSquaredPerSample = decimal.Parse(item.MetersSquaredPerSample),
+                                PaintedSamplesCount = uint.Parse(item.PaintedSamplesCount),
+                                PaintedMetersSquared = decimal.Parse(item.PaintedMetersSquared),
+                                KilogramsPerMeter = item.KilogramsPerMeter != null ? decimal.Parse(item.KilogramsPerMeter) : null,
+                                CreatedAt = DateTime.Now,
+                                UpdatedAt = DateTime.Now,
+                                DeletedAt = null,
+                                CreatedBy = App.CurrentUser.Id,
+                                UpdatedBy = App.CurrentUser.Id,
+                            };
 
-                        context.LaboratoryDays.Add(newLaboratoryDay);
+                            context.LaboratoryDays.Add(newLaboratoryDay);
 
-                        //Needed so we can later update LaboratoryDayIds, this makes it possible  to delete an item that was just created
-                        newlyCreatedDayItems.Add(newLaboratoryDay);
+                            //Needed so we can later update LaboratoryDayIds, this makes it possible  to delete an item that was just created
+                            newlyCreatedDayItems.Add(newLaboratoryDay);
 
-                        continue;
+                            continue;
+                        }
+
+                        //In DataItems if a row has been deleted it won't get needlessly updated since it won't be present in the ObservableCollection
+                        var rowToUpdate = context.LaboratoryDays.FirstOrDefault(row => row.Id == item.Id);
+
+                        if (item.Id == null && DataItems.Count == 1)
+                        {
+                            rowToUpdate = context.LaboratoryDays.FirstOrDefault(row => row.Id == LaboratoryDayIds[0]);
+                            rowToUpdate.DeletedAt = DateTime.Now;
+                        }
+                        else
+                        {
+                            rowToUpdate.ProfileId = (uint)item.ProfileId;
+                            rowToUpdate.MetersSquaredPerSample = decimal.Parse(item.MetersSquaredPerSample);
+                            rowToUpdate.PaintedSamplesCount = uint.Parse(item.PaintedSamplesCount);
+                            rowToUpdate.PaintedMetersSquared = decimal.Parse(item.PaintedMetersSquared);
+                            rowToUpdate.KilogramsPerMeter = item.KilogramsPerMeter != null ? decimal.Parse(item.KilogramsPerMeter) : null;
+                            rowToUpdate.UpdatedAt = DateTime.Now;
+                            rowToUpdate.UpdatedBy = App.CurrentUser.Id;
+                        }
                     }
 
-                    //In DataItems if a row has been deleted it won't get needlessly updated since it won't be present in the ObservableCollection
-                    var rowToUpdate = context.LaboratoryDays.FirstOrDefault(row => row.Id == item.Id);
+                    //Get the difference between LaboratoryDayIds, which is set when loading DataItems, and DataItems that has only ids to be updated
+                    List<uint?> idsToDelete = LaboratoryDayIds.Except(DataItems.Select(x => x.Id)).ToList();
 
-                    if (item.Id == null && DataItems.Count == 1)
+                    foreach (uint id in idsToDelete)
                     {
-                        rowToUpdate = context.LaboratoryDays.FirstOrDefault(row => row.Id == LaboratoryDayIds[0]);
-                        rowToUpdate.DeletedAt = DateTime.Now;
+                        var rowToDelete = context.LaboratoryDays.FirstOrDefault(x => x.Id == id);
+
+                        //Soft Delete the item from the database
+                        rowToDelete.DeletedAt = DateTime.Now;
                     }
-                    else
-                    {
-                        rowToUpdate.ProfileId = (uint)item.ProfileId;
-                        rowToUpdate.MetersSquaredPerSample = decimal.Parse(item.MetersSquaredPerSample);
-                        rowToUpdate.PaintedSamplesCount = uint.Parse(item.PaintedSamplesCount);
-                        rowToUpdate.PaintedMetersSquared = decimal.Parse(item.PaintedMetersSquared);
-                        rowToUpdate.KilogramsPerMeter = item.KilogramsPerMeter != null ? decimal.Parse(item.KilogramsPerMeter) : null;
-                        rowToUpdate.UpdatedAt = DateTime.Now;
-                        rowToUpdate.UpdatedBy = App.CurrentUser.Id;
-                    }
+
+                    context.SaveChanges();
+                    notifier.ShowSuccess("Успешно запазени промени!");
+
+                    LaboratoryDayIds.AddRange(newlyCreatedDayItems.Select(o => (uint?)o.Id));
+
+                    DataItems = new ObservableCollection<LaboratoryDayItem>(getLaboratoryDayItemsList(context, DateTime.Now.Date));
+                    LaboratoryDayDataGrid.ItemsSource = null;
+                    LaboratoryDayDataGrid.ItemsSource = DataItems;
                 }
-
-                //Get the difference between LaboratoryDayIds, which is set when loading DataItems, and DataItems that has only ids to be updated
-                List<uint?> idsToDelete = LaboratoryDayIds.Except(DataItems.Select(x => x.Id)).ToList();
-
-                foreach (uint id in idsToDelete)
+                catch (Exception ex)
                 {
-                    var rowToDelete = context.LaboratoryDays.FirstOrDefault(x => x.Id == id);
+                    context.Database.CurrentTransaction?.Rollback();
 
-                    //Soft Delete the item from the database
-                    rowToDelete.DeletedAt = DateTime.Now;
+                    Log.Error(ex, "An error occurred while saving changes.");
+                    notifier.ShowError("Грешка при запазване на промените!");
                 }
-
-                context.SaveChanges();
-                SaveLabel.Content = "Успешно запазени промени!";
-                SaveLabel.Foreground = new SolidColorBrush(Colors.Green);
-                var storyboard = (Storyboard)FindResource("FadeInOut");
-                storyboard.Stop();
-                storyboard.Begin(SaveLabel);
-
-                LaboratoryDayIds.AddRange(newlyCreatedDayItems.Select(o => (uint?) o.Id));
-
+            }
+            else
+            {
+                notifier.ShowWarning("Нямате нужните права, за да изпълните тази операция!");
                 DataItems = new ObservableCollection<LaboratoryDayItem>(getLaboratoryDayItemsList(context, DateTime.Now.Date));
                 LaboratoryDayDataGrid.ItemsSource = null;
                 LaboratoryDayDataGrid.ItemsSource = DataItems;
-            }
-            catch(Exception ex)
-            {
-                context.Database.CurrentTransaction?.Rollback();
-
-                Log.Error(ex, "An error occurred while saving changes.");
-
-                SaveLabel.Content = "Грешка при запазване на промените!";
-                SaveLabel.Foreground = new SolidColorBrush(Colors.Red);
-                var storyboard = (Storyboard)FindResource("FadeInOut");
-                storyboard.Stop();
-                storyboard.Begin(SaveLabel);
             }
 
             context.Dispose();

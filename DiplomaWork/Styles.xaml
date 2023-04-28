@@ -49,14 +49,4 @@
         </Style.Triggers>
     </Style>
 
-    <Storyboard x:Key="FadeInOut">
-        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Duration="0:0:0">
-            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}" />
-        </ObjectAnimationUsingKeyFrames>
-        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1.0" To="0.0" Duration="0:0:2" BeginTime="0:0:1" />
-        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Duration="0:0:0" BeginTime="0:0:2">
-            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Collapsed}" />
-        </ObjectAnimationUsingKeyFrames>
-    </Storyboard>
-
 </ResourceDictionary>

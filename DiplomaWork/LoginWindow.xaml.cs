@@ -9,6 +9,7 @@ using DiplomaWork.Helpers;
 using System.Data.SqlTypes;
 using System.Windows.Input;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace DiplomaWork
 {
@@ -79,6 +80,7 @@ namespace DiplomaWork
                         }
 
                         App.CurrentUser = user;
+                        setUserPermissions(user.Id);
 
                         // Close the current window
                         this.Close();
@@ -120,6 +122,7 @@ namespace DiplomaWork
                         mainWindow.Show();
 
                         App.CurrentUser = user;
+                        setUserPermissions(user.Id);
 
                         this.Close();
                     }
@@ -189,7 +192,18 @@ namespace DiplomaWork
             }
         }
 
+        private void setUserPermissions(uint id)
+        {
+            App.UserPermissions = _dbContext.Permissions
+            .Where(p => _dbContext.RoleHasPermissions
+                .Where(rp => _dbContext.UserHasRoles
+                    .Where(ur => ur.UserId == id)
+                    .Select(ur => ur.RoleId)
+                    .Contains(rp.RoleId))
+                .Select(rp => rp.PermissionId)
+                .Contains(p.Id))
+            .Select(p => p.Slug)
+            .ToList();
+        }
     }
-
-
 }

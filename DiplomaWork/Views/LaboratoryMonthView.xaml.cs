@@ -12,6 +12,10 @@ using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using System.Windows.Media;
 using System.Windows.Input;
+using ToastNotifications;
+using ToastNotifications.Lifetime;
+using ToastNotifications.Position;
+using ToastNotifications.Messages;
 
 namespace DiplomaWork.Views
 {
@@ -51,6 +55,21 @@ namespace DiplomaWork.Views
             LaboratoryMonthDataGrid.ItemsSource = DataItems;
             LaboratoryMonthChemicalDataGrid.ItemsSource = ChemicalDataItems;
         }
+
+        Notifier notifier = new Notifier(cfg =>
+        {
+            cfg.PositionProvider = new WindowPositionProvider(
+                parentWindow: Application.Current.MainWindow,
+                corner: Corner.TopRight,
+                offsetX: 10,
+                offsetY: 10);
+
+            cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
+                notificationLifetime: TimeSpan.FromSeconds(3),
+                maximumNotificationCount: MaximumNotificationCount.FromCount(5));
+
+            cfg.Dispatcher = Application.Current.Dispatcher;
+        });
 
         private void addDataItemsIfNeeded()
         {
@@ -194,160 +213,168 @@ namespace DiplomaWork.Views
             var context = new laboratory_2023Context();
             List<LaboratoryMonth> newlyCreatedMonthItems = new List<LaboratoryMonth>();
             List<LaboratoryMonthChemical> newlyCreatedMonthChemicalItems = new List<LaboratoryMonthChemical>();
-
-            try
+            if (App.UserPermissions.Contains("permissions.all") || App.UserPermissions.Contains("permissions.create_months") ||
+                App.UserPermissions.Contains("permissions.edit_months") || App.UserPermissions.Contains("permissions.delete_months"))
             {
-                foreach (LaboratoryMonthItem item in DataItems)
+                try
                 {
-                    if (item.Id == 0)
+                    foreach (LaboratoryMonthItem item in DataItems)
                     {
-                        LaboratoryMonth newLaboratoryMonth = new LaboratoryMonth
+                        if (item.Id == 0)
                         {
-                            Date = DateOnly.FromDateTime((DateTime)item.LaboratoryDayDate),
-                            MonthId = (uint)LaboratoryMonthPicker.SelectedDate.Value.Month,
-                            Year = (short) LaboratoryMonthPicker.SelectedDate.Value.Year,
-                            Kilograms = decimal.Parse(item.Kilograms),
-                            MetersSquared = decimal.Parse(item.MetersSquared),
-                            CreatedAt = DateTime.Now,
-                            UpdatedAt = DateTime.Now,
-                            DeletedAt = null,
-                            CreatedBy = App.CurrentUser.Id,
-                            UpdatedBy = App.CurrentUser.Id,
-                        };
+                            LaboratoryMonth newLaboratoryMonth = new LaboratoryMonth
+                            {
+                                Date = DateOnly.FromDateTime((DateTime)item.LaboratoryDayDate),
+                                MonthId = (uint)LaboratoryMonthPicker.SelectedDate.Value.Month,
+                                Year = (short)LaboratoryMonthPicker.SelectedDate.Value.Year,
+                                Kilograms = decimal.Parse(item.Kilograms),
+                                MetersSquared = decimal.Parse(item.MetersSquared),
+                                CreatedAt = DateTime.Now,
+                                UpdatedAt = DateTime.Now,
+                                DeletedAt = null,
+                                CreatedBy = App.CurrentUser.Id,
+                                UpdatedBy = App.CurrentUser.Id,
+                            };
 
-                        context.LaboratoryMonths.Add(newLaboratoryMonth);
+                            context.LaboratoryMonths.Add(newLaboratoryMonth);
 
-                        //Needed so we can later update LaboratoryMonthIds, this makes it possible  to delete an item that was just created
-                        newlyCreatedMonthItems.Add(newLaboratoryMonth);
+                            //Needed so we can later update LaboratoryMonthIds, this makes it possible  to delete an item that was just created
+                            newlyCreatedMonthItems.Add(newLaboratoryMonth);
 
-                        continue;
-                    }
-
-                    //In DataItems if a row has been deleted it won't get needlessly updated since it won't be present in the ObservableCollection
-                    var rowToUpdate = context.LaboratoryMonths.FirstOrDefault(row => row.Id == item.Id);
-
-                    if (item.Id == null && DataItems.Count == 1)
-                    {
-                        rowToUpdate = context.LaboratoryMonths.FirstOrDefault(row => row.Id == LaboratoryMonthIds[0]);
-                        rowToUpdate.DeletedAt = DateTime.Now;
-                    }
-                    else
-                    {
-                        if (rowToUpdate != null)
-                        {
-                            rowToUpdate.Date = DateOnly.FromDateTime((DateTime)item.LaboratoryDayDate);
-                            rowToUpdate.Kilograms = decimal.Parse(item.Kilograms);
-                            rowToUpdate.MetersSquared = decimal.Parse(item.MetersSquared);
-                            rowToUpdate.UpdatedAt = DateTime.Now;
-                            rowToUpdate.UpdatedBy = App.CurrentUser.Id;
-
+                            continue;
                         }
-                    }
-                }
 
-                //Get the difference between LaboratoryMonthIds, which is set when loading DataItems, and DataItems that has only ids to be updated
-                List<uint?> idsToDeleteMonths = LaboratoryMonthIds.Except(DataItems.Select(x => x.Id)).ToList();
+                        //In DataItems if a row has been deleted it won't get needlessly updated since it won't be present in the ObservableCollection
+                        var rowToUpdate = context.LaboratoryMonths.FirstOrDefault(row => row.Id == item.Id);
 
-                foreach (uint id in idsToDeleteMonths)
-                {
-                    var rowToDelete = context.LaboratoryMonths.FirstOrDefault(x => x.Id == id);
-
-                    //Soft Delete the item from the database
-                    rowToDelete.DeletedAt = DateTime.Now;
-                }
-
-                foreach (LaboratoryMonthChemicalItem item in ChemicalDataItems)
-                {
-                    if (item.Id == 0 && item.ChemicalExpenditure != null && item.ChemicalName != null && item.ExpensePerMeterSquared != null)
-                    {
-                        LaboratoryMonthChemical newLaboratoryMonthChemical = new LaboratoryMonthChemical
+                        if (item.Id == null && DataItems.Count == 1)
                         {
-                            MonthId = (uint)LaboratoryMonthPicker.SelectedDate.Value.Month,
-                            Year = (ushort)LaboratoryMonthPicker.SelectedDate.Value.Year,
-                            Name = item.ChemicalName,
-                            ChemicalExpenditure = decimal.Parse(item.ChemicalExpenditure),
-                            ExpensePerMeterSquared = decimal.Parse(item.ExpensePerMeterSquared),
-                            CreatedAt = DateTime.Now,
-                            UpdatedAt = DateTime.Now,
-                            DeletedAt = null,
-                            CreatedBy = App.CurrentUser.Id,
-                            UpdatedBy = App.CurrentUser.Id,
-                        };
-
-                        context.LaboratoryMonthChemicals.Add(newLaboratoryMonthChemical);
-
-                        //Needed so we can later update LaboratoryMonthChemicalIds, this makes it possible  to delete an item that was just created
-                        newlyCreatedMonthChemicalItems.Add(newLaboratoryMonthChemical);
-
-                        continue;
-                    }
-
-                    //In DataItems if a row has been deleted it won't get needlessly updated since it won't be present in the ObservableCollection
-                    var rowToUpdate = context.LaboratoryMonthChemicals.FirstOrDefault(row => row.Id == item.Id);
-
-                    if (item.Id == null && ChemicalDataItems.Count == 1)
-                    {
-                        if (LaboratoryMonthChemicalIds.Count != 0)
-                        {
-                            rowToUpdate = context.LaboratoryMonthChemicals.FirstOrDefault(row => row.Id == LaboratoryMonthChemicalIds[0]);
+                            rowToUpdate = context.LaboratoryMonths.FirstOrDefault(row => row.Id == LaboratoryMonthIds[0]);
                             rowToUpdate.DeletedAt = DateTime.Now;
                         }
-                    }
-                    else
-                    {
-                        if (rowToUpdate != null)
+                        else
                         {
-                            rowToUpdate.Name = item.ChemicalName;
-                            rowToUpdate.ChemicalExpenditure = decimal.Parse(item.ChemicalExpenditure);
-                            rowToUpdate.ExpensePerMeterSquared = decimal.Parse(item.ExpensePerMeterSquared);
-                            rowToUpdate.UpdatedAt = DateTime.Now;
-                            rowToUpdate.UpdatedBy = App.CurrentUser.Id;
+                            if (rowToUpdate != null)
+                            {
+                                rowToUpdate.Date = DateOnly.FromDateTime((DateTime)item.LaboratoryDayDate);
+                                rowToUpdate.Kilograms = decimal.Parse(item.Kilograms);
+                                rowToUpdate.MetersSquared = decimal.Parse(item.MetersSquared);
+                                rowToUpdate.UpdatedAt = DateTime.Now;
+                                rowToUpdate.UpdatedBy = App.CurrentUser.Id;
+
+                            }
                         }
                     }
+
+                    //Get the difference between LaboratoryMonthIds, which is set when loading DataItems, and DataItems that has only ids to be updated
+                    List<uint?> idsToDeleteMonths = LaboratoryMonthIds.Except(DataItems.Select(x => x.Id)).ToList();
+
+                    foreach (uint id in idsToDeleteMonths)
+                    {
+                        var rowToDelete = context.LaboratoryMonths.FirstOrDefault(x => x.Id == id);
+
+                        //Soft Delete the item from the database
+                        rowToDelete.DeletedAt = DateTime.Now;
+                    }
+
+                    foreach (LaboratoryMonthChemicalItem item in ChemicalDataItems)
+                    {
+                        if (item.Id == 0 && item.ChemicalExpenditure != null && item.ChemicalName != null && item.ExpensePerMeterSquared != null)
+                        {
+                            LaboratoryMonthChemical newLaboratoryMonthChemical = new LaboratoryMonthChemical
+                            {
+                                MonthId = (uint)LaboratoryMonthPicker.SelectedDate.Value.Month,
+                                Year = (ushort)LaboratoryMonthPicker.SelectedDate.Value.Year,
+                                Name = item.ChemicalName,
+                                ChemicalExpenditure = decimal.Parse(item.ChemicalExpenditure),
+                                ExpensePerMeterSquared = decimal.Parse(item.ExpensePerMeterSquared),
+                                CreatedAt = DateTime.Now,
+                                UpdatedAt = DateTime.Now,
+                                DeletedAt = null,
+                                CreatedBy = App.CurrentUser.Id,
+                                UpdatedBy = App.CurrentUser.Id,
+                            };
+
+                            context.LaboratoryMonthChemicals.Add(newLaboratoryMonthChemical);
+
+                            //Needed so we can later update LaboratoryMonthChemicalIds, this makes it possible  to delete an item that was just created
+                            newlyCreatedMonthChemicalItems.Add(newLaboratoryMonthChemical);
+
+                            continue;
+                        }
+
+                        //In DataItems if a row has been deleted it won't get needlessly updated since it won't be present in the ObservableCollection
+                        var rowToUpdate = context.LaboratoryMonthChemicals.FirstOrDefault(row => row.Id == item.Id);
+
+                        if (item.Id == null && ChemicalDataItems.Count == 1)
+                        {
+                            if (LaboratoryMonthChemicalIds.Count != 0)
+                            {
+                                rowToUpdate = context.LaboratoryMonthChemicals.FirstOrDefault(row => row.Id == LaboratoryMonthChemicalIds[0]);
+                                rowToUpdate.DeletedAt = DateTime.Now;
+                            }
+                        }
+                        else
+                        {
+                            if (rowToUpdate != null)
+                            {
+                                rowToUpdate.Name = item.ChemicalName;
+                                rowToUpdate.ChemicalExpenditure = decimal.Parse(item.ChemicalExpenditure);
+                                rowToUpdate.ExpensePerMeterSquared = decimal.Parse(item.ExpensePerMeterSquared);
+                                rowToUpdate.UpdatedAt = DateTime.Now;
+                                rowToUpdate.UpdatedBy = App.CurrentUser.Id;
+                            }
+                        }
+                    }
+
+                    //Get the difference between LaboratoryMonthChemicalIds, which is set when loading DataItems, and DataItems that has only ids to be updated
+                    List<uint?> idsToDeleteChemical = LaboratoryMonthChemicalIds.Except(ChemicalDataItems.Select(x => x.Id)).ToList();
+
+                    foreach (uint id in idsToDeleteChemical)
+                    {
+                        var rowToDelete = context.LaboratoryMonthChemicals.FirstOrDefault(x => x.Id == id);
+
+                        //Soft Delete the item from the database
+                        rowToDelete.DeletedAt = DateTime.Now;
+                    }
+
+                    context.SaveChanges();
+                    notifier.ShowSuccess("Успешно запазени промени!");
+
+                    LaboratoryMonthIds.AddRange(newlyCreatedMonthItems.Select(o => (uint?)o.Id));
+
+                    DataItems = new ObservableCollection<LaboratoryMonthItem>(getLaboratoryMonthItemsList(context, DateTime.Now.Date));
+                    LaboratoryMonthDataGrid.ItemsSource = null;
+                    LaboratoryMonthDataGrid.ItemsSource = DataItems;
+
+                    LaboratoryMonthChemicalIds.AddRange(newlyCreatedMonthChemicalItems.Select(o => (uint?)o.Id));
+
+                    LaboratoryMonthChemicalDataGrid.ItemsSource = null;
+                    LaboratoryMonthChemicalDataGrid.ItemsSource = ChemicalDataItems;
+
+                    addDataItemsIfNeeded();
                 }
-
-                //Get the difference between LaboratoryMonthChemicalIds, which is set when loading DataItems, and DataItems that has only ids to be updated
-                List<uint?> idsToDeleteChemical = LaboratoryMonthChemicalIds.Except(ChemicalDataItems.Select(x => x.Id)).ToList();
-
-                foreach (uint id in idsToDeleteChemical)
+                catch (Exception ex)
                 {
-                    var rowToDelete = context.LaboratoryMonthChemicals.FirstOrDefault(x => x.Id == id);
+                    context.Database.CurrentTransaction?.Rollback();
 
-                    //Soft Delete the item from the database
-                    rowToDelete.DeletedAt = DateTime.Now;
+                    Log.Error(ex, "An error occurred while saving changes.");
+
+                    notifier.ShowError("Грешка при запазване на промените!");
                 }
-
-                context.SaveChanges();
-                SaveLabel.Content = "Успешно запазени промени!";
-                SaveLabel.Foreground = new SolidColorBrush(Colors.Green);
-                var storyboard = (Storyboard)FindResource("FadeInOut");
-                storyboard.Stop();
-                storyboard.Begin(SaveLabel);
-
-                LaboratoryMonthIds.AddRange(newlyCreatedMonthItems.Select(o => (uint?)o.Id));
+            }
+            else
+            {
+                notifier.ShowWarning("Нямате нужните права, за да изпълните тази операция!");
 
                 DataItems = new ObservableCollection<LaboratoryMonthItem>(getLaboratoryMonthItemsList(context, DateTime.Now.Date));
                 LaboratoryMonthDataGrid.ItemsSource = null;
                 LaboratoryMonthDataGrid.ItemsSource = DataItems;
 
-                LaboratoryMonthChemicalIds.AddRange(newlyCreatedMonthChemicalItems.Select(o => (uint?)o.Id));
-
                 LaboratoryMonthChemicalDataGrid.ItemsSource = null;
                 LaboratoryMonthChemicalDataGrid.ItemsSource = ChemicalDataItems;
 
                 addDataItemsIfNeeded();
-            }
-            catch (Exception ex)
-            {
-                context.Database.CurrentTransaction?.Rollback();
-
-                Log.Error(ex, "An error occurred while saving changes.");
-
-                SaveLabel.Content = "Грешка при запазване на промените!";
-                SaveLabel.Foreground = new SolidColorBrush(Colors.Red);
-                var storyboard = (Storyboard)FindResource("FadeInOut");
-                storyboard.Stop();
-                storyboard.Begin(SaveLabel);
             }
 
             context.Dispose();

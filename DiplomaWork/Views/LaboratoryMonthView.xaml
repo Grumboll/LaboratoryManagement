@@ -26,7 +26,6 @@
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <Label FontWeight="DemiBold" x:Name="SaveLabel" Margin="2 5 2 2" Grid.Column="0" HorizontalAlignment="Left" Visibility="Collapsed"></Label>
             <DatePicker Name="LaboratoryMonthPicker" Grid.Column="2" my:DatePickerCalendar.IsMonthYear="True" Language="bg-BG" Width="200" MaxWidth="200" Margin="2 7 2 2"
                 my:DatePickerDateFormat.DateFormat="MM/yyyy" SelectedDateChanged="DatePicker_SelectedDateChanged"/>
             <Button Grid.Column="3" Style="{StaticResource AppButtonStyle}" Click="Generate_Click">Генерирай</Button>
