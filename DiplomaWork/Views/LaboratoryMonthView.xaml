@@ -5,7 +5,13 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:my="clr-namespace:DiplomaWork.Themes" 
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800">
+      d:DesignHeight="450" d:DesignWidth="800"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+      Background="{DynamicResource MaterialDesignPaper}"
+      TextElement.FontWeight="Medium"
+      TextElement.FontSize="14"
+       FontFamily="{materialDesign:MaterialDesignFont}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -28,9 +34,9 @@
             </Grid.ColumnDefinitions>
             <DatePicker Name="LaboratoryMonthPicker" Grid.Column="2" my:DatePickerCalendar.IsMonthYear="True" Language="bg-BG" Width="200" MaxWidth="200" Margin="2 7 2 2"
                 my:DatePickerDateFormat.DateFormat="MM/yyyy" SelectedDateChanged="DatePicker_SelectedDateChanged"/>
-            <Button Grid.Column="3" Style="{StaticResource AppButtonStyle}" Click="Generate_Click">Генерирай</Button>
-            <Button Grid.Column="4" Style="{StaticResource AppButtonStyle}" Click="ReloadFromDb_Click">Презареди</Button>
-            <Button Grid.Column="5" Style="{StaticResource AppButtonStyle}" Click="Save_Click">Запази</Button>
+            <Button Grid.Column="3" Style="{DynamicResource MaterialDesignRaisedButton}" Click="Generate_Click" Margin="3">Генерирай</Button>
+            <Button Grid.Column="4" Style="{DynamicResource MaterialDesignRaisedButton}" Click="ReloadFromDb_Click" Margin="3">Презареди</Button>
+            <Button Grid.Column="5" Style="{DynamicResource MaterialDesignRaisedButton}" Click="Save_Click" Margin="3">Запази</Button>
         </Grid>
         <ScrollViewer Grid.Row="1" x:Name="LaboratoryMonthScrollViewer" Width="auto">
             <Grid>
@@ -52,13 +58,13 @@
                         <DataGridTemplateColumn Header="Операции" HeaderStyle="{StaticResource DataGridColumnHeader}" CanUserReorder="False">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Content="X" Margin="15 2 15 2" Background="#F61E2C" FontSize="15" FontWeight="DemiBold" Click="DeleteChemicalButton_Click"/>
+                                    <Button Content="{materialDesign:PackIcon Minus}" Margin="15 2 15 2" Background="#F61E2C" FontSize="15" FontWeight="DemiBold" Click="DeleteChemicalButton_Click"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
-                <Button Grid.Row="1" Style="{StaticResource AppButtonStyle}" HorizontalAlignment="Center" Content="+" MaxWidth="75" Width="35" Height="35" Margin="2 10 2 2" Click="AddChemicalRow_Click"/>
+                <Button Grid.Row="1" Style="{DynamicResource MaterialDesignRaisedButton}" HorizontalAlignment="Center" Content="{materialDesign:PackIcon Plus}" MaxWidth="75" Width="50" Height="35" Margin="2 10 2 2" Click="AddChemicalRow_Click"/>
                 <DataGrid Grid.Column="0" Grid.Row="2" x:Name="LaboratoryMonthDataGrid" AutoGenerateColumns="False" SelectionMode="Single" SelectionUnit="Cell"
                             Margin="5" VerticalScrollBarVisibility="Hidden" CanUserAddRows="False" PreviewMouseWheel="MonthDataGrid_PreviewMouseWheel">
                     <DataGrid.Columns>
@@ -74,13 +80,13 @@
                         <DataGridTemplateColumn Header="Операции" HeaderStyle="{StaticResource DataGridColumnHeader}" CanUserReorder="False">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Content="X" Margin="15 2 15 2" Background="#F61E2C" FontSize="15" FontWeight="DemiBold" Click="DeleteMonthButton_Click"/>
+                                    <Button Content="{materialDesign:PackIcon Minus}" Margin="15 2 15 2" Background="#F61E2C" FontSize="15" FontWeight="DemiBold" Click="DeleteMonthButton_Click"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
-                <Button Grid.Row="3" Style="{StaticResource AppButtonStyle}" HorizontalAlignment="Center" Content="+" MaxWidth="75" Width="35" Height="35" Margin="2 10 2 2" Click="AddMonthRow_Click"/>
+                <Button Grid.Row="3" Style="{DynamicResource MaterialDesignRaisedButton}" HorizontalAlignment="Center" Content="{materialDesign:PackIcon Plus}" MaxWidth="75" Width="50" Height="35" Margin="2 10 2 2" Click="AddMonthRow_Click"/>
             </Grid>
         </ScrollViewer>
     </Grid>

@@ -4,7 +4,13 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800">
+      d:DesignHeight="450" d:DesignWidth="800"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+      Background="{DynamicResource MaterialDesignPaper}"
+      TextElement.FontWeight="Medium"
+      TextElement.FontSize="14"
+      FontFamily="{materialDesign:MaterialDesignFont}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -22,7 +28,7 @@
             </Grid.ColumnDefinitions>
             <DatePicker Grid.Column="2" x:Name="LaboratoryDayDatePicker" Language="bg-BG" Width="200" MaxWidth="200"
                 Margin="2 7 2 2" SelectedDateChanged="DatePicker_SelectedDateChanged"/>
-            <Button Grid.Column="3" Style="{StaticResource AppButtonStyle}" Click="LaboratoryDaySave_Click">Запази</Button>
+            <Button Grid.Column="3" Style="{DynamicResource MaterialDesignRaisedButton}" Click="LaboratoryDaySave_Click" Margin="3">Запази</Button>
         </Grid>
         <ScrollViewer Grid.Row="1" Width="auto" x:Name="LaboratoryDayScrollViewer">
             <StackPanel Orientation="Vertical">
@@ -52,13 +58,13 @@
                             <DataGridTemplateColumn Header="Операции" HeaderStyle="{StaticResource DataGridColumnHeader}" CanUserReorder="False">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Content="X" Margin="15 2 15 2" Background="#F61E2C" FontSize="15" FontWeight="DemiBold" Click="DeleteButton_Click"/>
+                                        <Button Content="{materialDesign:PackIcon Minus}" Margin="15 2 15 2" Background="#F61E2C" FontSize="15" FontWeight="DemiBold" Click="DeleteButton_Click"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Button Grid.Row="1" Style="{StaticResource AppButtonStyle}" HorizontalAlignment="Center" Content="+" MaxWidth="75" Width="35" Height="35" Margin="2 10 2 2" Click="AddRow_Click"/>
+                    <Button Grid.Row="1" Style="{DynamicResource MaterialDesignRaisedButton}" HorizontalAlignment="Center" Content="{materialDesign:PackIcon Plus}" MaxWidth="75" Width="50" Height="35" Margin="2 10 2 2" Click="AddRow_Click"/>
                 </Grid>
             </StackPanel>
         </ScrollViewer>

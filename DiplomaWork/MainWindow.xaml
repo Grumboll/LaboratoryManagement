@@ -6,6 +6,12 @@
         xmlns:control="clr-namespace:DiplomaWork.Controllers"
         xmlns:local="clr-namespace:DiplomaWork"
         mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="13"
+        FontFamily="{materialDesign:MaterialDesignFont}"
         Title="Laboratory" MinHeight="550" MinWidth="1050" Height="550" Width="1050">
     <Grid>
         <Grid.RowDefinitions>
@@ -14,17 +20,17 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Background="#F8F3D3">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="1.1*"/>
+                <ColumnDefinition Width="1.3*"/>
+                <ColumnDefinition Width="1.1*"/>
+                <ColumnDefinition Width="1.1*"/>
                 <ColumnDefinition Width="6*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Style="{StaticResource AppButtonStyle}" Click="LaboratoryDay_Click">Текущ ден</Button>
-            <Button Grid.Column="1" Style="{StaticResource AppButtonStyle}" Click="LaboratoryMonth_Click">Текущ месец</Button>
-            <Button Grid.Column="2" Style="{StaticResource AppButtonStyle}">Справки</Button>
-            <Button Grid.Column="3" Style="{StaticResource AppButtonStyle}">Настройки</Button>
-            <Button Grid.Column="4" HorizontalAlignment="Right" Name="LogOutButton" Click="LogOutButton_Click" Style="{StaticResource AppButtonStyle}">Изход</Button>
+            <Button Grid.Column="0" Style="{DynamicResource MaterialDesignRaisedButton}" Click="LaboratoryDay_Click" Margin="3">Текущ ден</Button>
+            <Button Grid.Column="1" Style="{DynamicResource MaterialDesignRaisedButton}" Click="LaboratoryMonth_Click" Margin="3">Текущ месец</Button>
+            <Button Grid.Column="2" Style="{DynamicResource MaterialDesignRaisedButton}" Margin="3">Справки</Button>
+            <Button Grid.Column="3" Style="{DynamicResource MaterialDesignRaisedButton}" Margin="3">Настройки</Button>
+            <Button Grid.Column="4" HorizontalAlignment="Right" Name="LogOutButton" Click="LogOutButton_Click" Style="{DynamicResource MaterialDesignRaisedButton}" Margin="3">Изход</Button>
         </Grid>
 
         <Grid Grid.Row="1">

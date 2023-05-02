@@ -10,6 +10,10 @@ using System.Data.SqlTypes;
 using System.Windows.Input;
 using System.Collections;
 using System.Collections.Generic;
+using ToastNotifications;
+using ToastNotifications.Lifetime;
+using ToastNotifications.Position;
+using ToastNotifications.Messages;
 
 namespace DiplomaWork
 {
@@ -37,6 +41,21 @@ namespace DiplomaWork
 
         }
 
+        Notifier notifier = new Notifier(cfg =>
+        {
+            cfg.PositionProvider = new WindowPositionProvider(
+                parentWindow: Application.Current.MainWindow,
+                corner: Corner.TopRight,
+                offsetX: 10,
+                offsetY: 10);
+
+            cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
+                notificationLifetime: TimeSpan.FromSeconds(3),
+                maximumNotificationCount: MaximumNotificationCount.FromCount(5));
+
+            cfg.Dispatcher = Application.Current.Dispatcher;
+        });
+
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             string username = UserNameTextBox.Text;
@@ -58,12 +77,10 @@ namespace DiplomaWork
 
             if (user != null)
             {
-                ErrorLabel.Visibility = Visibility.Hidden;
 
                 if (hashedPassword == null || hashedInputPassword == null)
                 {
-                    ErrorLabel.Content = "Грешни потребителски данни!";
-                    ErrorLabel.Visibility = Visibility.Visible;
+                    notifier.ShowError("Грешни потребителски данни!");
                 }
                 else
                 {
@@ -87,16 +104,14 @@ namespace DiplomaWork
                     }
                     else
                     {
-                        ErrorLabel.Content = "Грешни потребителски данни!";
-                        ErrorLabel.Visibility = Visibility.Visible;
+                        notifier.ShowError("Грешни потребителски данни!");
                     }
                 }
                                 
             }
             else
             {
-                ErrorLabel.Content = "Потребителското име не беше открито!";
-                ErrorLabel.Visibility = Visibility.Visible;
+                notifier.ShowError("Потребителското име не беше открито!");
             }
         }
 
@@ -109,8 +124,7 @@ namespace DiplomaWork
                 if (hashedPassword == null || hashedInputPassword == null)
                 {
                     InitializeComponent();
-                    ErrorLabel.Content = "Грешни потребителски данни!";
-                    ErrorLabel.Visibility = Visibility.Visible;
+                    notifier.ShowError("Грешни потребителски данни!");
                 }
                 else
                 {
@@ -129,8 +143,7 @@ namespace DiplomaWork
                     else
                     {
                         InitializeComponent();
-                        ErrorLabel.Content = "Грешни потребителски данни!";
-                        ErrorLabel.Visibility = Visibility.Visible;
+                        notifier.ShowError("Грешни потребителски данни!");
                     }
                 }
 
@@ -138,8 +151,7 @@ namespace DiplomaWork
             else
             {
                 InitializeComponent();
-                ErrorLabel.Content = "Потребителското име не беше открито!";
-                ErrorLabel.Visibility = Visibility.Visible;
+                notifier.ShowError("Потребителското име не беше открито!");
             }
         }
 
