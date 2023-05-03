@@ -150,9 +150,9 @@ namespace DiplomaWork.Views
 
         private void Generate_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult messageBoxResult = MessageBox.Show("Ще прегенерирате данните в таблицата! Ако имате промени ги запазете!", "Прегенериране на данни?", MessageBoxButton.YesNo);
+            bool? Result = new CustomMessageBox("Ще прегенерирате данните в таблицата! \nАко имате промени ги запазете!", "Прегенериране на данни?").ShowDialog();
 
-            if (messageBoxResult == MessageBoxResult.Yes)
+            if (Result.Value)
             {
                 var context = new laboratory_2023Context();
                 DateTime selectedDate = (DateTime)LaboratoryMonthPicker.SelectedDate;
@@ -169,9 +169,9 @@ namespace DiplomaWork.Views
         
         private void ReloadFromDb_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult messageBoxResult = MessageBox.Show("Ще презаредите данните в таблицата! Ако имате промени ги запазете!", "Презареждане на данни?", MessageBoxButton.YesNo);
+            bool? Result = new CustomMessageBox("Ще презаредите данните в таблицата! \nАко имате промени ги запазете!", "Презареждане на данни?").ShowDialog();
 
-            if (messageBoxResult == MessageBoxResult.Yes)
+            if (Result.Value)
             {
                 var context = new laboratory_2023Context();
                 DateTime selectedDate = (DateTime)LaboratoryMonthPicker.SelectedDate;

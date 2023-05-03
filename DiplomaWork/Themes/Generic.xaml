@@ -65,13 +65,13 @@
                                   HorizontalAlignment="Right"
                                   VerticalAlignment="Center"
                                   Margin="0 10 15 0">
-                                <Button
+                                <Button Style="{DynamicResource MaterialDesignRaisedButton}"
                                     Name="minimizeButton" Width="Auto" Height="Auto" Margin="0 0 5 5"
                                     Content="{materialDesign:PackIcon Minimize}"/>
-                                <Button
+                                <Button Style="{DynamicResource MaterialDesignRaisedButton}"
                                     Name="maximizeButton" Width="Auto" Height="Auto" Margin="0 0 5 5"
                                     Content="{materialDesign:PackIcon Maximize}"/>
-                                <Button
+                                <Button Style="{DynamicResource MaterialDesignRaisedButton}"
                                     Name="closeButton" Width="Auto" Height="Auto" Margin="0 0 5 5"
                                     Content="{materialDesign:PackIcon Close}"/>
                             </StackPanel>

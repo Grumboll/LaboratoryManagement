@@ -42,19 +42,19 @@ namespace DiplomaWork
 
         private void LogOutButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult messageBoxResult = MessageBox.Show("Сигурни ли сте, че искате да излезете от профила си?", "Излизане", MessageBoxButton.YesNo);
+            bool? Result = new CustomMessageBox("Сигурни ли сте, че искате да излезете от профила си?", "Излизане").ShowDialog();
 
-            if (messageBoxResult == MessageBoxResult.Yes)
+            if (Result.Value)
             {
                 if (File.Exists("login.dat"))
                 {
                     File.Delete("login.dat");
                 }
 
-                this.Close();
-
                 LoginWindow loginWindow = new LoginWindow();
                 loginWindow.Show();
+
+                this.Close();
             }
         }
 
