@@ -105,5 +105,22 @@ namespace DiplomaWork
                 notifier.ShowWarning("Нямате нужните права!");
             }
         }
+        
+        private void LaboratoryReports_Click(object sender, RoutedEventArgs e)
+        {
+            string viewName = "LaboratoryReportsView";
+            object view;
+
+            if (loadedViews.TryGetValue(viewName, out view))
+            {
+                ContentControl.Content = view;
+            }
+            else
+            {
+                view = new LaboratoryReportsView();
+                loadedViews.Add(viewName, view);
+                ContentControl.Content = view;
+            }
+        }
     }
 }

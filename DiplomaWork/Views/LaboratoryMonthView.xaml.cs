@@ -343,7 +343,7 @@ namespace DiplomaWork.Views
 
                     LaboratoryMonthIds.AddRange(newlyCreatedMonthItems.Select(o => (uint?)o.Id));
 
-                    DataItems = new ObservableCollection<LaboratoryMonthItem>(getLaboratoryMonthItemsList(context, DateTime.Now.Date));
+                    DataItems = new ObservableCollection<LaboratoryMonthItem>(getLaboratoryMonthItemsList(context, (DateTime) LaboratoryMonthPicker.SelectedDate));
                     LaboratoryMonthDataGrid.ItemsSource = null;
                     LaboratoryMonthDataGrid.ItemsSource = DataItems;
 
@@ -367,7 +367,7 @@ namespace DiplomaWork.Views
             {
                 notifier.ShowWarning("Нямате нужните права, за да изпълните тази операция!");
 
-                DataItems = new ObservableCollection<LaboratoryMonthItem>(getLaboratoryMonthItemsList(context, DateTime.Now.Date));
+                DataItems = new ObservableCollection<LaboratoryMonthItem>(getLaboratoryMonthItemsList(context, (DateTime) LaboratoryMonthPicker.SelectedDate));
                 LaboratoryMonthDataGrid.ItemsSource = null;
                 LaboratoryMonthDataGrid.ItemsSource = DataItems;
 

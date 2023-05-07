@@ -62,7 +62,7 @@
                     </Grid.ColumnDefinitions>
 
                     <Button x:Name="btnOk" Click="btnOk_Click" Grid.Column="1" Style="{DynamicResource MaterialDesignRaisedButton}" Margin="5" Width="100" Content="OK" ToolTip="Ok"/>
-                    <Button x:Name="btnCancel" Click="btnCancel_Click" Grid.Column="2" Style="{DynamicResource MaterialDesignRaisedButton}" Margin="5" Width="100" Content="Cancel" ToolTip="Cancel"/>
+                    <Button x:Name="btnCancel" Click="btnCancel_Click" Grid.Column="2" Style="{DynamicResource MaterialDesignRaisedButton}" Margin="5" Width="100" Content="Отказ" ToolTip="Отказ"/>
                 </Grid>
 
             </Grid>
