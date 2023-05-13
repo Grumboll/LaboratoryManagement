@@ -9,7 +9,7 @@ namespace DiplomaWork.Models
         public DateOnly Day { get; set; }
         public uint MonthId { get; set; }
         public ushort Year { get; set; }
-        public uint ProfileId { get; set; }
+        public uint ProfileHasLengthsPerimeterId { get; set; }
         public decimal MetersSquaredPerSample { get; set; }
         public uint PaintedSamplesCount { get; set; }
         public decimal PaintedMetersSquared { get; set; }
@@ -22,7 +22,7 @@ namespace DiplomaWork.Models
 
         public virtual User CreatedByNavigation { get; set; } = null!;
         public virtual Month Month { get; set; } = null!;
-        public virtual Profile Profile { get; set; } = null!;
+        public virtual ProfileHasLengthsPerimeter ProfileHasLengthsPerimeter { get; set; } = null!;
         public virtual User UpdatedByNavigation { get; set; } = null!;
     }
 }

@@ -14,14 +14,14 @@ namespace DiplomaWork.DataItems
     {
         public ObservableCollection<ProfileItem> Items { get; set; }
 
-        private int _ProfileId;
-        public int ProfileId
+        private int _ProfileHasLengthPerimeterId;
+        public int ProfileHasLengthsPerimeterId
         {
-            get { return _ProfileId; }
+            get { return _ProfileHasLengthPerimeterId; }
             set
             {
-                _ProfileId = value;
-                OnPropertyChanged(nameof(ProfileId));
+                _ProfileHasLengthPerimeterId = value;
+                OnPropertyChanged(nameof(ProfileHasLengthsPerimeterId));
             }
         }
 
@@ -34,7 +34,12 @@ namespace DiplomaWork.DataItems
         {
             using (var context = new laboratory_2023Context())
             {
-                var profiles = context.Profiles.Select(p => new ProfileItem { Id = p.Id, ProfileName = p.Name }).ToList();
+                var profiles = context.ProfileHasLengthsPerimeters
+                    .Join(context.Profiles,
+                        phlp => phlp.ProfileId,
+                        profile => profile.Id,
+                        (phlp, profile) => new { phlp, profile })
+                    .Select(p => new ProfileItem { Id = p.phlp.Id, ProfileName = p.profile.Name }).ToList();
 
                 Items = new ObservableCollection<ProfileItem>(profiles);
             }

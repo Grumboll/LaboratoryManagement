@@ -7,7 +7,6 @@ namespace DiplomaWork.Models
     {
         public Profile()
         {
-            LaboratoryDays = new HashSet<LaboratoryDay>();
             ProfileHasLengthsPerimeters = new HashSet<ProfileHasLengthsPerimeter>();
         }
 
@@ -21,7 +20,6 @@ namespace DiplomaWork.Models
 
         public virtual User CreatedByNavigation { get; set; } = null!;
         public virtual User UpdatedByNavigation { get; set; } = null!;
-        public virtual ICollection<LaboratoryDay> LaboratoryDays { get; set; }
         public virtual ICollection<ProfileHasLengthsPerimeter> ProfileHasLengthsPerimeters { get; set; }
     }
 }

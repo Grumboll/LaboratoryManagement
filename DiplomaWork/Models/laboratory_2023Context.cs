@@ -48,7 +48,7 @@ namespace DiplomaWork.Models
 
                 entity.HasIndex(e => e.MonthId, "fk_months_laboratory_day_idx");
 
-                entity.HasIndex(e => e.ProfileId, "fk_profile_laboratory_day");
+                entity.HasIndex(e => e.ProfileHasLengthsPerimeterId, "fk_profile_has_lengths_perimeter_laboratory_day2");
 
                 entity.HasIndex(e => e.CreatedBy, "fk_users_laboratory_day_profile1_idx");
 
@@ -96,9 +96,9 @@ namespace DiplomaWork.Models
                     .HasColumnType("int(10) unsigned")
                     .HasColumnName("painted_samples_count");
 
-                entity.Property(e => e.ProfileId)
+                entity.Property(e => e.ProfileHasLengthsPerimeterId)
                     .HasColumnType("int(10) unsigned")
-                    .HasColumnName("profile_id");
+                    .HasColumnName("profile_has_lengths_perimeter_id");
 
                 entity.Property(e => e.UpdatedAt)
                     .HasColumnType("timestamp")
@@ -125,11 +125,11 @@ namespace DiplomaWork.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_months_laboratory_day");
 
-                entity.HasOne(d => d.Profile)
+                entity.HasOne(d => d.ProfileHasLengthsPerimeter)
                     .WithMany(p => p.LaboratoryDays)
-                    .HasForeignKey(d => d.ProfileId)
+                    .HasForeignKey(d => d.ProfileHasLengthsPerimeterId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_profile_laboratory_day");
+                    .HasConstraintName("fk_profile_has_lengths_perimeter_laboratory_day2");
 
                 entity.HasOne(d => d.UpdatedByNavigation)
                     .WithMany(p => p.LaboratoryDayUpdatedByNavigations)

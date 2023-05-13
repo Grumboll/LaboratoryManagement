@@ -84,7 +84,7 @@ namespace DiplomaWork.Views
                 if (source.Count == 1)
                 {
                     item.Id = null;
-                    item.ProfileId = null;
+                    item.ProfileHasLengthsPerimeterId = null;
                     item.ProfilePerimeter = "";
                     item.ProfileLength = "";
                     item.KilogramsPerMeter = "";
@@ -159,7 +159,7 @@ namespace DiplomaWork.Views
                                 Day = DateOnly.FromDateTime((DateTime)LaboratoryDayDatePicker.SelectedDate),
                                 MonthId = (uint)LaboratoryDayDatePicker.SelectedDate.Value.Month,
                                 Year = (ushort)LaboratoryDayDatePicker.SelectedDate.Value.Year,
-                                ProfileId = (uint)item.ProfileId,
+                                ProfileHasLengthsPerimeterId = (uint)item.ProfileHasLengthsPerimeterId,
                                 MetersSquaredPerSample = decimal.Parse(item.MetersSquaredPerSample),
                                 PaintedSamplesCount = uint.Parse(item.PaintedSamplesCount),
                                 PaintedMetersSquared = decimal.Parse(item.PaintedMetersSquared),
@@ -189,7 +189,7 @@ namespace DiplomaWork.Views
                         }
                         else
                         {
-                            rowToUpdate.ProfileId = (uint)item.ProfileId;
+                            rowToUpdate.ProfileHasLengthsPerimeterId = (uint)item.ProfileHasLengthsPerimeterId;
                             rowToUpdate.MetersSquaredPerSample = decimal.Parse(item.MetersSquaredPerSample);
                             rowToUpdate.PaintedSamplesCount = uint.Parse(item.PaintedSamplesCount);
                             rowToUpdate.PaintedMetersSquared = decimal.Parse(item.PaintedMetersSquared);
@@ -215,7 +215,7 @@ namespace DiplomaWork.Views
 
                     LaboratoryDayIds.AddRange(newlyCreatedDayItems.Select(o => (uint?)o.Id));
 
-                    DataItems = new ObservableCollection<LaboratoryDayItem>(getLaboratoryDayItemsList(context, DateTime.Now.Date));
+                    DataItems = new ObservableCollection<LaboratoryDayItem>(getLaboratoryDayItemsList(context, (DateTime) LaboratoryDayDatePicker.SelectedDate));
                     LaboratoryDayDataGrid.ItemsSource = null;
                     LaboratoryDayDataGrid.ItemsSource = DataItems;
                 }
@@ -230,7 +230,7 @@ namespace DiplomaWork.Views
             else
             {
                 notifier.ShowWarning("Нямате нужните права, за да изпълните тази операция!");
-                DataItems = new ObservableCollection<LaboratoryDayItem>(getLaboratoryDayItemsList(context, DateTime.Now.Date));
+                DataItems = new ObservableCollection<LaboratoryDayItem>(getLaboratoryDayItemsList(context, (DateTime) LaboratoryDayDatePicker.SelectedDate));
                 LaboratoryDayDataGrid.ItemsSource = null;
                 LaboratoryDayDataGrid.ItemsSource = DataItems;
             }

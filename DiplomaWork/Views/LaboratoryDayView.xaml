@@ -45,7 +45,7 @@
                                     <DataTemplate>
                                         <ComboBox x:Name="DataGridComboBox" DropDownClosed="DataGridComboBox_DropDownClosed" SelectedItem="{Binding Path=ProfileName}"
                                                   ItemsSource="{Binding DataContext.Items, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-                                                  DisplayMemberPath="ProfileName" SelectedValuePath="Id" SelectedValue="{Binding ProfileId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                                  DisplayMemberPath="ProfileName" SelectedValuePath="Id" SelectedValue="{Binding ProfileHasLengthsPerimeterId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>

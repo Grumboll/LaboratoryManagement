@@ -48,6 +48,65 @@
                     </StackPanel>
                 </StackPanel>
             </ScrollViewer>
+            <StackPanel Grid.Column="0" Grid.Row="1">
+                <TextBlock Margin="5 3 0 0" FontSize="16">Текущ месец</TextBlock>
+                <StackPanel Orientation="Vertical" x:Name="ReportsMonthlyCards">
+                    <ItemsControl ItemsSource="{Binding MonthlyProfileReportItems}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <materialDesign:Card Margin="5">
+                                    <materialDesign:Card.RenderTransform>
+                                        <ScaleTransform ScaleX="1.0" ScaleY="1.0"/>
+                                    </materialDesign:Card.RenderTransform>
+
+                                    <materialDesign:Card.Triggers>
+                                        <EventTrigger RoutedEvent="MouseEnter">
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleX)"
+                                                        To="1.1" Duration="0:0:0.2" FillBehavior="HoldEnd"/>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleY)"
+                                                        To="1.1" Duration="0:0:0.2" FillBehavior="HoldEnd"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+
+                                        <EventTrigger RoutedEvent="MouseLeave">
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleX)"
+                                                        To="1.0" Duration="0:0:0.2"/>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleY)"
+                                                        To="1.0" Duration="0:0:0.2"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </materialDesign:Card.Triggers>
+                                    <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <materialDesign:PackIcon Kind="Window" Margin="5"/>
+                                            <TextBlock Margin="3" Text="{Binding Name}"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <materialDesign:PackIcon Kind="Perimeter" Margin="5"/>
+                                            <TextBlock Margin="3" Text="{Binding ProfilePerimeter}"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <materialDesign:PackIcon Kind="Gas" Margin="5"/>
+                                            <TextBlock Margin="3" Text="{Binding ProfileMetersSquaredPerSample}"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </materialDesign:Card>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </StackPanel>
         </Grid>
     </Grid>
 </UserControl>

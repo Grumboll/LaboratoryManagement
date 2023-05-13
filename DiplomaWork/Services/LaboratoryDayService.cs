@@ -17,16 +17,16 @@ namespace DiplomaWork.Services
                     .Where(ld => !getForMonth || ld.Year == now.Year)
                     .Where(ld => getForMonth || ld.Day == DateOnly.FromDateTime(now))
                     .Where(ld => ld.DeletedAt == null)
-                    .Include(x => x.Profile)
-                    .ThenInclude(x => x.ProfileHasLengthsPerimeters)
+                    .Include(x => x.ProfileHasLengthsPerimeter)
+                    .ThenInclude(x => x.Profile)
                     .Select(ld => new LaboratoryDayItem
                     {
                         Id = ld.Id,
-                        ProfileId = ld.Profile.Id,
+                        ProfileHasLengthsPerimeterId = ld.ProfileHasLengthsPerimeterId,
                         Day = ld.Day.ToString(),
-                        ProfileName = ld.Profile.Name,
-                        ProfileLength = ld.Profile.ProfileHasLengthsPerimeters.FirstOrDefault().Length.ToString(),
-                        ProfilePerimeter = ld.Profile.ProfileHasLengthsPerimeters.FirstOrDefault().Perimeter.ToString(),
+                        ProfileName = ld.ProfileHasLengthsPerimeter.Profile.Name,
+                        ProfileLength = ld.ProfileHasLengthsPerimeter.Length.ToString(),
+                        ProfilePerimeter = ld.ProfileHasLengthsPerimeter.Perimeter.ToString(),
                         MetersSquaredPerSample = ld.MetersSquaredPerSample.ToString(),
                         PaintedSamplesCount = ld.PaintedSamplesCount.ToString(),
                         PaintedMetersSquared = ld.PaintedMetersSquared.ToString(),
