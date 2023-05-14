@@ -266,5 +266,11 @@ namespace DiplomaWork.Views
 
             notifier.ShowSuccess("Успешно обновихте използваните химикали/профили!");
         }
+        
+        private void AdditionalReport_Click(object sender, RoutedEventArgs e)
+        {
+            GenerateReportModal generateReportModal = new GenerateReportModal();
+            generateReportModal.Show();
+        }
     }
 }

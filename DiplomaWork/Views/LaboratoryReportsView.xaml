@@ -29,7 +29,7 @@
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Style="{DynamicResource MaterialDesignRaisedButton}" Click="ReloadReports_Click" Margin="3">Обнови</Button>
-                <Button Style="{DynamicResource MaterialDesignRaisedButton}" Margin="3">Генерирай файл</Button>
+                <Button Style="{DynamicResource MaterialDesignRaisedButton}" Click="AdditionalReport_Click" Margin="3">Допълнителна справка</Button>
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1" x:Name="ReportsGrid">
