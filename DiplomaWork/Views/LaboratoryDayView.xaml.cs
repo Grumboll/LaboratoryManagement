@@ -256,8 +256,7 @@ namespace DiplomaWork.Views
 
             if (source.Contains(item))
             {
-                var profileId = selectedItem.Id;
-                var profileHasLengthsPerimeter = context.ProfileHasLengthsPerimeters.FirstOrDefault(p => p.ProfileId == profileId);
+                var profileHasLengthsPerimeter = context.ProfileHasLengthsPerimeters.FirstOrDefault(p => p.Id == selectedItem.Id);
 
                 if (profileHasLengthsPerimeter != null)
                 {
