@@ -54,12 +54,12 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <RadioButton Checked="FileTypeRadioButton_Checked" HorizontalAlignment="Right" Grid.Column="1" Grid.Row="0" Content="Excel" GroupName="FileTypeGroup" Style="{DynamicResource MaterialDesignChoiceChipAccentOutlineRadioButton}"/>
-                    <RadioButton Checked="FileTypeRadioButton_Checked" HorizontalAlignment="Left" Grid.Column="2" Grid.Row="0" Content="PDF" GroupName="FileTypeGroup" Style="{DynamicResource MaterialDesignChoiceChipAccentOutlineRadioButton}"/>
+                    <RadioButton Checked="FileTypeRadioButton_Checked" HorizontalAlignment="Right" Grid.Column="1" Grid.Row="0" Content="Excel" GroupName="FileTypeGroup" ToolTip="Генерира Excel файл" Style="{DynamicResource MaterialDesignChoiceChipAccentOutlineRadioButton}"/>
+                    <RadioButton Checked="FileTypeRadioButton_Checked" HorizontalAlignment="Left" Grid.Column="2" Grid.Row="0" Content="PDF" GroupName="FileTypeGroup" ToolTip="Генерира PDF файл" Style="{DynamicResource MaterialDesignChoiceChipAccentOutlineRadioButton}"/>
                     <StackPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal">
-                        <RadioButton Checked="ReportTypeRadioButton_Checked" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="0" Content="Дневна" GroupName="ReportTypeGroup" Style="{DynamicResource MaterialDesignChoiceChipAccentOutlineRadioButton}"/>
-                        <RadioButton Checked="ReportTypeRadioButton_Checked" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="0" Content="Месечна" GroupName="ReportTypeGroup" Style="{DynamicResource MaterialDesignChoiceChipAccentOutlineRadioButton}"/>
-                        <RadioButton Checked="ReportTypeRadioButton_Checked" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="0" Content="Среден Разход" GroupName="ReportTypeGroup" Style="{DynamicResource MaterialDesignChoiceChipAccentOutlineRadioButton}"/>
+                        <RadioButton Checked="ReportTypeRadioButton_Checked" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="0" Content="Дневна" ToolTip="Дневна справка за избраните дни" GroupName="ReportTypeGroup" Style="{DynamicResource MaterialDesignChoiceChipAccentOutlineRadioButton}"/>
+                        <RadioButton Checked="ReportTypeRadioButton_Checked" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="0" Content="Месечна" ToolTip="Месечна справка за избраните месеци" GroupName="ReportTypeGroup" Style="{DynamicResource MaterialDesignChoiceChipAccentOutlineRadioButton}"/>
+                        <RadioButton Checked="ReportTypeRadioButton_Checked" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="0" Content="Среден Разход" ToolTip="Среден разход за избраните месеци" GroupName="ReportTypeGroup" Style="{DynamicResource MaterialDesignChoiceChipAccentOutlineRadioButton}"/>
                     </StackPanel>
                     <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Label FontSize="16" Content="Начална дата:"/>

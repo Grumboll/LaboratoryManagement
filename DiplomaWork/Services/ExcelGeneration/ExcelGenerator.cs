@@ -8,6 +8,7 @@ using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.IO;
 using System.IO.Packaging;
 using System.Linq;
@@ -78,24 +79,31 @@ namespace DiplomaWork.Services.ExcelGeneration
         {
             using (MemoryStream stream = new MemoryStream())
             {
-                package.SaveAs(stream);
-
-                stream.Position = 0;
-
-                Microsoft.Win32.SaveFileDialog saveFileDialog = new Microsoft.Win32.SaveFileDialog();
-                saveFileDialog.Filter = "Excel Files (*.xlsx)|*.xlsx";
-                if (saveFileDialog.ShowDialog() == true)
+                try
                 {
-                    string filePath = saveFileDialog.FileName;
+                    package.SaveAs(stream);
 
-                    // Write the stream data to the file
-                    using (FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+                    stream.Position = 0;
+
+                    Microsoft.Win32.SaveFileDialog saveFileDialog = new Microsoft.Win32.SaveFileDialog();
+                    saveFileDialog.Filter = "Excel Files (*.xlsx)|*.xlsx";
+                    if (saveFileDialog.ShowDialog() == true)
                     {
-                        stream.WriteTo(fileStream);
-                    }
-                }
+                        string filePath = saveFileDialog.FileName;
 
-                bool? Result = new CustomMessageBox("Файлът беше запазен успешно!", "Генериране на справка").ShowDialog();
+                        // Write the stream data to the file
+                        using (FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+                        {
+                            stream.WriteTo(fileStream);
+                        }
+                    }
+
+                    bool? Result = new CustomMessageBox("Файлът беше запазен успешно!", "Генериране на справка").ShowDialog();
+                }
+                catch (IOException ex)
+                {
+                    bool? Result = new CustomMessageBox("Възникна грешка при запазването на файла!", "Грешка при запазване").ShowDialog();
+                }
             }
         }
 
@@ -238,13 +246,79 @@ namespace DiplomaWork.Services.ExcelGeneration
 
             worksheet.Cells[items.Count + 2, 2].Formula = $"SUM({'B'}{2}:{'B'}{items.Count + 1})";
             worksheet.Cells[items.Count + 2, 3].Formula = $"SUM({'C'}{2}:{'C'}{items.Count + 1})";
-
-            worksheet.Calculate();
         }
 
         private static void generateAverageExpenseExcelReportAndFillCells(ExcelWorksheet worksheet, DateTime? beginningDate, DateTime? endDate)
         {
+            var context = new laboratory_2023Context();
 
+            var profileItems = context.LaboratoryDays
+                .Where(ld => ld.MonthId >= beginningDate.Value.Month && ld.MonthId <= endDate.Value.Month)
+                .Where(ld => ld.Year >= beginningDate.Value.Year && ld.Year <= endDate.Value.Year)
+                .Where(x => x.DeletedAt == null)
+                .GroupBy(g => g.Id)
+                .Select(g => new MonthlyProfileReportItem
+                {
+                    Name = g.FirstOrDefault().ProfileHasLengthsPerimeter.Profile.Name,
+                    ProfilePerimeter = g.FirstOrDefault().ProfileHasLengthsPerimeter.Perimeter.ToString().TrimEnd('0').TrimEnd('.'),
+                    ProfileMetersSquaredPerSample = g.Average(x => x.MetersSquaredPerSample).ToString().TrimEnd('0').TrimEnd('.')
+                })
+                .ToList();
+
+            var chemicalItems = context.LaboratoryMonthChemicals
+                .Where(ld => ld.MonthId >= beginningDate.Value.Month && ld.MonthId <= endDate.Value.Month)
+                .Where(ld => ld.Year >= beginningDate.Value.Year && ld.Year <= endDate.Value.Year)
+                .Where(x => x.DeletedAt == null)
+                .GroupBy(x => x.Name)
+                .Select(g => new YearlyChemicalReportItem
+                {
+                    Name = g.Key,
+                    ChemicalExpenseSum = g.Sum(x => x.ExpensePerMeterSquared).ToString().TrimEnd('0').TrimEnd('.'),
+                    ChemicalExpenseAverage = g.Average(x => x.ExpensePerMeterSquared).ToString().TrimEnd('0').TrimEnd('.')
+                })
+                .ToList();
+
+            context.Dispose();
+
+            int i = 0;
+            int j = 0;
+
+            for (int column = 1; column <= 7; column++)
+            {
+                var headerCells = worksheet.Cells[1, column];
+
+                headerCells.Style.Font.Bold = true;
+                headerCells.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                headerCells.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+            }
+
+            worksheet.Cells[1, 1].Value = "Вид профил";
+            worksheet.Cells[1, 2].Value = "Периметър";
+            worksheet.Cells[1, 3].Value = "Среден разход (м2)";
+
+            worksheet.Cells[1, 5].Value = "Име на химикал";
+            worksheet.Cells[1, 6].Value = "Разход сума";
+            worksheet.Cells[1, 7].Value = "Среден разход";
+
+            for (int row = 2; row <= profileItems.Count + 1; row++)
+            {
+                worksheet.Cells[row, 1].Value = profileItems[i].Name;
+
+                worksheet.Cells[row, 2].Value = decimal.Parse(profileItems[i].ProfilePerimeter);
+
+                worksheet.Cells[row, 3].Value = decimal.Parse(profileItems[i].ProfileMetersSquaredPerSample);
+                i++;
+            }
+            
+            for (int rowChem = 2; rowChem <= chemicalItems.Count + 1; rowChem++)
+            {
+                worksheet.Cells[rowChem, 5].Value = chemicalItems[j].Name;
+
+                worksheet.Cells[rowChem, 6].Value = decimal.Parse(chemicalItems[j].ChemicalExpenseSum);
+
+                worksheet.Cells[rowChem, 7].Value = decimal.Parse(chemicalItems[j].ChemicalExpenseAverage);
+                j++;
+            }
         }
     }
 }

@@ -235,20 +235,12 @@ namespace DiplomaWork.Views
             var result = context.LaboratoryDays
                 .Where(x => x.MonthId == currentMonth)
                 .Where(x => x.DeletedAt == null)
-                .Join(context.ProfileHasLengthsPerimeters,
-                    ld => ld.ProfileHasLengthsPerimeterId,
-                    phlp => phlp.Id,
-                    (ld, phlp) => new { ld, phlp })
-                .Join(context.Profiles,
-                    joinResult => joinResult.phlp.ProfileId,
-                    p => p.Id,
-                    (joinResult, p) => new { joinResult.ld, joinResult.phlp, p })
-                .GroupBy(g => g.phlp.Id)
+                .GroupBy(g => g.Id)
                 .Select(g => new MonthlyProfileReportItem
                 {
-                    Name = g.FirstOrDefault().p.Name,
-                    ProfilePerimeter = g.FirstOrDefault().phlp.Perimeter.ToString().TrimEnd('0').TrimEnd('.'),
-                    ProfileMetersSquaredPerSample = g.Sum(x => x.ld.MetersSquaredPerSample).ToString().TrimEnd('0').TrimEnd('.') + " м2"
+                    Name = g.FirstOrDefault().ProfileHasLengthsPerimeter.Profile.Name,
+                    ProfilePerimeter = g.FirstOrDefault().ProfileHasLengthsPerimeter.Perimeter.ToString().TrimEnd('0').TrimEnd('.'),
+                    ProfileMetersSquaredPerSample = g.Sum(x => x.MetersSquaredPerSample).ToString().TrimEnd('0').TrimEnd('.') + " м2"
                 })
                 .ToList();
 
