@@ -21,7 +21,7 @@ namespace DiplomaWork.Helpers
             }
             catch (Exception)
             {
-                MessageBox.Show("Грешка при запазване на данните!");
+                bool? errorBox = new CustomMessageBox("Грешка при запазване на данните!", "Грешка!").ShowDialog();
             }
         }
 

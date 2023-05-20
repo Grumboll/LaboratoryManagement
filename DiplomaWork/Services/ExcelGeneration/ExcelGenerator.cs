@@ -256,7 +256,7 @@ namespace DiplomaWork.Services.ExcelGeneration
                 .Where(ld => ld.MonthId >= beginningDate.Value.Month && ld.MonthId <= endDate.Value.Month)
                 .Where(ld => ld.Year >= beginningDate.Value.Year && ld.Year <= endDate.Value.Year)
                 .Where(x => x.DeletedAt == null)
-                .GroupBy(g => g.Id)
+                .GroupBy(g => g.ProfileHasLengthsPerimeter.Id)
                 .Select(g => new MonthlyProfileReportItem
                 {
                     Name = g.FirstOrDefault().ProfileHasLengthsPerimeter.Profile.Name,

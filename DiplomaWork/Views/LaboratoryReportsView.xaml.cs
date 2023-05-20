@@ -235,7 +235,7 @@ namespace DiplomaWork.Views
             var result = context.LaboratoryDays
                 .Where(x => x.MonthId == currentMonth)
                 .Where(x => x.DeletedAt == null)
-                .GroupBy(g => g.Id)
+                .GroupBy(g => g.ProfileHasLengthsPerimeter.Id)
                 .Select(g => new MonthlyProfileReportItem
                 {
                     Name = g.FirstOrDefault().ProfileHasLengthsPerimeter.Profile.Name,
