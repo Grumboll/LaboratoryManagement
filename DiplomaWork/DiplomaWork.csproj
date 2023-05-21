@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <PackageReference Include="EPPlus" Version="6.2.3" />
+    <PackageReference Include="itext7" Version="8.0.0" />
     <PackageReference Include="MaterialDesignColors" Version="2.1.2" />
     <PackageReference Include="MaterialDesignThemes" Version="4.8.0" />
     <PackageReference Include="MaterialDesignXaml.DialogsHelper" Version="1.0.4" />
