@@ -63,11 +63,11 @@
                     </StackPanel>
                     <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Label FontSize="16" Content="Начална дата:"/>
-                        <DatePicker Style="{DynamicResource MaterialDesignDatePicker}" Margin="5" x:Name="ReportBeginningDate"/>
+                        <DatePicker Style="{DynamicResource MaterialDesignDatePicker}" Margin="5" x:Name="ReportBeginningDate" SelectedDateChanged="BeginningDatePicker_SelectedDateChanged" PreviewMouseLeftButtonDown="BeginningDate_PreviewMouseLeftButtonDown"/>
                     </StackPanel>
                     <StackPanel Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="2" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Label FontSize="16" Content="Крайна дата: "/>
-                        <DatePicker Style="{DynamicResource MaterialDesignDatePicker}" Margin="5" x:Name="ReportEndDate"/>
+                        <DatePicker Style="{DynamicResource MaterialDesignDatePicker}" Margin="5" x:Name="ReportEndDate" PreviewMouseLeftButtonDown="EndDate_PreviewMouseLeftButtonDown"/>
                     </StackPanel>  
                     <Button x:Name="btnOk" Click="btnOk_Click" Grid.Column="1" Grid.Row="3" Style="{DynamicResource MaterialDesignRaisedButton}" Margin="5" Width="100" Content="OK" ToolTip="Ok"/>
                     <Button x:Name="btnCancel" Click="btnCancel_Click" Grid.Column="2" Grid.Row="3" Style="{DynamicResource MaterialDesignRaisedButton}" Margin="5" Width="100" Content="Отказ" ToolTip="Отказ"/>

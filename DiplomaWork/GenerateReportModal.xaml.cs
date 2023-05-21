@@ -91,5 +91,36 @@ namespace DiplomaWork
 
             reportType = selectedOption;
         }
+
+        private void BeginningDate_PreviewMouseLeftButtonDown(object sender, RoutedEventArgs e)
+        {
+            if (!ReportBeginningDate.IsDropDownOpen)
+            {
+                ReportBeginningDate.IsDropDownOpen = true;
+                e.Handled = true;
+            }
+        }
+
+        private void EndDate_PreviewMouseLeftButtonDown(object sender, RoutedEventArgs e)
+        {
+            if (!ReportEndDate.IsDropDownOpen)
+            {
+                ReportEndDate.IsDropDownOpen = true;
+                e.Handled = true;
+            }
+        }
+
+        private void BeginningDatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ReportBeginningDate.SelectedDate.HasValue)
+            {
+                DateTime? selectedDate = ReportBeginningDate.SelectedDate;
+                ReportEndDate.DisplayDateStart = selectedDate;
+                if (ReportEndDate.SelectedDate.HasValue && ReportEndDate.SelectedDate.Value < selectedDate)
+                {
+                    ReportEndDate.SelectedDate = selectedDate;
+                }
+            }
+        }
     }
 }
