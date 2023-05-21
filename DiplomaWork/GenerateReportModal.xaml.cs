@@ -9,6 +9,7 @@ using ToastNotifications;
 using ToastNotifications.Lifetime;
 using ToastNotifications.Position;
 using ToastNotifications.Messages;
+using DiplomaWork.Services.PDFGeneration;
 
 namespace DiplomaWork
 {
@@ -56,6 +57,7 @@ namespace DiplomaWork
                         break;
 
                     case "PDF":
+                        PDFGenerator.GeneratePdfByReportType(reportType, ReportBeginningDate.SelectedDate, ReportEndDate.SelectedDate);
                         break;
                 }
                 this.Close();

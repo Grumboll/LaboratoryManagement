@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DiplomaWork.DataItems
 {
-    class YearlyChemicalReportItem
+    public class YearlyChemicalReportItem
     {
         public string Name { get; set; }
         public string ChemicalExpenseSum{ get; set; }

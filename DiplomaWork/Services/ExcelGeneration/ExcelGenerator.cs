@@ -65,6 +65,7 @@ namespace DiplomaWork.Services.ExcelGeneration
                         break;
                     case "Среден Разход":
                         generateAverageExpenseExcelReportAndFillCells(worksheet, beginningDate, endDate);
+
                         break;
                 }
 
@@ -96,9 +97,9 @@ namespace DiplomaWork.Services.ExcelGeneration
                         {
                             stream.WriteTo(fileStream);
                         }
-                    }
 
-                    bool? Result = new CustomMessageBox("Файлът беше запазен успешно!", "Генериране на справка").ShowDialog();
+                        bool? Result = new CustomMessageBox("Файлът беше запазен успешно!", "Генериране на справка").ShowDialog();
+                    }
                 }
                 catch (IOException ex)
                 {
@@ -109,37 +110,7 @@ namespace DiplomaWork.Services.ExcelGeneration
 
         private static void generateDailyExcelReportAndFillCells(ExcelWorksheet worksheet, DateTime? beginningDate, DateTime? endDate)
         {
-            var context = new laboratory_2023Context();
-
-            List<LaboratoryDayItem> items = context.LaboratoryDays
-                    .Where(ld => ld.Day >= DateOnly.FromDateTime((DateTime) beginningDate) && ld.Day <= DateOnly.FromDateTime((DateTime) endDate))
-                    .Where(ld => ld.DeletedAt == null)
-                    .Include(x => x.ProfileHasLengthsPerimeter)
-                    .ThenInclude(x => x.Profile)
-                    .Select(ld => new LaboratoryDayItem
-                    {
-                        Id = ld.Id,
-                        ProfileHasLengthsPerimeterId = ld.ProfileHasLengthsPerimeterId,
-                        Day = ld.Day.ToString(),
-                        ProfileName = ld.ProfileHasLengthsPerimeter.Profile.Name,
-                        ProfileLength = ld.ProfileHasLengthsPerimeter.Length.ToString(),
-                        ProfilePerimeter = ld.ProfileHasLengthsPerimeter.Perimeter.ToString(),
-                        MetersSquaredPerSample = ld.MetersSquaredPerSample.ToString(),
-                        PaintedSamplesCount = ld.PaintedSamplesCount.ToString(),
-                        PaintedMetersSquared = ld.PaintedMetersSquared.ToString(),
-                        KilogramsPerMeter = ld.KilogramsPerMeter.ToString()
-                    }).ToList();
-
-            foreach (LaboratoryDayItem item in items)
-            {
-                item.ProfileLength = item.ProfileLength.TrimEnd('0').TrimEnd('.');
-                item.ProfilePerimeter = item.ProfilePerimeter.TrimEnd('0').TrimEnd('.');
-                item.MetersSquaredPerSample = item.MetersSquaredPerSample.TrimEnd('0').TrimEnd('.');
-                item.PaintedMetersSquared = item.PaintedMetersSquared.TrimEnd('0').TrimEnd('.');
-                item.KilogramsPerMeter = item.KilogramsPerMeter != null ? item.KilogramsPerMeter.TrimEnd('0').TrimEnd('.') : null;
-            }
-
-            context.Dispose();
+            List<LaboratoryDayItem> items = ReportService.getDailyReportData(beginningDate, endDate);
 
             int i = 0;
 
@@ -158,45 +129,8 @@ namespace DiplomaWork.Services.ExcelGeneration
         
         private static void generateMonthlyExcelReportAndFillCells(ExcelWorksheet worksheet, DateTime? beginningDate, DateTime? endDate)
         {
-            var context = new laboratory_2023Context();
-
-            List<LaboratoryMonthItem> items = context.LaboratoryMonths
-                    .Where(ld => ld.MonthId >= beginningDate.Value.Month && ld.MonthId <= endDate.Value.Month)
-                    .Where(ld => ld.Year >= beginningDate.Value.Year && ld.Year <= endDate.Value.Year)
-                    .Where(ld => ld.DeletedAt == null)
-                    .Select(ld => new LaboratoryMonthItem
-                    {
-                        Id = ld.Id,
-                        LaboratoryDayDate = new DateTime(ld.Date.Year, ld.Date.Month, ld.Date.Day),
-                        Kilograms = ld.Kilograms.ToString(),
-                        MetersSquared = ld.MetersSquared.ToString(),
-                    }).ToList();
-
-            List<LaboratoryMonthChemicalItem> chemicalItems = context.LaboratoryMonthChemicals
-                    .Where(ld => ld.MonthId >= beginningDate.Value.Month && ld.MonthId <= endDate.Value.Month)
-                    .Where(ld => ld.Year >= beginningDate.Value.Year && ld.Year <= endDate.Value.Year)
-                    .Where(ld => ld.DeletedAt == null)
-                    .Select(ld => new LaboratoryMonthChemicalItem
-                    {
-                        Id = ld.Id,
-                        ChemicalName = ld.Name,
-                        ChemicalExpenditure = ld.ChemicalExpenditure.ToString(),
-                        ExpensePerMeterSquared = ld.ExpensePerMeterSquared.ToString(),
-                    }).ToList();
-
-            foreach (LaboratoryMonthItem item in items)
-            {
-                item.Kilograms = item.Kilograms.TrimEnd('0').TrimEnd('.');
-                item.MetersSquared = item.MetersSquared.TrimEnd('0').TrimEnd('.');
-            }
-            
-            foreach (LaboratoryMonthChemicalItem chemicalItem in chemicalItems)
-            {
-                chemicalItem.ChemicalExpenditure = chemicalItem.ChemicalExpenditure.TrimEnd('0').TrimEnd('.');
-                chemicalItem.ExpensePerMeterSquared = chemicalItem.ExpensePerMeterSquared.TrimEnd('0').TrimEnd('.');
-            }
-
-            context.Dispose();
+            List<LaboratoryMonthItem> items = ReportService.getMonthlyReportData(beginningDate, endDate);
+            List<LaboratoryMonthChemicalItem> chemicalItems = ReportService.getMonthlyChemicalReportData(beginningDate, endDate);
 
             int i = 0;
             int j = 0;
@@ -250,35 +184,8 @@ namespace DiplomaWork.Services.ExcelGeneration
 
         private static void generateAverageExpenseExcelReportAndFillCells(ExcelWorksheet worksheet, DateTime? beginningDate, DateTime? endDate)
         {
-            var context = new laboratory_2023Context();
-
-            var profileItems = context.LaboratoryDays
-                .Where(ld => ld.MonthId >= beginningDate.Value.Month && ld.MonthId <= endDate.Value.Month)
-                .Where(ld => ld.Year >= beginningDate.Value.Year && ld.Year <= endDate.Value.Year)
-                .Where(x => x.DeletedAt == null)
-                .GroupBy(g => g.ProfileHasLengthsPerimeter.Id)
-                .Select(g => new MonthlyProfileReportItem
-                {
-                    Name = g.FirstOrDefault().ProfileHasLengthsPerimeter.Profile.Name,
-                    ProfilePerimeter = g.FirstOrDefault().ProfileHasLengthsPerimeter.Perimeter.ToString().TrimEnd('0').TrimEnd('.'),
-                    ProfileMetersSquaredPerSample = g.Average(x => x.MetersSquaredPerSample).ToString().TrimEnd('0').TrimEnd('.')
-                })
-                .ToList();
-
-            var chemicalItems = context.LaboratoryMonthChemicals
-                .Where(ld => ld.MonthId >= beginningDate.Value.Month && ld.MonthId <= endDate.Value.Month)
-                .Where(ld => ld.Year >= beginningDate.Value.Year && ld.Year <= endDate.Value.Year)
-                .Where(x => x.DeletedAt == null)
-                .GroupBy(x => x.Name)
-                .Select(g => new YearlyChemicalReportItem
-                {
-                    Name = g.Key,
-                    ChemicalExpenseSum = g.Sum(x => x.ExpensePerMeterSquared).ToString().TrimEnd('0').TrimEnd('.'),
-                    ChemicalExpenseAverage = g.Average(x => x.ExpensePerMeterSquared).ToString().TrimEnd('0').TrimEnd('.')
-                })
-                .ToList();
-
-            context.Dispose();
+            List<MonthlyProfileReportItem> profileItems = ReportService.getAverageExpenseProfileReportData(beginningDate, endDate);
+            List<YearlyChemicalReportItem> chemicalItems = ReportService.getAverageExpenseChemicalProfileReportData(beginningDate, endDate);
 
             int i = 0;
             int j = 0;
