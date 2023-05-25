@@ -29,7 +29,7 @@
             <Button Grid.Column="0" Style="{DynamicResource MaterialDesignRaisedButton}" Click="LaboratoryDay_Click" Margin="3">Текущ ден</Button>
             <Button Grid.Column="1" Style="{DynamicResource MaterialDesignRaisedButton}" Click="LaboratoryMonth_Click" Margin="3">Текущ месец</Button>
             <Button Grid.Column="2" Style="{DynamicResource MaterialDesignRaisedButton}" Click="LaboratoryReports_Click" Margin="3">Справки</Button>
-            <Button Grid.Column="3" Style="{DynamicResource MaterialDesignRaisedButton}" Margin="3">Настройки</Button>
+            <Button Grid.Column="3" Style="{DynamicResource MaterialDesignRaisedButton}" Click="LaboratorySettings_Click" Margin="3">Настройки</Button>
             <Button Grid.Column="4" HorizontalAlignment="Right" Name="LogOutButton" Click="LogOutButton_Click" Style="{DynamicResource MaterialDesignRaisedButton}" Margin="3">Изход</Button>
         </Grid>
 

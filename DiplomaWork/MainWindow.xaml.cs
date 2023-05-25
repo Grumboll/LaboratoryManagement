@@ -111,6 +111,7 @@ namespace DiplomaWork
             string viewName = "LaboratoryReportsView";
             object view;
 
+
             if (loadedViews.TryGetValue(viewName, out view))
             {
                 ContentControl.Content = view;
@@ -118,6 +119,24 @@ namespace DiplomaWork
             else
             {
                 view = new LaboratoryReportsView();
+                loadedViews.Add(viewName, view);
+                ContentControl.Content = view;
+            }
+        }
+        
+        private void LaboratorySettings_Click(object sender, RoutedEventArgs e)
+        {
+            string viewName = "LaboratorySettingsView";
+            object view;
+
+
+            if (loadedViews.TryGetValue(viewName, out view))
+            {
+                ContentControl.Content = view;
+            }
+            else
+            {
+                view = new LaboratorySettingsView();
                 loadedViews.Add(viewName, view);
                 ContentControl.Content = view;
             }

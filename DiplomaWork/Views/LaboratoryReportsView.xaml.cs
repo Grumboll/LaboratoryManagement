@@ -24,6 +24,7 @@ using ToastNotifications.Lifetime;
 using ToastNotifications.Position;
 using ToastNotifications.Messages;
 using System.ComponentModel;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace DiplomaWork.Views
 {
@@ -261,8 +262,15 @@ namespace DiplomaWork.Views
         
         private void AdditionalReport_Click(object sender, RoutedEventArgs e)
         {
-            GenerateReportModal generateReportModal = new GenerateReportModal();
-            generateReportModal.Show();
+            if (App.UserPermissions.Contains("permissions.all") || App.UserPermissions.Contains("permissions.create_inquiry"))
+            {
+                GenerateReportModal generateReportModal = new GenerateReportModal();
+                generateReportModal.Show();
+            }
+            else
+            {
+                notifier.ShowWarning("Нямате нужните права!");
+            }
         }
     }
 }
