@@ -22,12 +22,16 @@ namespace DiplomaWork.Models
 
         public uint Id { get; set; }
         public string Username { get; set; } = null!;
+        public string? EMail { get; set; }
+        public string? PhoneNumber { get; set; }
+        public DateOnly? DateOfBirth { get; set; }
         public string Password { get; set; } = null!;
         public string PasswordSalt { get; set; } = null!;
         public string FirstName { get; set; } = null!;
         public string? MiddleName { get; set; }
         public string LastName { get; set; } = null!;
         public bool IsLocked { get; set; }
+        public bool PasswordResetRequired { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }

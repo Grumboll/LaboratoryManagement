@@ -508,9 +508,15 @@ namespace DiplomaWork.Models
                     .HasColumnType("int(10) unsigned")
                     .HasColumnName("created_by");
 
+                entity.Property(e => e.DateOfBirth).HasColumnName("date_of_birth");
+
                 entity.Property(e => e.DeletedAt)
                     .HasColumnType("timestamp")
                     .HasColumnName("deleted_at");
+
+                entity.Property(e => e.EMail)
+                    .HasMaxLength(255)
+                    .HasColumnName("e-mail");
 
                 entity.Property(e => e.FirstName)
                     .HasMaxLength(64)
@@ -530,9 +536,15 @@ namespace DiplomaWork.Models
                     .HasMaxLength(255)
                     .HasColumnName("password");
 
+                entity.Property(e => e.PasswordResetRequired).HasColumnName("password_reset_required");
+
                 entity.Property(e => e.PasswordSalt)
                     .HasMaxLength(255)
                     .HasColumnName("password_salt");
+
+                entity.Property(e => e.PhoneNumber)
+                    .HasMaxLength(15)
+                    .HasColumnName("phone_number");
 
                 entity.Property(e => e.UpdatedAt)
                     .HasColumnType("timestamp")
