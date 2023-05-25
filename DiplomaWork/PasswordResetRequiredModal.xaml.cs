@@ -154,8 +154,6 @@ namespace DiplomaWork
                 }
             }
 
-           
-
             bool? successMessage = new CustomMessageBox("Успешно променихте паролата си!", "Промяна на паролата!").ShowDialog();
 
             this.Close();
