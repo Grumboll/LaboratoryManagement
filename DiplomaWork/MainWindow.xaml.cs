@@ -8,6 +8,7 @@ using ToastNotifications;
 using ToastNotifications.Lifetime;
 using ToastNotifications.Position;
 using ToastNotifications.Messages;
+using DiplomaWork.DataItems;
 
 namespace DiplomaWork
 {
@@ -22,6 +23,12 @@ namespace DiplomaWork
 
             LaboratoryDayView laboratoryDayView = new LaboratoryDayView();
             ContentControl.Content = laboratoryDayView;
+
+            if(App.CurrentUser.PasswordResetRequired)
+            {
+                PasswordResetRequiredModal passwordResetModal = new PasswordResetRequiredModal();
+                passwordResetModal.Show();
+            }
         }
 
 

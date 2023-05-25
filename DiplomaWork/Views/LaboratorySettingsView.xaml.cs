@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using DiplomaWork.DataItems;
 using MaterialDesignThemes.Wpf;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 

@@ -14,6 +14,7 @@ using ToastNotifications;
 using ToastNotifications.Lifetime;
 using ToastNotifications.Position;
 using ToastNotifications.Messages;
+using DiplomaWork.DataItems;
 
 namespace DiplomaWork
 {
@@ -64,7 +65,6 @@ namespace DiplomaWork
             loginUserThroughForm(username, password);
         }
 
-        // Dispose the DbContext
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
@@ -87,6 +87,9 @@ namespace DiplomaWork
                     // Compare the resulting hash with the hash stored in the database
                     if (hashedPassword == hashedInputPassword)
                     {
+                        App.CurrentUser = user;
+                        setUserPermissions(user.Id);
+
                         // Authentication successful, open Main Window
                         MainWindow mainWindow = new MainWindow();
                         mainWindow.Show();
@@ -95,9 +98,6 @@ namespace DiplomaWork
                         {
                             LoginCredentialsHelper.SaveLoginCredentials(username, password);
                         }
-
-                        App.CurrentUser = user;
-                        setUserPermissions(user.Id);
 
                         // Close the current window
                         this.Close();
@@ -131,12 +131,12 @@ namespace DiplomaWork
                     // Compare the resulting hash with the hash stored in the database
                     if (hashedPassword == hashedInputPassword)
                     {
+                        App.CurrentUser = user;
+                        setUserPermissions(user.Id);
+
                         // Authentication successful, open Main Window
                         MainWindow mainWindow = new MainWindow();
                         mainWindow.Show();
-
-                        App.CurrentUser = user;
-                        setUserPermissions(user.Id);
 
                         this.Close();
                     }
@@ -216,6 +216,20 @@ namespace DiplomaWork
                 .Contains(p.Id))
             .Select(p => p.Slug)
             .ToList();
+        }
+
+        private void ToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            PasswordBox.Visibility = Visibility.Collapsed;
+            PasswordTextBox.Visibility = Visibility.Visible;
+            PasswordTextBox.Text = PasswordBox.Password;
+        }
+
+        private void ToggleButton_Unchecked(object sender, RoutedEventArgs e)
+        {
+            PasswordBox.Visibility = Visibility.Visible;
+            PasswordTextBox.Visibility = Visibility.Collapsed;
+            PasswordBox.Focus();
         }
     }
 }

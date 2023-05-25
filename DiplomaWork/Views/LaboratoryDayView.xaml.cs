@@ -144,7 +144,7 @@ namespace DiplomaWork.Views
         {
             var context = new laboratory_2023Context();
             List <LaboratoryDay> newlyCreatedDayItems = new List<LaboratoryDay>();
-            if (App.UserPermissions.Contains("permissions.all") || App.UserPermissions.Contains("permissions.create_days") || 
+            if (App.UserPermissions.Contains("permissions.all") || App.UserPermissions.Contains("permissions.create_days") ||
                 App.UserPermissions.Contains("permissions.edit_days") || App.UserPermissions.Contains("permissions.delete_days"))
             {
                 try
