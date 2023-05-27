@@ -15,8 +15,8 @@ namespace DiplomaWork.Models
             LaboratoryMonthChemicalUpdatedByNavigations = new HashSet<LaboratoryMonthChemical>();
             LaboratoryMonthCreatedByNavigations = new HashSet<LaboratoryMonth>();
             LaboratoryMonthUpdatedByNavigations = new HashSet<LaboratoryMonth>();
-            ProfileCreatedByNavigations = new HashSet<Profile>();
-            ProfileUpdatedByNavigations = new HashSet<Profile>();
+            ProfileHasLengthsPerimeterCreatedByNavigations = new HashSet<ProfileHasLengthsPerimeter>();
+            ProfileHasLengthsPerimeterUpdatedByNavigations = new HashSet<ProfileHasLengthsPerimeter>();
             UserHasRoles = new HashSet<UserHasRole>();
         }
 
@@ -48,8 +48,8 @@ namespace DiplomaWork.Models
         public virtual ICollection<LaboratoryMonthChemical> LaboratoryMonthChemicalUpdatedByNavigations { get; set; }
         public virtual ICollection<LaboratoryMonth> LaboratoryMonthCreatedByNavigations { get; set; }
         public virtual ICollection<LaboratoryMonth> LaboratoryMonthUpdatedByNavigations { get; set; }
-        public virtual ICollection<Profile> ProfileCreatedByNavigations { get; set; }
-        public virtual ICollection<Profile> ProfileUpdatedByNavigations { get; set; }
+        public virtual ICollection<ProfileHasLengthsPerimeter> ProfileHasLengthsPerimeterCreatedByNavigations { get; set; }
+        public virtual ICollection<ProfileHasLengthsPerimeter> ProfileHasLengthsPerimeterUpdatedByNavigations { get; set; }
         public virtual ICollection<UserHasRole> UserHasRoles { get; set; }
     }
 }

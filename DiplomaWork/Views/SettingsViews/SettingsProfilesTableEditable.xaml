@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="DiplomaWork.Views.SettingsViews.SettingsProfilesTableEditable"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DiplomaWork.Views.SettingsViews"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="{DynamicResource MaterialDesignPaper}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="{materialDesign:MaterialDesignFont}">
+    <Grid>
+        <ScrollViewer Width="auto" x:Name="SettingsProfileEditableScrollViewer">
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5">
+                    <Button Click="ProfilesCreateNew_Click" Style="{DynamicResource MaterialDesignRaisedButton}" x:Name="createButton" 
+                            Width="Auto" Height="Auto" Margin="5 5 25 5" Content="{materialDesign:PackIcon Add}"/>
+                    <TextBox x:Name="ProfilNameTextBox" HorizontalAlignment="Right" Width="200" Style="{DynamicResource MaterialDesignFloatingHintTextBox}" 
+                         materialDesign:HintAssist.Hint="Име на профил:" TextChanged="ProfilNameTextBox_TextChanged"/>
+                </StackPanel>
+                <DataGrid x:Name="SettingsProfileEditableDataGrid" AutoGenerateColumns="False" SelectionMode="Single" SelectionUnit="Cell"
+                              Margin="5" HorizontalScrollBarVisibility="Hidden" PreviewMouseWheel="DataGrid_PreviewMouseWheel" CanUserAddRows="False" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="*" Header="ИД" Binding="{Binding Id}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
+                        <DataGridTextColumn Width="1.5*" Header="Име" Binding="{Binding Name}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
+                        <DataGridTextColumn Width="1.5*" Header="Дължина" Binding="{Binding Length}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
+                        <DataGridTextColumn Width="1.5*" Header="Периметър" Binding="{Binding Perimeter}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
+                        <DataGridTemplateColumn Width="*"  Header="Операции" HeaderStyle="{StaticResource DataGridColumnHeader}" CanUserReorder="False">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button Content="{materialDesign:PackIcon Edit}" Margin="15 2 15 2" Background="#F61E2C" FontSize="15" FontWeight="DemiBold" Click="EditButton_Click"/>
+                                        <Button Content="{materialDesign:PackIcon Minus}" Margin="15 2 15 2" Background="#F61E2C" FontSize="15" FontWeight="DemiBold" Click="DeleteButton_Click"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5">
+                    <Button Click="ProfilesPagePrevious_Click" Style="{DynamicResource MaterialDesignRaisedButton}" x:Name="leftButton"
+                            Width="Auto" Height="Auto" Margin="0 0 5 5" Content="{materialDesign:PackIcon ChevronLeft}"/>
+                    <Button Click="ProfilesPageNext_Click" Style="{DynamicResource MaterialDesignRaisedButton}" x:Name="RightButton"
+                            Width="Auto" Height="Auto" Margin="0 0 5 5" Content="{materialDesign:PackIcon ChevronRight}"/>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

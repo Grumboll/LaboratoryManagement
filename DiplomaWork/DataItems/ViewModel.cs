@@ -35,6 +35,7 @@ namespace DiplomaWork.DataItems
             using (var context = new laboratory_2023Context())
             {
                 var profiles = context.ProfileHasLengthsPerimeters
+                    .Where(p => p.DeletedAt == null)
                     .Select(p => new ProfileItem { Id = p.Id, ProfileName = p.Profile.Name }).ToList();
 
                 Items = new ObservableCollection<ProfileItem>(profiles);

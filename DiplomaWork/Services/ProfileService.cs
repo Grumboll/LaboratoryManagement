@@ -26,6 +26,7 @@ namespace DiplomaWork.Services
                     .OrderBy(p => p.Id)
                     .Skip(startIndex)
                     .Take(pageSize)
+                    .Where(p => p.DeletedAt == null)
                     .Select(p => new ProfileSettingsItem
                     {
                         Id = p.Id,

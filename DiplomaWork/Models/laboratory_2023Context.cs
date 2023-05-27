@@ -340,9 +340,27 @@ namespace DiplomaWork.Models
             {
                 entity.ToTable("profiles");
 
-                entity.HasIndex(e => e.CreatedBy, "fk_users_profile1_idx");
+                entity.HasIndex(e => e.Id, "id_UNIQUE")
+                    .IsUnique();
 
-                entity.HasIndex(e => e.UpdatedBy, "fk_users_profile2_idx");
+                entity.Property(e => e.Id)
+                    .HasColumnType("int(10) unsigned")
+                    .HasColumnName("id");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(50)
+                    .HasColumnName("name");
+            });
+
+            modelBuilder.Entity<ProfileHasLengthsPerimeter>(entity =>
+            {
+                entity.ToTable("profile_has_lengths_perimeter");
+
+                entity.HasIndex(e => e.ProfileId, "fk_profile_profile_has_lengths_perimeter_idx");
+
+                entity.HasIndex(e => e.CreatedBy, "fk_users1_profile_has_lengths_perimeter_idx");
+
+                entity.HasIndex(e => e.UpdatedBy, "fk_users2_profile_has_lengths_perimeter_idx");
 
                 entity.HasIndex(e => e.Id, "id_UNIQUE")
                     .IsUnique();
@@ -364,45 +382,6 @@ namespace DiplomaWork.Models
                     .HasColumnType("timestamp")
                     .HasColumnName("deleted_at");
 
-                entity.Property(e => e.Name)
-                    .HasMaxLength(50)
-                    .HasColumnName("name");
-
-                entity.Property(e => e.UpdatedAt)
-                    .HasColumnType("timestamp")
-                    .HasColumnName("updated_at")
-                    .HasDefaultValueSql("current_timestamp()");
-
-                entity.Property(e => e.UpdatedBy)
-                    .HasColumnType("int(10) unsigned")
-                    .HasColumnName("updated_by");
-
-                entity.HasOne(d => d.CreatedByNavigation)
-                    .WithMany(p => p.ProfileCreatedByNavigations)
-                    .HasForeignKey(d => d.CreatedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_users_profile1");
-
-                entity.HasOne(d => d.UpdatedByNavigation)
-                    .WithMany(p => p.ProfileUpdatedByNavigations)
-                    .HasForeignKey(d => d.UpdatedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_users_profile2");
-            });
-
-            modelBuilder.Entity<ProfileHasLengthsPerimeter>(entity =>
-            {
-                entity.ToTable("profile_has_lengths_perimeter");
-
-                entity.HasIndex(e => e.ProfileId, "fk_profile_profile_has_lengths_perimeter_idx");
-
-                entity.HasIndex(e => e.Id, "id_UNIQUE")
-                    .IsUnique();
-
-                entity.Property(e => e.Id)
-                    .HasColumnType("int(10) unsigned")
-                    .HasColumnName("id");
-
                 entity.Property(e => e.Length)
                     .HasColumnType("decimal(21,13) unsigned")
                     .HasColumnName("length");
@@ -415,11 +394,32 @@ namespace DiplomaWork.Models
                     .HasColumnType("int(10) unsigned")
                     .HasColumnName("profile_id");
 
+                entity.Property(e => e.UpdatedAt)
+                    .HasColumnType("timestamp")
+                    .HasColumnName("updated_at")
+                    .HasDefaultValueSql("current_timestamp()");
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnType("int(10) unsigned")
+                    .HasColumnName("updated_by");
+
+                entity.HasOne(d => d.CreatedByNavigation)
+                    .WithMany(p => p.ProfileHasLengthsPerimeterCreatedByNavigations)
+                    .HasForeignKey(d => d.CreatedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_users1_profile_has_lengths_perimeter");
+
                 entity.HasOne(d => d.Profile)
                     .WithMany(p => p.ProfileHasLengthsPerimeters)
                     .HasForeignKey(d => d.ProfileId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_profile_profile_has_lengths_perimeter");
+
+                entity.HasOne(d => d.UpdatedByNavigation)
+                    .WithMany(p => p.ProfileHasLengthsPerimeterUpdatedByNavigations)
+                    .HasForeignKey(d => d.UpdatedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_users2_profile_has_lengths_perimeter");
             });
 
             modelBuilder.Entity<Role>(entity =>
