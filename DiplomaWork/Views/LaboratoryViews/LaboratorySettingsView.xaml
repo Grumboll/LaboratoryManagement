@@ -20,10 +20,10 @@
 
         <Grid Grid.Column="0" Background="#D3D8F8">
             <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center"  x:Name="SettingsButtonStackPanel">
-                <Button Margin="5" Width="110" Height="30" FontSize="12" Style="{DynamicResource MaterialDesignRaisedButton}">
+                <Button Margin="5" Width="110" Height="30" FontSize="12" Style="{DynamicResource MaterialDesignRaisedButton}" Click="SettingsUsers_Click">
                     Потребители
                 </Button>
-                <Button Margin="5" Width="110" Height="30" FontSize="12" Style="{DynamicResource MaterialDesignRaisedButton}">
+                <Button Margin="5" Width="110" Height="30" FontSize="12" Style="{DynamicResource MaterialDesignRaisedButton}" Click="SettingsProfiles_Click">
                     Профили
                 </Button>
                 <Button Margin="5" Width="110" MinHeight="35" Height="auto" FontSize="12" Style="{DynamicResource MaterialDesignRaisedButton}">
