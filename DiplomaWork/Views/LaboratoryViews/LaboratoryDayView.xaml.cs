@@ -298,7 +298,6 @@ namespace DiplomaWork.Views
                         LaboratoryDayDataGrid.ItemsSource = DataItems;
                     }
                 }
-
             }
         }
     }

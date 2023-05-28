@@ -24,15 +24,15 @@
                 <DataGrid x:Name="SettingsProfileEditableDataGrid" AutoGenerateColumns="False" SelectionMode="Single" SelectionUnit="Cell"
                               Margin="5" HorizontalScrollBarVisibility="Hidden" PreviewMouseWheel="DataGrid_PreviewMouseWheel" CanUserAddRows="False" IsReadOnly="True">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Width="*" Header="ИД" Binding="{Binding Id}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
-                        <DataGridTextColumn Width="1.5*" Header="Име" Binding="{Binding Name}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
-                        <DataGridTextColumn Width="1.5*" Header="Дължина" Binding="{Binding Length}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
-                        <DataGridTextColumn Width="1.5*" Header="Периметър" Binding="{Binding Perimeter}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
+                        <DataGridTextColumn Width="0.7*" Header="ИД" Binding="{Binding Id}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
+                        <DataGridTextColumn Width="0.9*" Header="Име" Binding="{Binding Name}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
+                        <DataGridTextColumn Width="0.9*" Header="Дължина" Binding="{Binding Length}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
+                        <DataGridTextColumn Width="0.9*" Header="Периметър" Binding="{Binding Perimeter}" HeaderStyle="{StaticResource DataGridColumnHeader}"/>
                         <DataGridTemplateColumn Width="*"  Header="Операции" HeaderStyle="{StaticResource DataGridColumnHeader}" CanUserReorder="False">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <Button Content="{materialDesign:PackIcon Edit}" Margin="15 2 15 2" Background="#F61E2C" FontSize="15" FontWeight="DemiBold" Click="EditButton_Click"/>
+                                        <Button Content="{materialDesign:PackIcon Edit}" Margin="15 2 15 2" Background="#80ADFE" FontSize="15" FontWeight="DemiBold" Click="EditButton_Click"/>
                                         <Button Content="{materialDesign:PackIcon Minus}" Margin="15 2 15 2" Background="#F61E2C" FontSize="15" FontWeight="DemiBold" Click="DeleteButton_Click"/>
                                     </StackPanel>
                                 </DataTemplate>

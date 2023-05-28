@@ -98,7 +98,7 @@ namespace DiplomaWork.Views
                 }
                 else
                 {
-                    notifier.ShowError("Нямате нужните права!");
+                    notifier.ShowWarning("Нямате нужните права!");
                     return;
                 }
 
@@ -132,7 +132,7 @@ namespace DiplomaWork.Views
                 if (App.UserPermissions.Contains("permissions.all") || App.UserPermissions.Contains("permissions.create_profiles") ||
                     App.UserPermissions.Contains("permissions.edit_profiles") || App.UserPermissions.Contains("permissions.delete_profiles"))
                 {
-                    view = new SettingsProfilesTableReadOnly(); // TODO: ADD PROFILES TABLE WITH OPERATIONS HERE!!!!!!!!!!!!!!
+                    view = new SettingsProfilesTableEditable();
                 } 
                 else if (App.UserPermissions.Contains("permissions.show_profiles"))
                 {
@@ -140,7 +140,7 @@ namespace DiplomaWork.Views
                 }
                 else
                 {
-                    notifier.ShowError("Нямате нужните права!");
+                    notifier.ShowWarning("Нямате нужните права!");
                     return;
                 }
 

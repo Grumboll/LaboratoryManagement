@@ -124,6 +124,7 @@ namespace DiplomaWork
                 if (hashedPassword == null || hashedInputPassword == null)
                 {
                     InitializeComponent();
+                    this.Show();
                     notifier.ShowError("Грешни потребителски данни!");
                 }
                 else
@@ -143,6 +144,7 @@ namespace DiplomaWork
                     else
                     {
                         InitializeComponent();
+                        this.Show();
                         notifier.ShowError("Грешни потребителски данни!");
                     }
                 }
@@ -151,6 +153,7 @@ namespace DiplomaWork
             else
             {
                 InitializeComponent();
+                this.Show();
                 notifier.ShowError("Потребителското име не беше открито!");
             }
         }

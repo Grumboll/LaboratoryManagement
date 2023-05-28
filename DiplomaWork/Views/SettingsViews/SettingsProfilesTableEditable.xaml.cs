@@ -20,6 +20,7 @@ using ToastNotifications;
 using ToastNotifications.Lifetime;
 using ToastNotifications.Position;
 using ToastNotifications.Messages;
+using Microsoft.EntityFrameworkCore;
 
 namespace DiplomaWork.Views.SettingsViews
 {
@@ -96,37 +97,79 @@ namespace DiplomaWork.Views.SettingsViews
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            var button = sender as Button;
-            var item = button.DataContext as ProfileSettingsItem;
-
-            // Get the data source of the DataGrid
-            var source = SettingsProfileEditableDataGrid.ItemsSource as ObservableCollection<ProfileSettingsItem>;
-
-            if (source.Contains(item))
+            if (App.UserPermissions.Contains("permissions.all") || App.UserPermissions.Contains("permissions.delete_profiles"))
             {
-                bool? Result = new CustomMessageBox("Сигурни ли сте, че искате да изтриете профил с ИД: " + item.Id + "?", "Изтриване на профил").ShowDialog();
+                var button = sender as Button;
+                var item = button.DataContext as ProfileSettingsItem;
 
-                if (Result.Value)
+                var source = SettingsProfileEditableDataGrid.ItemsSource as ObservableCollection<ProfileSettingsItem>;
+
+                if (source.Contains(item))
                 {
-                    using (var dbContext = new laboratory_2023Context())
-                    {
-                        var rowToDelete = dbContext.ProfileHasLengthsPerimeters.FirstOrDefault(x => x.Id == item.Id);
+                    bool? Result = new CustomMessageBox("Сигурни ли сте, че искате да изтриете профил с ИД: " + item.Id + "?", "Изтриване на профил").ShowDialog();
 
-                       // rowToDelete.DeletedAt = DateTime.Now;
-                        source.Remove((ProfileSettingsItem)item);
+                    if (Result.Value)
+                    {
+                        using (var dbContext = new laboratory_2023Context())
+                        {
+                            bool hasResult = dbContext.LaboratoryDays.Any(ld => ld.Id == item.Id);
+
+                            if (hasResult)
+                            {
+                                notifier.ShowError("Съществува лабораторен ден с този профил!");
+                            }
+                            else
+                            {
+                                var rowToDelete = dbContext.ProfileHasLengthsPerimeters.FirstOrDefault(x => x.Id == item.Id);
+
+                                rowToDelete.DeletedAt = DateTime.Now;
+                                source.Remove((ProfileSettingsItem)item);
+
+                                notifier.ShowSuccess("Успешно изтрихте профил!");
+                            }
+                        }
                     }
                 }
+            }
+            else
+            {
+                notifier.ShowWarning("Нямате нужните права!");
             }
         }
         
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
+            if (App.UserPermissions.Contains("permissions.all") || App.UserPermissions.Contains("permissions.edit_profiles"))
+            {
+                var button = sender as Button;
+                var item = button.DataContext as ProfileSettingsItem;
 
+                var source = SettingsProfileEditableDataGrid.ItemsSource as ObservableCollection<ProfileSettingsItem>;
+
+                if (source.Contains(item))
+                {
+                    var profile = ProfileService.GetProfileSettingsItemById(item.Id);
+
+                    ProfileModal profileModal = new ProfileModal("edit", profile);
+                    profileModal.Closed += ProfileModal_Closed;
+                    profileModal.Show();
+                }
+            }
+            else
+            {
+                notifier.ShowWarning("Нямате нужните права!");
+            }
+        }
+        private void ProfileModal_Closed(object sender, EventArgs e)
+        {
+            LoadDataForPage(currentPage, filterText);
         }
 
         private void ProfilesCreateNew_Click(object sender, RoutedEventArgs e)
         {
-            
+            ProfileModal profileModal = new ProfileModal("create", null);
+            profileModal.Closed += ProfileModal_Closed;
+            profileModal.Show();
         }
 
         private void DataGrid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
