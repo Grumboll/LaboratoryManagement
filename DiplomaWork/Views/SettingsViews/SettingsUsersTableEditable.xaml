@@ -17,7 +17,7 @@
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5">
                     <Button Click="UsersCreateNew_Click" Style="{DynamicResource MaterialDesignRaisedButton}" x:Name="createButton" 
-                            Width="Auto" Height="Auto" Margin="5 5 25 5" Content="{materialDesign:PackIcon Add}"/>
+                            Width="Auto" Height="Auto" Margin="5 5 25 5" Content="{materialDesign:PackIcon AccountAdd}"/>
                     <TextBox x:Name="UsernameTextBox" HorizontalAlignment="Right" Width="200" Style="{DynamicResource MaterialDesignFloatingHintTextBox}" 
                          materialDesign:HintAssist.Hint="Потребителско име:" TextChanged="UsernameTextBox_TextChanged"/>
                 </StackPanel>
