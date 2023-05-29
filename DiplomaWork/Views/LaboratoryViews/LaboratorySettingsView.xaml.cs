@@ -90,7 +90,7 @@ namespace DiplomaWork.Views
                 if (App.UserPermissions.Contains("permissions.all") || App.UserPermissions.Contains("permissions.create_users") ||
                     App.UserPermissions.Contains("permissions.delete_users") || App.UserPermissions.Contains("permissions.lock_users"))
                 {
-                    view = new SettingsUsersTableReadOnly(); // TODO: ADD USERS TABLE WITH OPERATIONS HERE!!!!!!!!!!!!!!
+                    view = new SettingsUsersTableEditable();
                 } 
                 else if (App.UserPermissions.Contains("permissions.show_users"))
                 {

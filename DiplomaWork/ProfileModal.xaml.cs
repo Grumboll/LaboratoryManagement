@@ -14,6 +14,7 @@ namespace DiplomaWork
     {
         private string mode;
         private uint? profileHasLengthsPerimeterId;
+
         public ProfileModal(string mode, ProfileSettingsItem? profile)
         {
             InitializeComponent();

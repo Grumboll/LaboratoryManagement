@@ -9,6 +9,7 @@ using ToastNotifications.Lifetime;
 using ToastNotifications.Position;
 using ToastNotifications.Messages;
 using DiplomaWork.DataItems;
+using DiplomaWork.Services;
 
 namespace DiplomaWork
 {
@@ -24,7 +25,14 @@ namespace DiplomaWork
             LaboratoryDayView laboratoryDayView = new LaboratoryDayView();
             ContentControl.Content = laboratoryDayView;
 
-            if(App.CurrentUser.PasswordResetRequired)
+            if (App.CurrentUser.IsLocked)
+            {
+                bool? messageBox = new CustomMessageBox("Админ е заключил профила ви.", "Нямате достъп!").ShowDialog();
+
+                Environment.Exit(0);
+            }
+
+            if (App.CurrentUser.PasswordResetRequired)
             {
                 PasswordResetRequiredModal passwordResetModal = new PasswordResetRequiredModal();
                 passwordResetModal.Show();

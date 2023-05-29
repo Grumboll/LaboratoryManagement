@@ -18,6 +18,7 @@ using ToastNotifications.Messages;
 using System.Security.Cryptography;
 using DiplomaWork.Models;
 using System.IO;
+using DiplomaWork.Services;
 
 namespace DiplomaWork
 {
@@ -54,6 +55,7 @@ namespace DiplomaWork
         {
             PasswordBox.Visibility = Visibility.Visible;
             PasswordTextBox.Visibility = Visibility.Collapsed;
+            PasswordBox.Password = PasswordTextBox.Text;
             PasswordBox.Focus();
         }
 
@@ -68,6 +70,7 @@ namespace DiplomaWork
         {
             ConfirmPasswordBox.Visibility = Visibility.Visible;
             ConfirmPasswordTextBox.Visibility = Visibility.Collapsed;
+            ConfirmPasswordBox.Password = ConfirmPasswordTextBox.Text;
             ConfirmPasswordBox.Focus();
         }
 
@@ -76,67 +79,55 @@ namespace DiplomaWork
             DragMove();
         }
 
-        private bool ContainsSpecialSymbol(string password)
+        private bool IsPasswordValid(string password, string confirmPassword)
         {
-            const string specialSymbols = "!@#$%^&*()-_=+[]{};:'\",.<>/?";
-            return password.Any(ch => specialSymbols.Contains(ch));
-        }
-
-        private bool ContainsNumber(string password)
-        {
-            return password.Any(ch => char.IsDigit(ch));
-        }
-
-        private string GenerateSalt()
-        {
-            const string allowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            Random random = new Random();
-            return new string(Enumerable.Repeat(allowedChars, 16)
-                .Select(s => s[random.Next(s.Length)]).ToArray());
-        }
-
-        private string HashPassword(string password, string salt)
-        {
-            using (SHA256 sha256 = SHA256.Create())
+            // Check if passwords match
+            if (password != confirmPassword)
             {
-                byte[] passwordBytes = Encoding.UTF8.GetBytes(password + salt);
-                byte[] hashBytes = sha256.ComputeHash(passwordBytes);
-                return Convert.ToBase64String(hashBytes);
+                return false;
             }
+
+            // Check if passwords meet the required criteria
+            bool isLengthValid = password.Length >= 8;
+            bool hasSpecialSymbol = password.Any(c => !char.IsLetterOrDigit(c));
+            bool hasUppercase = password.Any(c => char.IsUpper(c));
+            bool hasNumber = password.Any(c => char.IsDigit(c));
+
+            return isLengthValid && hasSpecialSymbol && hasUppercase && hasNumber;
         }
 
         private void btnOk_Click(object sender, RoutedEventArgs e)
         {
-            string newPassword1 = PasswordBox.Password;
-            string newPassword2 = ConfirmPasswordBox.Password;
+            string password = string.Empty;
+            string confirmPassword = string.Empty;
 
-            if (newPassword1 != newPassword2)
+            if (PasswordBox.Visibility == Visibility.Visible)
             {
-                notifier.ShowError("Паролите не съвпадат, опитайте отново!");
+                password = PasswordBox.Password;
+            }
+            else if (PasswordTextBox.Visibility == Visibility.Visible)
+            {
+                password = PasswordTextBox.Text;
+            }
+            
+            if (ConfirmPasswordBox.Visibility == Visibility.Visible)
+            {
+                confirmPassword = ConfirmPasswordBox.Password;
+            }
+            else if (ConfirmPasswordTextBox.Visibility == Visibility.Visible)
+            {
+                confirmPassword = ConfirmPasswordTextBox.Text;
+            }
+
+            if (!IsPasswordValid(password, confirmPassword))
+            {
+                notifier.ShowWarning("Паролите не са еднакви или са невалидни (Трябва да съдържат поне 8 символа, голяма буква, специален символ и число)!");
                 return;
             }
 
-            if (newPassword1.Length < 8)
-            {
-                notifier.ShowError("Паролата трябва да е поне 8 символа!");
-                return;
-            }
+            string salt = UserService.GenerateSalt();
 
-            if (!ContainsSpecialSymbol(newPassword1))
-            {
-                notifier.ShowError("Паролата трябва да съдържа специални символи!");
-                return;
-            }
-
-            if (!ContainsNumber(newPassword1))
-            {
-                notifier.ShowError("Паролата трябва да съдържа цифри!");
-                return;
-            }
-
-            string salt = GenerateSalt();
-
-            string hashedPassword1 = HashPassword(newPassword1, salt);
+            string hashedPassword1 = UserService.HashPassword(password, salt);
 
             using (var dbContext = new laboratory_2023Context())
             {
