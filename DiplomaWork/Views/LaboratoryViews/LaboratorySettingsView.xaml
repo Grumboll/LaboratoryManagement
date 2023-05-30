@@ -26,7 +26,7 @@
                 <Button Margin="5" Width="110" Height="30" FontSize="12" Style="{DynamicResource MaterialDesignRaisedButton}" Click="SettingsProfiles_Click">
                     Профили
                 </Button>
-                <Button Margin="5" Width="110" MinHeight="35" Height="auto" FontSize="12" Style="{DynamicResource MaterialDesignRaisedButton}">
+                <Button Margin="5" Width="110" MinHeight="35" Height="auto" FontSize="12" Style="{DynamicResource MaterialDesignRaisedButton}" Click="SettingsOwnProfile_Click">
                     <TextBlock TextWrapping="Wrap">Редактиране на профил</TextBlock>
                 </Button>
             </StackPanel>

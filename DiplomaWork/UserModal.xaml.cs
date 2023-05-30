@@ -73,10 +73,12 @@ namespace DiplomaWork
         {
             if (validateFormData())
             {
-                UserService.createUser(UserNameTextBox.Text, UserEMailTextBox.Text, DateOnly.FromDateTime(UserDateOfBirthDatePicker.SelectedDate.Value.Date),
-                    UserPhoneNumberTextBox.Text, passwordText, UserFirstNameTextBox.Text, UserLastNameTextBox.Text, ((Role)RolesComboBox.SelectedItem).Id);
+                if (UserService.createUser(UserNameTextBox.Text, UserEMailTextBox.Text, DateOnly.FromDateTime(UserDateOfBirthDatePicker.SelectedDate.Value.Date),
+                    UserPhoneNumberTextBox.Text, passwordText, UserFirstNameTextBox.Text, UserLastNameTextBox.Text, ((Role)RolesComboBox.SelectedItem).Id) == 1)
+                {
+                    notifier.ShowSuccess("Успешно запазихте потребител.");
+                }
 
-                notifier.ShowSuccess("Успешно запазихте потребител.");
                 this.Close();
             }
         }
@@ -150,7 +152,7 @@ namespace DiplomaWork
                 confirmPassword = ConfirmPasswordTextBox.Text;
             }
 
-            if (!IsPasswordValid(password, confirmPassword))
+            if (!UserService.IsPasswordValid(password, confirmPassword))
             {
                 notifier.ShowWarning("Паролите не са еднакви или са невалидни (Трябва да съдържат поне 8 символа, голяма буква, специален символ и число)!");
 
@@ -166,7 +168,7 @@ namespace DiplomaWork
 
                 return false;
             }
-            else if (!IsNameValid(firstName))
+            else if (!UserService.IsNameValid(firstName))
             {
                 notifier.ShowWarning("Името е невалидно!");
                 UserFirstNameTextBox.Focus();
@@ -181,7 +183,7 @@ namespace DiplomaWork
 
                 return false;
             }
-            else if (!IsNameValid(lastName))
+            else if (!UserService.IsNameValid(lastName))
             {
                 notifier.ShowWarning("Името е невалидно!");
                 UserLastNameTextBox.Focus();
@@ -200,28 +202,6 @@ namespace DiplomaWork
             return true;
         }
         
-        private bool IsNameValid(string name)
-        {
-            string namePattern = @"^[A-Za-z]+$";
-
-            return Regex.IsMatch(name, namePattern);
-        }
-
-        private bool IsPasswordValid(string password, string confirmPassword)
-        {
-            if (password != confirmPassword)
-            {
-                return false;
-            }
-
-            bool isLengthValid = password.Length >= 8;
-            bool hasSpecialSymbol = password.Any(c => !char.IsLetterOrDigit(c));
-            bool hasUppercase = password.Any(c => char.IsUpper(c));
-            bool hasNumber = password.Any(c => char.IsDigit(c));
-
-            return isLengthValid && hasSpecialSymbol && hasUppercase && hasNumber;
-        }
-
         private void btnClose_Click(object sender, RoutedEventArgs e)
         {
             this.Close();

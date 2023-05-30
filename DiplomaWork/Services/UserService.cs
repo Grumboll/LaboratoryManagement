@@ -1,5 +1,7 @@
-﻿using DiplomaWork.DataItems;
+﻿using DiplomaWork;
+using DiplomaWork.DataItems;
 using DiplomaWork.Models;
+using iText.Commons.Actions.Contexts;
 using iText.Kernel.Geom;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -9,8 +11,10 @@ using System.Drawing.Printing;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
+using static Org.BouncyCastle.Utilities.Test.FixedSecureRandom;
 
 namespace DiplomaWork.Services
 {
@@ -107,7 +111,29 @@ namespace DiplomaWork.Services
             }
         }
 
-        public static uint createUser(string username, string? email, DateOnly? dateOfBirth, string? phoneNumber, string password, string firstName, string lastName, uint roleId)
+        public static bool IsNameValid(string name)
+        {
+            string namePattern = @"^[A-Za-zА-Яа-я]+$";
+
+            return Regex.IsMatch(name, namePattern);
+        }
+
+        public static bool IsPasswordValid(string password, string confirmPassword)
+        {
+            if (password != confirmPassword)
+            {
+                return false;
+            }
+
+            bool isLengthValid = password.Length >= 8;
+            bool hasSpecialSymbol = password.Any(c => !char.IsLetterOrDigit(c));
+            bool hasUppercase = password.Any(c => char.IsUpper(c));
+            bool hasNumber = password.Any(c => char.IsDigit(c));
+
+            return isLengthValid && hasSpecialSymbol && hasUppercase && hasNumber;
+        }
+
+        public static int createUser(string username, string? email, DateOnly? dateOfBirth, string? phoneNumber, string password, string firstName, string lastName, uint roleId)
         {
             using (var dbContext = new laboratory_2023Context())
             {
@@ -154,6 +180,61 @@ namespace DiplomaWork.Services
                     Log.Error(ex, "An error occurred while saving changes.");
                     return 0;
                 }
+            }
+        }
+        
+        public static int editUser(User user, string username, string email, DateOnly? dateOfBirth, string phoneNumber, string password, string firstName, string middleName, string lastName)
+        {
+            using (var dbContext = new laboratory_2023Context())
+            {
+                try
+                {
+                    user.Username = username;
+                    user.EMail = email;
+                    user.PhoneNumber = phoneNumber;
+                    user.FirstName = firstName;
+                    user.MiddleName = middleName;
+                    user.LastName = lastName;
+
+                    if (!dateOfBirth.Equals(DateOnly.FromDateTime(DateTime.MinValue)))
+                    {
+                        user.DateOfBirth = dateOfBirth;
+                    }
+                    else
+                    {
+                        user.DateOfBirth = null;
+                    }
+
+                    if (password != "")
+                    {
+                        string passwordSalt = GenerateSalt();
+                        user.Password = HashPassword(password, passwordSalt);
+                        user.PasswordSalt = passwordSalt;
+                    }
+
+                    user.UpdatedAt = DateTime.Now;
+                    user.UpdatedBy = App.CurrentUser.Id;
+
+                    dbContext.Entry(user).State = EntityState.Modified;
+                    dbContext.SaveChanges();
+
+                    return 1;
+                }
+                catch (Exception ex)
+                {
+                    dbContext.Database.CurrentTransaction?.Rollback();
+
+                    Log.Error(ex, "An error occurred while saving changes.");
+                    return 0;
+                }
+            }
+        }
+
+        public static User getUserById(uint userId)
+        {
+            using (var dbContext = new laboratory_2023Context())
+            {
+                return dbContext.Users.FirstOrDefault(x => x.Id == userId);
             }
         }
     }

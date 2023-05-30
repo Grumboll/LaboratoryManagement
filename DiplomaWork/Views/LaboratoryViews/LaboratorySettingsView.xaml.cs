@@ -148,5 +148,10 @@ namespace DiplomaWork.Views
                 SettingsContentControl.Content = view;
             }
         }
+        
+        private void SettingsOwnProfile_Click(object sender, RoutedEventArgs e)
+        {
+            SettingsContentControl.Content = new SettingsOwnUserProfile();
+        }
     }
 }
