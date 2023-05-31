@@ -18,6 +18,7 @@ namespace DiplomaWork
         public static User CurrentUser { get; set; }
         public static User EmailUser { get; set; }
         public static List<string> UserPermissions { get; set; }
+        public static string companyEmail = "rumenpavlov35@gmail.com";
 
         private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
         {

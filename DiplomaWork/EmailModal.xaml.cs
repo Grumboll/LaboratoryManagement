@@ -18,6 +18,8 @@ using ToastNotifications.Messages;
 using System.Text.RegularExpressions;
 using DiplomaWork.Services;
 using DiplomaWork.Models;
+using System.Net;
+using System.Net.Mail;
 
 namespace DiplomaWork
 {
@@ -60,6 +62,7 @@ namespace DiplomaWork
                         EmailCode newEmailCode = new EmailCode
                         {
                             UserId = App.EmailUser.Id,
+                            Code = GenerateRandomCode().ToString(),
                             ExpiredAt = DateTime.Now.AddMinutes(15),
                             IsValid = 1
                         };
@@ -71,11 +74,36 @@ namespace DiplomaWork
                     
                     this.Close();
 
-                    //TODO: STEP 3
+                    sendForgottenPasswordEmail();
                 }
 
                 notifier.ShowError("Не беше открит потребител с този имейл адрес!");
             }
+        }
+
+        private void sendForgottenPasswordEmail()
+        {
+            MailMessage message = new MailMessage();
+
+            message.From = new MailAddress(App.companyEmail);
+            message.To.Add(App.EmailUser.EMail);
+
+            string emailCode = UserService.getUserEmailCodeByUserId(App.EmailUser.Id);
+
+            message.Subject = "Код за възстановяване на парола!";
+            message.Body = "Вашият код за възстановяване на парола: " + emailCode;
+
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+            smtpClient.Credentials = new NetworkCredential("Rumen Pavlov", "password");
+            smtpClient.EnableSsl = true;
+
+            smtpClient.Send(message);
+        }
+
+        private int GenerateRandomCode()
+        {
+            Random random = new Random();
+            return random.Next(100000, 999999);
         }
 
         private bool validateEmail()
