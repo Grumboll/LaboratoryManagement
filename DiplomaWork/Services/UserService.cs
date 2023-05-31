@@ -237,5 +237,13 @@ namespace DiplomaWork.Services
                 return dbContext.Users.FirstOrDefault(x => x.Id == userId);
             }
         }
+        
+        public static User getUserByEmail(string email)
+        {
+            using (var dbContext = new laboratory_2023Context())
+            {
+                return dbContext.Users.FirstOrDefault(x => x.EMail == email);
+            }
+        }
     }
 }

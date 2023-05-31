@@ -22,11 +22,21 @@ using DiplomaWork.Services;
 
 namespace DiplomaWork
 {
-    public partial class PasswordResetRequiredModal : Window
+    public partial class PasswordResetModal : Window
     {
-        public PasswordResetRequiredModal()
+        public PasswordResetModal(string mode)
         {
             InitializeComponent();
+
+            switch (mode)
+            {
+                case "resetRequired":
+                    ChangePasswordSubText.Text = "Администратор е изискал да промените паролата си.";
+                    break;
+                case "resetForgotten":
+                    ChangePasswordSubText.Text = "Напишете нова парола.";
+                    break;
+            }
         }
 
         Notifier notifier = new Notifier(cfg =>

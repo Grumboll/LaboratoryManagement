@@ -24,6 +24,8 @@ namespace DiplomaWork
 
         private User user;
 
+        private bool isEmailModalOpen = false;
+
         public LoginWindow()
         {
             // Initialize the DbContext
@@ -191,9 +193,6 @@ namespace DiplomaWork
             {
                 return (null, null);
             }
-            
-            
-            
         }
 
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -232,7 +231,25 @@ namespace DiplomaWork
         {
             PasswordBox.Visibility = Visibility.Visible;
             PasswordTextBox.Visibility = Visibility.Collapsed;
+            PasswordBox.Password = PasswordTextBox.Text;
             PasswordBox.Focus();
+        }
+
+        private void ForgottenPasswordButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!isEmailModalOpen)
+            {
+                isEmailModalOpen = true;
+
+                EmailModal emailModal = new EmailModal();
+                emailModal.Closed += EmailModal_Closed;
+                emailModal.Show();
+            }
+        }
+
+        private void EmailModal_Closed(object sender, EventArgs e)
+        {
+            isEmailModalOpen = false;
         }
     }
 }

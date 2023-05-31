@@ -29,6 +29,7 @@ namespace DiplomaWork.Views.SettingsViews
         private int currentPage = 1;
         private string filterText = string.Empty;
         private int totalRecords = -1;
+        private bool isUserModalOpen = false;
 
         public SettingsUsersTableEditable()
         {
@@ -153,14 +154,21 @@ namespace DiplomaWork.Views.SettingsViews
         
         private void UsersCreateNew_Click(object sender, RoutedEventArgs e)
         {
-            UserModal userModal = new UserModal();
-            userModal .Closed += UserModal_Closed;
-            userModal .Show();
+            if (!isUserModalOpen)
+            {
+                isUserModalOpen = true;
+
+                UserModal userModal = new UserModal();
+                userModal.Closed += UserModal_Closed;
+                userModal.Show();
+            }
+            
         }
 
         private void UserModal_Closed(object sender, EventArgs e)
         {
             LoadDataForPage(currentPage, filterText);
+            isUserModalOpen = false;
         }
     }
 }

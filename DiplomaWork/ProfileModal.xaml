@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="ProfileModal" Height="380" Width="320" MinHeight="380" MinWidth="320" MaxHeight="380" MaxWidth="320" 
         WindowStartupLocation="CenterScreen" WindowStyle="None"
-        ResizeMode="NoResize" Topmost="True" ShowInTaskbar="False"
+        ResizeMode="NoResize" Topmost="True"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}"

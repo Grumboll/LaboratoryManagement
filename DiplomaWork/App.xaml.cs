@@ -16,6 +16,7 @@ namespace DiplomaWork
         WindowState WindowState;
 
         public static User CurrentUser { get; set; }
+        public static User EmailUser { get; set; }
         public static List<string> UserPermissions { get; set; }
 
         private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)

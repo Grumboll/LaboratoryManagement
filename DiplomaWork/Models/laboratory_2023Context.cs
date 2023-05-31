@@ -16,6 +16,7 @@ namespace DiplomaWork.Models
         {
         }
 
+        public virtual DbSet<EmailCode> EmailCodes { get; set; } = null!;
         public virtual DbSet<LaboratoryDay> LaboratoryDays { get; set; } = null!;
         public virtual DbSet<LaboratoryMonth> LaboratoryMonths { get; set; } = null!;
         public virtual DbSet<LaboratoryMonthChemical> LaboratoryMonthChemicals { get; set; } = null!;
@@ -42,13 +43,48 @@ namespace DiplomaWork.Models
             modelBuilder.UseCollation("utf8mb4_general_ci")
                 .HasCharSet("utf8mb4");
 
+            modelBuilder.Entity<EmailCode>(entity =>
+            {
+                entity.ToTable("email_codes");
+
+                entity.HasIndex(e => e.UserId, "fk_users_email_codes_idx");
+
+                entity.HasIndex(e => e.Id, "id_UNIQUE")
+                    .IsUnique();
+
+                entity.Property(e => e.Id)
+                    .HasColumnType("int(10) unsigned")
+                    .HasColumnName("id");
+
+                entity.Property(e => e.ExpiredAt)
+                    .HasColumnType("timestamp")
+                    .ValueGeneratedOnAddOrUpdate()
+                    .HasColumnName("expired_at")
+                    .HasDefaultValueSql("current_timestamp()");
+
+                entity.Property(e => e.IsValid)
+                    .HasColumnType("tinyint(1) unsigned")
+                    .HasColumnName("is_valid")
+                    .HasDefaultValueSql("'1'");
+
+                entity.Property(e => e.UserId)
+                    .HasColumnType("int(10) unsigned")
+                    .HasColumnName("user_id");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.EmailCodes)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_users_email_codes");
+            });
+
             modelBuilder.Entity<LaboratoryDay>(entity =>
             {
                 entity.ToTable("laboratory_day");
 
                 entity.HasIndex(e => e.MonthId, "fk_months_laboratory_day_idx");
 
-                entity.HasIndex(e => e.ProfileHasLengthsPerimeterId, "fk_profile_has_lengths_perimeter_laboratory_day2");
+                entity.HasIndex(e => e.ProfileHasLengthsPerimeterId, "fk_profile_has_lengths_perimeter_laboratory_day_idx");
 
                 entity.HasIndex(e => e.CreatedBy, "fk_users_laboratory_day_profile1_idx");
 
@@ -129,7 +165,7 @@ namespace DiplomaWork.Models
                     .WithMany(p => p.LaboratoryDays)
                     .HasForeignKey(d => d.ProfileHasLengthsPerimeterId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_profile_has_lengths_perimeter_laboratory_day2");
+                    .HasConstraintName("fk_profile_has_lengths_perimeter_laboratory_day");
 
                 entity.HasOne(d => d.UpdatedByNavigation)
                     .WithMany(p => p.LaboratoryDayUpdatedByNavigations)
@@ -141,6 +177,8 @@ namespace DiplomaWork.Models
             modelBuilder.Entity<LaboratoryMonth>(entity =>
             {
                 entity.ToTable("laboratory_months");
+
+                entity.HasIndex(e => e.MonthId, "fk_months_laboratory_months");
 
                 entity.HasIndex(e => e.UpdatedBy, "fk_users2_laboratory_months_idx");
 
@@ -216,7 +254,7 @@ namespace DiplomaWork.Models
             {
                 entity.ToTable("laboratory_month_chemicals");
 
-                entity.HasIndex(e => e.MonthId, "fk_laboratory_month_chemicals_laboratory_months_idx");
+                entity.HasIndex(e => e.MonthId, "fk_laboratory_month_chemicals_months_idx");
 
                 entity.HasIndex(e => e.UpdatedBy, "fk_users2_laboratory_month_chemicals_idx");
 
@@ -485,6 +523,9 @@ namespace DiplomaWork.Models
             {
                 entity.ToTable("users");
 
+                entity.HasIndex(e => e.EMail, "e-mail_UNIQUE")
+                    .IsUnique();
+
                 entity.HasIndex(e => e.CreatedBy, "fk_users_users1_idx");
 
                 entity.HasIndex(e => e.UpdatedBy, "fk_users_users2_idx");
@@ -514,9 +555,7 @@ namespace DiplomaWork.Models
                     .HasColumnType("timestamp")
                     .HasColumnName("deleted_at");
 
-                entity.Property(e => e.EMail)
-                    .HasMaxLength(255)
-                    .HasColumnName("e-mail");
+                entity.Property(e => e.EMail).HasColumnName("e-mail");
 
                 entity.Property(e => e.FirstName)
                     .HasMaxLength(64)

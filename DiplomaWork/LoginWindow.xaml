@@ -13,7 +13,7 @@
         TextElement.FontSize="14"
         FontFamily="{materialDesign:MaterialDesignFont}"
         WindowStartupLocation="CenterScreen"
-        Title="Login" Height="320" Width="430" MinHeight="320" MinWidth="430" MaxHeight="320" MaxWidth="430" PreviewKeyDown="Window_PreviewKeyDown">
+        Title="Login" Height="330" Width="430" MinHeight="330" MinWidth="430" MaxHeight="330" MaxWidth="430" PreviewKeyDown="Window_PreviewKeyDown">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -41,6 +41,8 @@
                 <CheckBox Name="RememberMeCheckBox"  VerticalAlignment="Center" Margin="3 0 0 0"/>
             </StackPanel>
             <Button Name="LoginButton" Content="Влизане" Width="236" MaxWidth="236" Click="LoginButton_Click" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignRaisedButton}"/>
+            
+            <Button Name="ForgottenPasswordButton" Content="Забравена парола" Margin="5 10 5 5" Width="236" MaxWidth="236" Click="ForgottenPasswordButton_Click" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignRaisedButton}"/>
         </StackPanel>
     </Grid>
 </control:CustomWindow>

@@ -34,7 +34,7 @@ namespace DiplomaWork
 
             if (App.CurrentUser.PasswordResetRequired)
             {
-                PasswordResetRequiredModal passwordResetModal = new PasswordResetRequiredModal();
+                PasswordResetModal passwordResetModal = new PasswordResetModal("resetRequired");
                 passwordResetModal.Show();
             }
         }

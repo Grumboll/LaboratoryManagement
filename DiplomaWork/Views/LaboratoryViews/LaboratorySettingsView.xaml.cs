@@ -24,29 +24,6 @@ namespace DiplomaWork.Views
         public LaboratorySettingsView()
         {
             InitializeComponent();
-
-            if (App.UserPermissions.Contains("permissions.all"))
-            {
-                Button btn = new Button()
-                {
-                    MinHeight = 30,
-                    Height = Double.NaN,
-                    Width = 110,
-                    Margin = new Thickness(5),
-                    Style = Application.Current.FindResource("MaterialDesignRaisedButton") as Style
-                };
-
-                TextBlock textBlock = new TextBlock()
-                {
-                    Text = "Заявки за нова парола",
-                    FontSize = 12,
-                    TextWrapping = TextWrapping.Wrap
-                };
-
-                btn.Content = textBlock;
-
-                SettingsButtonStackPanel.Children.Add(btn);
-            }
         }
 
         Notifier notifier = new Notifier(cfg =>

@@ -7,6 +7,7 @@ namespace DiplomaWork.Models
     {
         public User()
         {
+            EmailCodes = new HashSet<EmailCode>();
             InverseCreatedByNavigation = new HashSet<User>();
             InverseUpdatedByNavigation = new HashSet<User>();
             LaboratoryDayCreatedByNavigations = new HashSet<LaboratoryDay>();
@@ -22,9 +23,9 @@ namespace DiplomaWork.Models
 
         public uint Id { get; set; }
         public string Username { get; set; } = null!;
-        public string? EMail { get; set; }
-        public string? PhoneNumber { get; set; }
+        public string EMail { get; set; } = null!;
         public DateOnly? DateOfBirth { get; set; }
+        public string? PhoneNumber { get; set; }
         public string Password { get; set; } = null!;
         public string PasswordSalt { get; set; } = null!;
         public string FirstName { get; set; } = null!;
@@ -40,6 +41,7 @@ namespace DiplomaWork.Models
 
         public virtual User CreatedByNavigation { get; set; } = null!;
         public virtual User UpdatedByNavigation { get; set; } = null!;
+        public virtual ICollection<EmailCode> EmailCodes { get; set; }
         public virtual ICollection<User> InverseCreatedByNavigation { get; set; }
         public virtual ICollection<User> InverseUpdatedByNavigation { get; set; }
         public virtual ICollection<LaboratoryDay> LaboratoryDayCreatedByNavigations { get; set; }

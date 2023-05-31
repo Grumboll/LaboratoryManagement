@@ -30,6 +30,8 @@ namespace DiplomaWork.Views
 {
     public partial class LaboratoryReportsView : UserControl, INotifyPropertyChanged
     {
+        private bool isAdditionalReportOpen = false;
+
         public LaboratoryReportsView()
         {
             InitializeComponent();
@@ -264,13 +266,23 @@ namespace DiplomaWork.Views
         {
             if (App.UserPermissions.Contains("permissions.all") || App.UserPermissions.Contains("permissions.create_inquiry"))
             {
-                GenerateReportModal generateReportModal = new GenerateReportModal();
-                generateReportModal.Show();
+                if (!isAdditionalReportOpen)
+                {
+                    isAdditionalReportOpen = true;
+
+                    GenerateReportModal generateReportModal = new GenerateReportModal();
+                    generateReportModal.Closed += GenerateReportModal_Closed;
+                    generateReportModal.Show();
+                }
             }
             else
             {
                 notifier.ShowWarning("Нямате нужните права!");
             }
+        }
+        private void GenerateReportModal_Closed(object sender, EventArgs e)
+        {
+            isAdditionalReportOpen = false;
         }
     }
 }

@@ -31,6 +31,7 @@ namespace DiplomaWork.Views.SettingsViews
         private int currentPage = 1;
         private string filterText = string.Empty;
         private int totalRecords = -1;
+        private bool isProfileModalOpen = false;
 
         public SettingsProfilesTableEditable()
         {
@@ -148,11 +149,16 @@ namespace DiplomaWork.Views.SettingsViews
 
                 if (source.Contains(item))
                 {
-                    var profile = ProfileService.GetProfileSettingsItemById(item.Id);
+                    if (!isProfileModalOpen)
+                    {
+                        var profile = ProfileService.GetProfileSettingsItemById(item.Id);
 
-                    ProfileModal profileModal = new ProfileModal("edit", profile);
-                    profileModal.Closed += ProfileModal_Closed;
-                    profileModal.Show();
+                        isProfileModalOpen = true;
+
+                        ProfileModal profileModal = new ProfileModal("edit", profile);
+                        profileModal.Closed += ProfileModal_Closed;
+                        profileModal.Show();
+                    }
                 }
             }
             else
@@ -163,6 +169,7 @@ namespace DiplomaWork.Views.SettingsViews
         private void ProfileModal_Closed(object sender, EventArgs e)
         {
             LoadDataForPage(currentPage, filterText);
+            isProfileModalOpen = false;
         }
 
         private void ProfilesCreateNew_Click(object sender, RoutedEventArgs e)
