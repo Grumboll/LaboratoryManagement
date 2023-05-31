@@ -31,7 +31,7 @@
                 <TextBox Name="UserNameTextBox" Margin="5" Width="150" VerticalContentAlignment="Center"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Width="auto">
-                <Label Content="Парола:" Margin="5" Foreground="#c8ccc9"/>
+                <Label Content="Парола: " Margin="5" Foreground="#c8ccc9"/>
                 <PasswordBox Name="PasswordBox" Margin="29 5 5 5" Width="150" VerticalContentAlignment="Center"/>
                 <TextBox x:Name="PasswordTextBox" Visibility="Collapsed" Margin="29 5 5 5" Width="150" VerticalContentAlignment="Center"/>
                 <ToggleButton Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked" Style="{DynamicResource MaterialDesignSwitchDarkToggleButton}"/>

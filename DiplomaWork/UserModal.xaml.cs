@@ -73,7 +73,7 @@ namespace DiplomaWork
         {
             if (validateFormData())
             {
-                if (UserService.createUser(UserNameTextBox.Text, UserEMailTextBox.Text, DateOnly.FromDateTime(UserDateOfBirthDatePicker.SelectedDate.Value.Date),
+                if (UserService.createUser(UserNameTextBox.Text, UserEMailTextBox.Text, DateOnly.FromDateTime(UserDateOfBirthDatePicker.SelectedDate.GetValueOrDefault()),
                     UserPhoneNumberTextBox.Text, passwordText, UserFirstNameTextBox.Text, UserLastNameTextBox.Text, ((Role)RolesComboBox.SelectedItem).Id) == 1)
                 {
                     notifier.ShowSuccess("Успешно запазихте потребител.");
@@ -108,7 +108,14 @@ namespace DiplomaWork
                 return false;
             }
 
-            if (!string.IsNullOrEmpty(email))
+            if (string.IsNullOrEmpty(email))
+            {
+                notifier.ShowWarning("Имейлът е задължителен!");
+                UserEMailTextBox.Focus();
+
+                return false;
+            }
+            else
             {
                 string emailPattern = @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$";
 

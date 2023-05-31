@@ -141,11 +141,17 @@ namespace DiplomaWork.Services
                 {
                     string passwordSalt = GenerateSalt();
 
+                    DateOnly? dateOnly = null;
+                    if (!dateOfBirth.Equals(DateOnly.FromDateTime(DateTime.MinValue)))
+                    {
+                        dateOnly = dateOfBirth;
+                    }
+
                     User newUser = new User
                     {
                         Username = username,
                         EMail = email,
-                        DateOfBirth = dateOfBirth,
+                        DateOfBirth = dateOnly,
                         PhoneNumber = phoneNumber,
                         Password = HashPassword(password, passwordSalt),
                         PasswordSalt = passwordSalt,

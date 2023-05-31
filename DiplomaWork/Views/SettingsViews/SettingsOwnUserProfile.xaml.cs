@@ -107,6 +107,13 @@ namespace DiplomaWork.Views.SettingsViews
                     return false;
                 }
             }
+            else
+            {
+                notifier.ShowWarning("Имейлът е  задължително поле!");
+                UserEMailTextBox.Focus();
+
+                return false;
+            }
 
             if (!string.IsNullOrEmpty(phoneNumber))
             {

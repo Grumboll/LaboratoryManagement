@@ -1,4 +1,5 @@
 -- CORE INSERT SCRIPT LABORATORY
+SET FOREIGN_KEY_CHECKS = 0;
 
 INSERT INTO users(id, username, `e-mail`, password, password_salt, first_name, last_name, created_by, updated_by) VALUES 
 (1, 'admin', 'email@example.com', 'yNcf58gzTp62MaOa23THAOOj50VXmR6i8oDt/Nff4d0=', '19cLL8FFIdfomX/FW8ZSFw==', 'Admin_first_name', 'Admin_last_name', 1, 1);
@@ -2943,3 +2944,5 @@ INSERT INTO profile_has_lengths_perimeter(profile_id, length, perimeter, created
 (1048	, 6000	, 200, 1, 1),
 (1049	, 6500	, 320, 1, 1),
 (1050	, 6000	, 400, 1, 1);
+
+SET FOREIGN_KEY_CHECKS = 1;

@@ -255,7 +255,10 @@ namespace DiplomaWork.Views
         private void ReloadReports_Click(object sender, RoutedEventArgs e)
         {
             ReportsYearlyCards.Children.Clear();
-            MonthlyProfileReportItems.Clear();
+            if (MonthlyProfileReportItems != null)
+            {
+                MonthlyProfileReportItems.Clear();
+            }
             loadYearlyReportCards();
             loadMonthlyReportCards();
 

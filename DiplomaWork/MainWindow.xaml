@@ -23,7 +23,7 @@
                 <ColumnDefinition Width="1.1*"/>
                 <ColumnDefinition Width="1.3*"/>
                 <ColumnDefinition Width="1.1*"/>
-                <ColumnDefinition Width="1.1*"/>
+                <ColumnDefinition Width="1.2*"/>
                 <ColumnDefinition Width="6*"/>
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" Style="{DynamicResource MaterialDesignRaisedButton}" Click="LaboratoryDay_Click" Margin="3">Текущ ден</Button>
