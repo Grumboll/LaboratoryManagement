@@ -7,6 +7,7 @@ namespace DiplomaWork.Models
     {
         public uint Id { get; set; }
         public uint UserId { get; set; }
+        public string Code { get; set; } = null!;
         public byte IsValid { get; set; }
         public DateTime ExpiredAt { get; set; }
 

@@ -56,6 +56,10 @@ namespace DiplomaWork.Models
                     .HasColumnType("int(10) unsigned")
                     .HasColumnName("id");
 
+                entity.Property(e => e.Code)
+                    .HasMaxLength(6)
+                    .HasColumnName("code");
+
                 entity.Property(e => e.ExpiredAt)
                     .HasColumnType("timestamp")
                     .ValueGeneratedOnAddOrUpdate()
