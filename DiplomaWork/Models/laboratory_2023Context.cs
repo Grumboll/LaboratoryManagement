@@ -61,10 +61,8 @@ namespace DiplomaWork.Models
                     .HasColumnName("code");
 
                 entity.Property(e => e.ExpiredAt)
-                    .HasColumnType("timestamp")
-                    .ValueGeneratedOnAddOrUpdate()
-                    .HasColumnName("expired_at")
-                    .HasDefaultValueSql("current_timestamp()");
+                    .HasColumnType("datetime")
+                    .HasColumnName("expired_at");
 
                 entity.Property(e => e.IsValid)
                     .HasColumnType("tinyint(1) unsigned")

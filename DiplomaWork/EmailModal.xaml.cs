@@ -20,6 +20,10 @@ using DiplomaWork.Services;
 using DiplomaWork.Models;
 using System.Net;
 using System.Net.Mail;
+using Microsoft.EntityFrameworkCore;
+using Serilog;
+using System.Configuration;
+using DiplomaWork.Helpers;
 
 namespace DiplomaWork
 {
@@ -47,9 +51,8 @@ namespace DiplomaWork
             cfg.Dispatcher = Application.Current.Dispatcher;
         });
 
-        private void btnOk_Click(object sender, RoutedEventArgs e)
+        private async void validateAndSendEmail()
         {
-
             if (validateEmail())
             {
                 App.EmailUser = UserService.getUserByEmail(email);
@@ -59,11 +62,35 @@ namespace DiplomaWork
 
                     using (var dbContext = new laboratory_2023Context())
                     {
+                        var existingEmailCode = dbContext.EmailCodes.FirstOrDefault(x => x.UserId == App.EmailUser.Id && x.IsValid == 1);
+
+                        DateTime dateTimeNow = DateTime.Now;
+                        DateTime nowPlus15Minutes = dateTimeNow.AddMinutes(15);
+                        DateTime fifteenMinutesAgo = dateTimeNow.AddMinutes(-15);
+
+                        var pastCodes = dbContext.EmailCodes
+                                .Where(x => x.ExpiredAt >= fifteenMinutesAgo && x.ExpiredAt <= nowPlus15Minutes && x.UserId == App.EmailUser.Id && x.IsValid == 0)
+                                .ToList();
+
+                        if (pastCodes.Count >= 5)
+                        {
+                            notifier.ShowError("Достигнахте лимита на опити за подновяване на парола! Опитайте по-късно.");
+                            return;
+                        }
+
+                        if (existingEmailCode != null)
+                        {
+                            existingEmailCode.IsValid = 0;
+                            dbContext.Entry(existingEmailCode).State = EntityState.Modified;
+
+                            dbContext.SaveChanges();
+                        }
+
                         EmailCode newEmailCode = new EmailCode
                         {
                             UserId = App.EmailUser.Id,
                             Code = GenerateRandomCode().ToString(),
-                            ExpiredAt = DateTime.Now.AddMinutes(15),
+                            ExpiredAt = nowPlus15Minutes,
                             IsValid = 1
                         };
 
@@ -71,17 +98,35 @@ namespace DiplomaWork
 
                         dbContext.SaveChanges();
                     }
-                    
+
+
+                    ConfirmEmailCodeModal confirmEmailCodeModal = new ConfirmEmailCodeModal();
+                    confirmEmailCodeModal.Show();
+
                     this.Close();
 
-                    sendForgottenPasswordEmail();
+                    try
+                    {
+                        await sendForgottenPasswordEmail();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
+
+                    return;
                 }
 
                 notifier.ShowError("Не беше открит потребител с този имейл адрес!");
             }
         }
 
-        private void sendForgottenPasswordEmail()
+        private void btnOk_Click(object sender, RoutedEventArgs e)
+        {
+            validateAndSendEmail();
+        }
+
+        private async Task sendForgottenPasswordEmail()
         {
             MailMessage message = new MailMessage();
 
@@ -93,11 +138,14 @@ namespace DiplomaWork
             message.Subject = "Код за възстановяване на парола!";
             message.Body = "Вашият код за възстановяване на парола: " + emailCode;
 
-            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
-            smtpClient.Credentials = new NetworkCredential("Rumen Pavlov", "password");
-            smtpClient.EnableSsl = true;
+            using (SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587))
+            {
+                smtpClient.Credentials = new NetworkCredential(ConfigurationHelper.getEmailValue(), ConfigurationHelper.getPasswordValue());
+                smtpClient.EnableSsl = true;
+                smtpClient.UseDefaultCredentials = false;
 
-            smtpClient.Send(message);
+                await smtpClient.SendMailAsync(message);
+            }
         }
 
         private int GenerateRandomCode()
@@ -141,6 +189,14 @@ namespace DiplomaWork
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             DragMove();
+        }
+
+        private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                validateAndSendEmail();
+            }
         }
     }
 }

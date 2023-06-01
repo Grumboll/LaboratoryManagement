@@ -19,5 +19,22 @@ namespace DiplomaWork.Helpers
             return section.Settings["EncryptionKey"].Value;
         }
         
+        public static string getEmailValue()
+        {
+            var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            var section = config.GetSection("appSettings") as AppSettingsSection;
+
+            // Get the email from the configuration file
+            return section.Settings["Email"].Value;
+        } 
+        
+        public static string getPasswordValue()
+        {
+            var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            var section = config.GetSection("appSettings") as AppSettingsSection;
+
+            // Get the password from the configuration file
+            return section.Settings["Password"].Value;
+        }
     }
 }
