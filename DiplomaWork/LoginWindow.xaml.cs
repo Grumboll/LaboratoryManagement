@@ -64,6 +64,11 @@ namespace DiplomaWork
             string username = UserNameTextBox.Text;
             string password = PasswordBox.Password;
 
+            if (string.IsNullOrEmpty(password))
+            {
+                password = PasswordTextBox.Text;
+            }
+
             loginUserThroughForm(username, password);
         }
 
